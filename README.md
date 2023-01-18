@@ -1,6 +1,6 @@
 # Go-Goal
 
-Project Description
+Go-Goal is a website dedicated to the tracking and reaching of personalized goals for its users, additionally acting as a social media site, connecting users with others who share the same interests and pursuits.
 
 ## Project Memebers
 - Don Chen (dwan12345) -- _Back-End_
