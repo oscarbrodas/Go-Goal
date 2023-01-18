@@ -4,6 +4,5 @@ Project Description
 
 ## Project Memebers
 - Don Chen (dwan12345)
-- Oscar Rodas (thescar101)
-- Nathan De Jesus (AvalonAce)
+- Nathan De Jesus (AvalonAce) -- _Front-End_
 - Sam Glickman (ThatOneGuySam)
