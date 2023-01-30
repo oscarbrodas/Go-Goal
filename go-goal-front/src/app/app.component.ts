@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavbarTopComponent } from 'src/navbar/navbar-top/navbar-top.component';
+import { NavbarTopComponent } from './navbar/navbar-top/navbar-top.component';
 
 @Component({
   selector: 'app-root',
