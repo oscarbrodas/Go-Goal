@@ -8,4 +8,4 @@ If a different password was used, change the "password" part of the DSN variable
 
 If a different database name was used, change the "somedb" part of the DSN variable in main.go to your database name
 
-Use postman to send http requests. Sample jsons inputs are provided in the "input.txt" file
+Use postman to send http requests. Sample json inputs are provided in the "input.txt" file
