@@ -1,0 +1,30 @@
+http://localhost:9000/users
+{
+    "FirstName":"Don",
+    "LastName":"Chen",
+    "Email":"dc@gmail.com",
+    "Password":"123pw"
+}
+{
+    "FirstName":"Ted",
+    "LastName":"Bed",
+    "Email":"tedbed@gmail.com",
+    "Password":"root"
+}
+{
+    "FirstName":"John",
+    "LastName":"Brown",
+    "Email":"JohnBrown@gmail.com",
+    "Password":"rot123123"
+}
+
+http://localhost:9000/goals/{userID}
+{
+    "Title":"My first goal",
+    "Description":"This is my very first goal! I hope I accomplish it"
+}
+{
+    "Title":"My second goal",
+    "Description":"idk mmmmmmmmmmmmmmmmmmmmmm"
+}
+
