@@ -17,13 +17,27 @@ type User struct {
 	Password  string
 }
 
+// checks if email exists, if not then creates the user
+// returns json of whether email was found
 func createUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
 	var user User
 	json.NewDecoder(r.Body).Decode(&user)
-	globalDB.Create(&user)
-	json.NewEncoder(w).Encode(user)
+
+	emailExist := struct { // this json return must be standardized
+		FindEmail bool
+	}{}
+
+	c := int64(0)
+	globalDB.Model(&User{}).Where("email = ?", user.Email).Count(&c)
+	if c > 0 {
+		emailExist.FindEmail = true
+	}
+
+	json.NewEncoder(w).Encode(emailExist)
+	if !emailExist.FindEmail {
+		globalDB.Create(&user)
+	}
 }
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
