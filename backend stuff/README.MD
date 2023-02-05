@@ -1,4 +1,4 @@
-The "backend stuff" folder must be the only folder opened in vs code for this to work
+The "backend stuff" folder must be the folder opened in vs code for this to work
 
 Place all files in the same folder
 
