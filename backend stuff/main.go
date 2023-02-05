@@ -20,6 +20,7 @@ func initializeRouter() {
 	r.HandleFunc("/users", createUser).Methods("POST")
 	r.HandleFunc("/users/{id}", updateUser).Methods("PUT")
 	r.HandleFunc("/users/{id}", deleteUser).Methods("DELETE")
+	r.HandleFunc("/login", checkLogin).Methods("GET")
 
 	r.HandleFunc("/goals/{userID}", createGoal).Methods("POST")
 	r.HandleFunc("/goals/{userID}", getGoals).Methods("GET")

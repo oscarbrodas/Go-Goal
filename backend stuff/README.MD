@@ -1,3 +1,5 @@
+The "backend stuff" folder must be the only folder opened in vs code for this to work
+
 Place all files in the same folder
 
 In the terminal, run "go build" to create a .exe file and run this file with ".\nameOfFile.exe"
