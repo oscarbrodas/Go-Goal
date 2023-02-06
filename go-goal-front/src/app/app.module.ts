@@ -8,13 +8,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarTopComponent } from './navbar/navbar-top/navbar-top.component';
 
 import {HttpClientModule} from '@angular/common/http';
-import { LoginPageComponent } from './login-page/login-page.component'
+import { LoginPageComponent } from './login-page/login-page.component';
+import { SignUpComponentComponent } from './sign-up-component/sign-up-component.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarTopComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    SignUpComponentComponent
   ],
   imports: [
     BrowserModule,

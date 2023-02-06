@@ -12,8 +12,10 @@ export class LoginPageComponent {
   Login(): void{
     this.backend.getLoginInfo().subscribe(data => this.data = data);
   }
-  constructor(private backend: BackendConnectService){
+  constructor(public backend: BackendConnectService){
 
-For reasons unclear to me at this time, this code makes login page no longer work}
+  }
+
+For reasons unclear to me at this time, this code makes login page no longer work
 */
 }

@@ -7,28 +7,29 @@ body{
     font-size: 5vmax;
     padding-bottom: 3vmax;
 }
-.login{
+.signup{
     margin-top:2vmax;
+    margin-right: 40%;
     font-size: 1vmax;
     font-weight:bolder;
-    text-align:center;
-    
+    text-align:right;
 }
 .form{
     margin-top: 1vmax;
+    
 }
 button{
     margin-top: 25px;
     margin-bottom: 15px;
-    height: 4vmax;
-    width: 20%;
+    height: 4vh;
+    width: 6vw;
     background-color:#00FF04;
     border-style: dashed;
     font-weight: bold;
-    font-size: 2vmax;
+    font-size: 1vw;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 button:hover{
-    height:4.2vmax;
-    width:21%;
+    height:4.2vh;
+    width:6.3vw;
 }
