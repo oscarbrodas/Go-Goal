@@ -25,6 +25,8 @@ func initializeRouter() {
 	r.HandleFunc("/goals/{userID}", createGoal).Methods("POST")
 	r.HandleFunc("/goals/{userID}", getGoals).Methods("GET")
 
+	r.HandleFunc("/friends", getAllFriends).Methods("GET")
+
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }
 
@@ -38,6 +40,7 @@ func main() {
 	// MAKE SURE TO AUTOMIGRATE BEFORE INITALIZEROUTER
 	globalDB.AutoMigrate(&User{})
 	globalDB.AutoMigrate(&Goal{})
+	globalDB.AutoMigrate(&Friend{})
 
 	initializeRouter()
 

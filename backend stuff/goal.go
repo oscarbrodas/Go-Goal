@@ -18,7 +18,7 @@ type Goal struct {
 	User        User `gorm:"foreignKey:UserID"`
 }
 
-func createGoal(w http.ResponseWriter, r *http.Request) { //does not work as intended
+func createGoal(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var goal Goal
 	var err error
