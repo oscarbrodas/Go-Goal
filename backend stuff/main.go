@@ -26,6 +26,7 @@ func initializeRouter() {
 	r.HandleFunc("/goals/{userID}", getGoals).Methods("GET")
 
 	r.HandleFunc("/friends", getAllFriends).Methods("GET")
+	r.HandleFunc("/friends/sendFriendRequest", sendFriendRequest).Methods("POST") // the route should be changed
 
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }

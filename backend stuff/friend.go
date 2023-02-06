@@ -25,7 +25,7 @@ func getAllFriends(w http.ResponseWriter, r *http.Request) {
 	var friends []Friend
 	var user User
 	returnInfo := struct {
-		IDs []int
+		IDs []int // name needs to be standardized
 	}{}
 	json.NewDecoder(r.Body).Decode(&user)
 
@@ -40,4 +40,38 @@ func getAllFriends(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(returnInfo)
+}
+
+// input json must contain "user1" and "user2". user1 sends a request to user2
+// cannot send a request if you already sent one
+// cannot send a request if the other person sent you one
+// cannot send a request if you are already friends
+// returns if the request failed or succeeded
+func sendFriendRequest(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	inputUsers := struct {
+		User1 User
+		User2 User
+	}{}
+	var canSend bool
+	var c1 int64
+	var c2 int64
+
+	json.NewDecoder(r.Body).Decode(&inputUsers)
+
+	globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ?", inputUsers.User1.ID, inputUsers.User2.ID).Count(&c1)
+	globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ?", inputUsers.User2.ID, inputUsers.User1.ID).Count(&c2)
+	canSend = (c1 == 0) && (c2 == 0)
+
+	if canSend {
+		var friendInput Friend
+		friendInput.User1 = int(inputUsers.User1.ID)
+		friendInput.User2 = int(inputUsers.User2.ID)
+		friendInput.WhoSent = 1
+		globalDB.Model(&Friend{}).Create(&friendInput)
+
+		json.NewEncoder(w).Encode(struct{ RequestSent bool }{RequestSent: true})
+	} else {
+		json.NewEncoder(w).Encode(struct{ RequestSent bool }{RequestSent: false})
+	}
 }
