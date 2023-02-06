@@ -79,11 +79,11 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // must pass in json with attributes "Email" and "Password"
-// returns a struct of whether email and password exists
-// if both exist, return the user object
+// returns a struct of whether email and password exists and a user object
+// if both  email and password exists, the user object will be the corresponding user
+// if not, the user object will have default values. the ID will be 0
 func checkLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var user User
 
 	// these create temporary structs
 	emailAndPassword := struct {
@@ -93,6 +93,7 @@ func checkLogin(w http.ResponseWriter, r *http.Request) {
 	returnInfo := struct { // the names of this json return must be standardized
 		FindEmail    bool
 		FindPassword bool
+		User         User
 	}{}
 
 	json.NewDecoder(r.Body).Decode(&emailAndPassword)
@@ -107,10 +108,8 @@ func checkLogin(w http.ResponseWriter, r *http.Request) {
 		returnInfo.FindPassword = true
 	}
 
-	// always returns returnInfo, only returns user if email and password are correct
-	json.NewEncoder(w).Encode(returnInfo)
 	if returnInfo.FindEmail && returnInfo.FindPassword {
-		globalDB.Where("email = ?", emailAndPassword.Email).Find(&user)
-		json.NewEncoder(w).Encode(user)
+		globalDB.Where("email = ?", emailAndPassword.Email).First(&returnInfo.User)
 	}
+	json.NewEncoder(w).Encode(returnInfo)
 }
