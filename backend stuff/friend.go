@@ -17,7 +17,7 @@ type Friend struct {
 	Userx   User `gorm:"foreignKey:User2"`
 }
 
-// http request must have the ID of the user in json
+// http request must have the user object
 // returns a json of an array of numbers of IDs
 // the name of the array called "IDs"
 func getAllFriends(w http.ResponseWriter, r *http.Request) {
@@ -74,4 +74,54 @@ func sendFriendRequest(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(struct{ RequestSent bool }{RequestSent: false})
 	}
+}
+
+// the input json must be of the user object
+// returns a json of an array of the user IDs named "IDs"
+func getOutgoingFriendRequests(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var user User
+	var friends []Friend
+	returnInfo := struct { // need to be standardized
+		IDs []int
+	}{}
+
+	json.NewDecoder(r.Body).Decode(&user)
+	globalDB.Where("user1 = ? AND who_sent = ?", user.ID, 1).Find(&friends)
+	for i := 0; i < len(friends); i++ {
+		returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
+	}
+
+	json.NewDecoder(r.Body).Decode(&user)
+	globalDB.Where("user2 = ? AND who_sent = ?", user.ID, 2).Find(&friends)
+	for i := 0; i < len(friends); i++ {
+		returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
+	}
+
+	json.NewEncoder(w).Encode(returnInfo)
+}
+
+// input json must contain the user object
+// return will contain json of an array called "IDs" that contains IDs
+func getIngoingFriendRequests(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var user User
+	var friends []Friend
+	returnInfo := struct { // need to be standardized
+		IDs []int
+	}{}
+
+	json.NewDecoder(r.Body).Decode(&user)
+	globalDB.Where("user1 = ? AND who_sent = ?", user.ID, 2).Find(&friends)
+	for i := 0; i < len(friends); i++ {
+		returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
+	}
+
+	json.NewDecoder(r.Body).Decode(&user)
+	globalDB.Where("user2 = ? AND who_sent = ?", user.ID, 1).Find(&friends)
+	for i := 0; i < len(friends); i++ {
+		returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
+	}
+
+	json.NewEncoder(w).Encode(returnInfo)
 }

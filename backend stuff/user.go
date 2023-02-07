@@ -11,6 +11,7 @@ import (
 type User struct {
 	gorm.Model
 
+	Username  string // test this
 	FirstName string
 	LastName  string
 	Email     string
@@ -18,26 +19,28 @@ type User struct {
 }
 
 // checks if email exists, if not then creates the user
-// returns json of whether email was found
+// returns json of whether email was found and whether a new user was created
 func createUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var user User
 	json.NewDecoder(r.Body).Decode(&user)
 
-	emailExist := struct { // this json return must be standardized
-		FindEmail bool
+	returnInfo := struct { // this json return must be standardized
+		FindEmail   bool
+		UserCreated bool
 	}{}
 
 	c := int64(0)
 	globalDB.Model(&User{}).Where("email = ?", user.Email).Count(&c)
 	if c > 0 {
-		emailExist.FindEmail = true
+		returnInfo.FindEmail = true
 	}
 
-	json.NewEncoder(w).Encode(emailExist)
-	if !emailExist.FindEmail {
+	if !returnInfo.FindEmail {
 		globalDB.Create(&user)
+		returnInfo.UserCreated = true
 	}
+	json.NewEncoder(w).Encode(returnInfo)
 }
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
