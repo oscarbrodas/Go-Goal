@@ -13,10 +13,10 @@ import (
 func main() {
 	accounts := user.New()
 	r := mux.NewRouter()
-	s := r.Host("/api").Subrouter()
+	//s := r.Host("/api").Subrouter() // Wasn't working, need to investigate
 
-	s.HandleFunc("/login", handler.CheckLogin(accounts)).Methods("GET")
-	s.HandleFunc("/sign-up", handler.SignUp(accounts)).Methods("POST")
+	r.HandleFunc("/api/login", handler.CheckLogin(accounts)).Methods("GET")
+	r.HandleFunc("/api/sign-up", handler.SignUp(accounts)).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":9000", r))
 }

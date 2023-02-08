@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-goal/platform/user"
 	"net/http"
 )
@@ -12,7 +11,6 @@ func SignUp(A *user.Repo) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		newUser := user.User{}
 		json.NewDecoder(r.Body).Decode(&newUser)
-		fmt.Println(newUser)
 		var response bool
 		accounts := A.GetAll()
 		if FoundUser(newUser, accounts) {
