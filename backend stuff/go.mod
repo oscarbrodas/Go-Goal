@@ -1,4 +1,4 @@
-module mods
+module go-goal
 
 go 1.19
 
