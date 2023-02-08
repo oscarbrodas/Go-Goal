@@ -1,10 +1,8 @@
-The "backend stuff" folder must be the folder opened in vs code for this to work
-
-Place all files in the same folder
+cd all the way into the httpd folder where "main.go" is
 
 In the terminal, run "go build" to create a .exe file and run this file with ".\nameOfFile.exe"
 
-The MySQL workbench localhost must be running with the password set to "password" and database name of "somedb"
+The MySQL workbench localhost must have the password set to "password" and database name of "somedb"
 
 If a different password was used, change the "password" part of the DSN variable in main.go to your password
 

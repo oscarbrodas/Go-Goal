@@ -1,9 +1,9 @@
 package main
 
 import (
+	"go-goal/httpd/handlers"
 	"log"
 	"net/http"
-	"go-goal/httpd/handlers"
 
 	"github.com/gorilla/mux"
 	"gorm.io/driver/mysql"
@@ -20,14 +20,14 @@ func initializeRouter() {
 	r.HandleFunc("/users/{id}", handlers.GetUser(globalDB)).Methods("GET")
 	r.HandleFunc("/users", handlers.CreateUser(globalDB)).Methods("POST")
 	r.HandleFunc("/users/{id}", handlers.UpdateUser(globalDB)).Methods("PUT")
-	r.HandleFunc("/users/{id}", handler.DeleteUser(globalDB)).Methods("DELETE")
+	r.HandleFunc("/users/{id}", handlers.DeleteUser(globalDB)).Methods("DELETE")
 	r.HandleFunc("/login", handlers.CheckLogin(globalDB)).Methods("GET")
 
 	r.HandleFunc("/goals/{userID}", handlers.CreateGoal(globalDB)).Methods("POST")
 	r.HandleFunc("/goals/{userID}", handlers.GetGoals(globalDB)).Methods("GET")
 
 	r.HandleFunc("/friends", handlers.GetAllFriends(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/sendFriendRequest", handlers,SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
+	r.HandleFunc("/friends/sendFriendRequest", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
 	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
 
@@ -42,9 +42,9 @@ func main() {
 	globalDB = db
 
 	// MAKE SURE TO AUTOMIGRATE BEFORE INITALIZEROUTER
-	globalDB.AutoMigrate(&User{})
-	globalDB.AutoMigrate(&Goal{})
-	globalDB.AutoMigrate(&Friend{})
+	globalDB.AutoMigrate(&handlers.User{})
+	globalDB.AutoMigrate(&handlers.Goal{})
+	globalDB.AutoMigrate(&handlers.Friend{})
 
 	initializeRouter()
 

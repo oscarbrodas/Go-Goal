@@ -18,13 +18,13 @@ type Goal struct {
 	User        User `gorm:"foreignKey:UserID"`
 }
 
-func createGoal(globalDB *gorm.DB) http.HandlerFunc {
+func CreateGoal(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var goal Goal
 		var err error
 		params := mux.Vars(r)
-	
+
 		json.NewDecoder(r.Body).Decode(&goal)
 		goal.UserID, err = strconv.Atoi(params["userID"])
 		if err != nil {
@@ -34,17 +34,15 @@ func createGoal(globalDB *gorm.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(goal)
 	}
 }
-	
 
-func getGoals(globalDB *gorm.DB) http.HandlerFunc {
+func GetGoals(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var goal []Goal
 		params := mux.Vars(r)
-	
+
 		globalDB.Where("user_id = ?", params["userID"]).Find(&goal)
-	
+
 		json.NewEncoder(w).Encode(goal)
 	}
 }
-	
