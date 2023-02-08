@@ -5,7 +5,7 @@ import { catchError, retry } from 'rxjs/operators';
 
 @Injectable()
 export class BackendConnectService {
-  backendURL = "api/"
+  backendURL = "/api"
 
   constructor(private http: HttpClient) {
 
