@@ -19,6 +19,7 @@ body{
     
 }
 button{
+    text-align: center;
     margin-top: 25px;
     margin-bottom: 15px;
     height: 4vh;
@@ -27,9 +28,12 @@ button{
     border-style: dashed;
     font-weight: bold;
     font-size: 1vw;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-family:Verdana, Tahoma, sans-serif;
 }
 button:hover{
     height:4.2vh;
     width:6.3vw;
+}
+#test{
+    background-color: #D3D425;
 }
