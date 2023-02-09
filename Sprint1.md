@@ -23,15 +23,12 @@
 
 ### Attempted
 
+- [ ]  Communicate using Angular HTTP.
+    We had difficulty finding a way to host the go server at first so that the front end could access it. We figured this out toward the end of the sprint but it was difficult to quickly add in the features for accessing that URL.
+
 ### Completed
 
  - [x] Figure how to work with the HTTP library. 
  - [x]  Determine the structure of the database.
  - [x]  Communicate with the database relating to user logins and user goals.
-
-
-To be assigned
-
--   Communicate using Angular HTTP.
-    
--   Set up routes for login, user goal list, and home page.
+-  [x] Set up routes for login, user goal list, and home page.
