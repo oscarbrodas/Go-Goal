@@ -1,12 +1,14 @@
 body {
     text-align: center;
-    padding-top: 3vmax;
-
+    margin-top: 1%;
 }
 
 .title {
     font-size: 5vmax;
     padding-bottom: 3vmax;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+
 }
 
 .login {
