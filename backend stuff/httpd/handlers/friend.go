@@ -2,8 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -128,6 +131,54 @@ func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 		globalDB.Where("user2 = ? AND who_sent = ?", user.ID, 1).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
+		}
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+// input params must contain the ID of the user that sent the friend request
+// input json must be of the user who accepted
+// returns json of what happened
+func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		id := params["id"]
+		var user User
+		returnInfo := struct { // need to be standardized
+			Successful bool
+			ErrorExist bool
+		}{ErrorExist: false}
+		json.NewDecoder(r.Body).Decode(&user)
+
+		var c1 int64 = 0 // the 'c's are used to count if a certain tuple exists for error checking
+		c2 := c1
+		userIn1 := true
+		globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", id, user.ID, 1).Count(&c1)
+		c2 = c2 + c1
+		if c1 == 1 {
+			userIn1 = false
+		}
+		globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", user.ID, id, 2).Count(&c1)
+		c2 = c2 + c1
+		if c1 == 1 {
+			userIn1 = true
+		}
+
+		if c2 != 1 {
+			returnInfo.ErrorExist = true
+		}
+
+		if !returnInfo.ErrorExist {
+			returnInfo.Successful = true
+			if userIn1 {
+				globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ?", user.ID, id).Update("who_sent", 0)
+			} else {
+				globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ?", id, user.ID).Update("who_sent", 0)
+			}
+		} else {
+			str := strconv.FormatUint(uint64(user.ID), 10)
+			fmt.Print("\nError in AcceptFriendRequest\nuserID:" + str + " accepted a request from userID:" + id)
 		}
 
 		json.NewEncoder(w).Encode(returnInfo)

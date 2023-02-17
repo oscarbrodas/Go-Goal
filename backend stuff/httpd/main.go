@@ -30,6 +30,7 @@ func initializeRouter() {
 	r.HandleFunc("/friends/sendFriendRequest", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
 	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
+	r.HandleFunc("/friends/acceptFriendRequest/{id}", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
 
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }
@@ -47,5 +48,4 @@ func main() {
 	globalDB.AutoMigrate(&handlers.Friend{})
 
 	initializeRouter()
-
 }
