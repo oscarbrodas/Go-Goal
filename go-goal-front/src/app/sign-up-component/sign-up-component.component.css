@@ -1,39 +1,45 @@
-body{
+body {
     text-align: center;
     padding-top: 3vmax;
-    
+    margin-top: 1%;
 }
-.title{
+
+.title {
     font-size: 5vmax;
     padding-bottom: 3vmax;
 }
-.signup{
-    margin-top:2vmax;
+
+.signup {
+    margin-top: 2vmax;
     margin-right: 40%;
     font-size: 1vmax;
-    font-weight:bolder;
-    text-align:right;
+    font-weight: bolder;
+    text-align: right;
 }
-.form{
+
+.form {
     margin-top: 1vmax;
-    
+
 }
-button{
+
+button {
     text-align: center;
     margin-top: 25px;
     margin-bottom: 15px;
     height: 4vh;
     width: 6vw;
-    background-color:#00FF04;
+    background-color: #66ff1a;
     border-style: dashed;
     font-weight: bold;
     font-size: 1vw;
-    font-family:Verdana, Tahoma, sans-serif;
+    font-family: Verdana, Tahoma, sans-serif;
 }
-button:hover{
-    height:4.2vh;
-    width:6.3vw;
+
+button:hover {
+    height: 4.2vh;
+    width: 6.3vw;
 }
-#test{
+
+#test {
     background-color: #D3D425;
 }

@@ -16,6 +16,7 @@ import { BackendConnectService } from './backend-connect.service'
 import { LoginService } from './login-page/login.service';
 
 import { CarouselModule } from '@coreui/angular';
+import { LinkbarComponent } from './linkbar/linkbar.component';
 
 
 
@@ -25,7 +26,8 @@ import { CarouselModule } from '@coreui/angular';
     NavbarTopComponent,
     LoginPageComponent,
     SignUpComponentComponent,
-    MainComponent
+    MainComponent,
+    LinkbarComponent
   ],
   imports: [
     BrowserModule,
