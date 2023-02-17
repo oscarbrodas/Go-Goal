@@ -18,6 +18,7 @@
     
 -   As a user who has completed my goal, I want a way to share this with others, so that I can show my accomplishments and motivate others.
 
+- As a user who is creating a goal, I want to be able to track my progress in completing the goal by using benchmarks.
 
 ## Issues
 
