@@ -31,6 +31,7 @@ func initializeRouter() {
 	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/acceptFriendRequest/{id}", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
+	r.HandleFunc("/friends/declineFriendRequest/{id}", handlers.DeclineFriendRequest(globalDB)).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }

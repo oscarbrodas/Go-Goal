@@ -184,3 +184,51 @@ func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
+
+// input params must contain the ID of the user that sent the friend request
+// input json must be of the user who declined
+// returns json of what happened
+func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		id := params["id"]
+		var user User
+		returnInfo := struct { // need to be standardized
+			Successful bool
+			ErrorExist bool
+		}{ErrorExist: false}
+		json.NewDecoder(r.Body).Decode(&user)
+
+		var c1 int64 = 0 // the 'c's are used to count if a certain tuple exists for error checking
+		c2 := c1
+		userIn1 := true
+		globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", id, user.ID, 1).Count(&c1)
+		c2 = c2 + c1
+		if c1 == 1 {
+			userIn1 = false
+		}
+		globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", user.ID, id, 2).Count(&c1)
+		c2 = c2 + c1
+		if c1 == 1 {
+			userIn1 = true
+		}
+
+		if c2 != 1 {
+			returnInfo.ErrorExist = true
+		}
+
+		if !returnInfo.ErrorExist {
+			returnInfo.Successful = true
+			if userIn1 {
+				globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", user.ID, id, 2).Delete(&Friend{})
+			} else {
+				globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", id, user.ID, 1).Delete(&Friend{})
+			}
+		} else {
+			str := strconv.FormatUint(uint64(user.ID), 10)
+			fmt.Print("\nError in DeclineFriendRequest\nuserID:" + str + " declined a request from userID:" + id)
+		}
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
