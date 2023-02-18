@@ -27,11 +27,12 @@ func initializeRouter() {
 	r.HandleFunc("/goals/{userID}", handlers.GetGoals(globalDB)).Methods("GET")
 
 	r.HandleFunc("/friends", handlers.GetAllFriends(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/sendFriendRequest", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
+	r.HandleFunc("/friends/sendFriendRequest/{id}", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
 	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/acceptFriendRequest/{id}", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
 	r.HandleFunc("/friends/declineFriendRequest/{id}", handlers.DeclineFriendRequest(globalDB)).Methods("DELETE")
+	r.HandleFunc("/friends/removeFriend/{id}", handlers.RemoveFriend(globalDB)).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }
