@@ -9,6 +9,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
+
+    position: fixed;
 }
 
 button {

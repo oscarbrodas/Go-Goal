@@ -1,19 +1,34 @@
 <div class="bar">
     <div class="content">
-        <div class="item">
-            <a routerLink="/home" routerLinkActive="active">Home</a>
-        </div>
-        <div class="item">
-            <a routerLink="/about" routerLinkActive="active">About</a>
-        </div>
-        <div class="item">
-            <a routerLink="/contact" routerLinkActive="active">Contact</a>
-        </div>
-        <div class="item">
-            <a routerLink="/login" routerLinkActive="active">Login</a>
-        </div>
-        <div class="item">
-            <a routerLink="/register" routerLinkActive="active">Register</a>
-        </div>
+        <c-card class="item" routerLink="main">
+            Home
+        </c-card>
+
+        <c-card class="item" routerLink="help">
+            Help/FAQ
+        </c-card>
+
+        <c-card class="item" routerLink="aboutus">
+            About Us
+        </c-card>
+
+
+
     </div>
-</div>
+
+    <div class="login">
+        <h1>Account</h1>
+
+        <c-card class="item" routerLink="login">
+            Login
+        </c-card>
+
+        <c-card class="item" routerLink="sign-up">
+            Register
+        </c-card>
+    </div>
+
+    <p style="color: black; position: fixed; bottom: -10px; left: 5px;"><b>Go Goal® is a Registered Trademark. All
+            rights
+            reserved.</b>
+    </p>

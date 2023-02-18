@@ -1,20 +1,24 @@
 body {
     text-align: center;
-    padding-top: 3vmax;
-    margin-top: 1%;
+    padding: 20px;
+    position: relative;
+    width: 600px;
+
+    height: 100%;
+    border-radius: 25px;
+    background-color: black;
 }
 
 .title {
-    font-size: 5vmax;
-    padding-bottom: 3vmax;
+    font-size: 75px;
+
 }
 
 .signup {
-    margin-top: 2vmax;
-    margin-right: 40%;
-    font-size: 1vmax;
+
+    font-size: 20px;
     font-weight: bolder;
-    text-align: right;
+    text-align: center;
 }
 
 .form {
@@ -25,14 +29,17 @@ body {
 button {
     text-align: center;
     margin-top: 25px;
-    margin-bottom: 15px;
-    height: 4vh;
-    width: 6vw;
+    height: fit-content;
+    width: fit-content;
+    padding: 15px;
     background-color: #66ff1a;
-    border-style: dashed;
+
     font-weight: bold;
     font-size: 1vw;
     font-family: Verdana, Tahoma, sans-serif;
+    border-radius: 10px;
+    border: 5px;
+    border-color: #2e2e2e;
 }
 
 button:hover {
@@ -40,6 +47,22 @@ button:hover {
     width: 6.3vw;
 }
 
-#test {
-    background-color: #D3D425;
+.background {
+    background-image: url("../../assets/gg.png");
+    background-position: left center;
+    background-repeat: repeat;
+    background-size: auto 7%;
+
+    height: 100%;
+}
+
+.signblock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 20%;
+
+
+
 }
