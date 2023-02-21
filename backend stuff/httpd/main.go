@@ -14,6 +14,8 @@ var globalDB *gorm.DB
 
 const DSN string = "root:password@tcp(127.0.0.1:3306)/somedb?charset=utf8mb4&parseTime=True&loc=Local"
 
+// example route: http://localhost:9000/users
+
 func initializeRouter() {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", handlers.GetUsers(globalDB)).Methods("GET")
@@ -27,12 +29,12 @@ func initializeRouter() {
 	r.HandleFunc("/goals/{userID}", handlers.GetGoals(globalDB)).Methods("GET")
 
 	r.HandleFunc("/friends", handlers.GetAllFriends(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/sendFriendRequest/{id}", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
+	r.HandleFunc("/friends/sendFriendRequest", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
 	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/acceptFriendRequest/{id}", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
-	r.HandleFunc("/friends/declineFriendRequest/{id}", handlers.DeclineFriendRequest(globalDB)).Methods("DELETE")
-	r.HandleFunc("/friends/removeFriend/{id}", handlers.RemoveFriend(globalDB)).Methods("DELETE")
+	r.HandleFunc("/friends/acceptFriendRequest", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
+	r.HandleFunc("/friends/declineFriendRequest", handlers.DeclineFriendRequest(globalDB)).Methods("DELETE")
+	r.HandleFunc("/friends/removeFriend", handlers.RemoveFriend(globalDB)).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }

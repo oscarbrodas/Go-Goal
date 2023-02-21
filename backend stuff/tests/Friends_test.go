@@ -74,9 +74,339 @@ func TestGetAllFriends(t *testing.T) {
 	}
 
 	expected := []int{2, 3}
-	body := struct{ IDs []int }{}
+	body := struct {
+		IDs        []int
+		ErrorExist bool
+	}{}
 	json.NewDecoder(w.Result().Body).Decode(&body)
-	if !reflect.DeepEqual(body.IDs, expected) { // reflect.DeepEqual() is needed to compare slices
+	if !reflect.DeepEqual(body.IDs, expected) { // reflect.DeepEqual() is needed to compare slices and structs
 		t.Errorf("Expected %v, but got %v", expected, body.IDs)
+	}
+	if body.ErrorExist {
+		t.Errorf("There was an error")
+	}
+}
+
+func TestSendFriendRequest1(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"3\",\"Chen\",\"3@gmail.com\",\"pw\")")
+
+	var user handlers.User
+	user.ID = 1
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "/?id=3", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.SendFriendRequest(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	expected := struct {
+		Successful bool
+		ErrorExist bool
+	}{
+		Successful: true,
+		ErrorExist: false,
+	}
+	returnInfo := struct {
+		Successful bool
+		ErrorExist bool
+	}{}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) { // reflect.DeepEqual() is needed to compare slices
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+	var exists bool
+	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 3) AND who_sent = 1").Find(&exists)
+	if !exists {
+		t.Errorf("Did not find inserted tuple when 1 sent a friend request to 3")
+	}
+}
+
+func TestSendFriendRequest2(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"3\",\"Chen\",\"3@gmail.com\",\"pw\")")
+
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,0)")
+
+	var user handlers.User
+	user.ID = 1
+	expected := struct {
+		Successful bool
+		ErrorExist bool
+	}{
+		Successful: false,
+		ErrorExist: true,
+	}
+	returnInfo := struct {
+		Successful bool
+		ErrorExist bool
+	}{}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "/?id=2", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.SendFriendRequest(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) {
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+}
+
+func TestGetOutgoingFriendRequests(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"3\",\"Chen\",\"3@gmail.com\",\"pw\")")
+
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,1,2)")
+
+	var user handlers.User
+	user.ID = 1
+	expected := struct {
+		IDs        []uint
+		ErrorExist bool
+	}{
+		IDs:        []uint{2, 3},
+		ErrorExist: false,
+	}
+	returnInfo := struct {
+		IDs        []uint
+		ErrorExist bool
+	}{}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("GET", "", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.GetOutgoingFriendRequests(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) {
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+}
+
+func TestGetIngoingFriendRequests(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"3\",\"Chen\",\"3@gmail.com\",\"pw\")")
+
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,2,1)")
+
+	var user handlers.User
+	user.ID = 2
+	expected := struct {
+		IDs        []uint
+		ErrorExist bool
+	}{
+		IDs:        []uint{1, 3},
+		ErrorExist: false,
+	}
+	returnInfo := struct {
+		IDs        []uint
+		ErrorExist bool
+	}{}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("GET", "", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.GetIngoingFriendRequests(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) {
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+}
+
+func TestAcceptFriendRequest(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
+
+	var user handlers.User
+	user.ID = 2
+	expected := struct {
+		Successful bool
+		ErrorExist bool
+	}{
+		Successful: true,
+		ErrorExist: false,
+	}
+	returnInfo := struct {
+		Successful bool
+		ErrorExist bool
+	}{}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("PUT", "/?id=1", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.AcceptFriendRequest(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) {
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+	var exists bool
+	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 0").Find(&exists)
+	if !exists {
+		t.Errorf("Did not find the tuple {user1 = 1, user2 = 2, who_sent = 0}")
+	}
+}
+
+func TestDeclineFriendRequest(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
+
+	var user handlers.User
+	user.ID = 2
+	expected := struct {
+		Successful bool
+		ErrorExist bool
+	}{
+		Successful: true,
+		ErrorExist: false,
+	}
+	returnInfo := struct {
+		Successful bool
+		ErrorExist bool
+	}{}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("DELETE", "/?id=1", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.DeclineFriendRequest(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) {
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+	var exists bool
+	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 1").Find(&exists)
+	if exists {
+		t.Errorf("Found the tuple {user1 = 1, user2 = 2, who_sent = 1} even though it should be deleted")
+	}
+}
+
+func TestRemoveFriend(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+
+	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,0)")
+
+	var user handlers.User
+	user.ID = 2
+	expected := struct {
+		Successful bool
+		ErrorExist bool
+	}{
+		Successful: true,
+		ErrorExist: false,
+	}
+	returnInfo := struct {
+		Successful bool
+		ErrorExist bool
+	}{}
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("DELETE", "/?id=1", &buf)
+	if err != nil {
+		panic(err)
+	}
+
+	handlers.RemoveFriend(globalDB)(w, r)
+	if w.Result().StatusCode != http.StatusOK {
+		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
+	}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !reflect.DeepEqual(returnInfo, expected) {
+		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
+	}
+	var exists bool
+	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 0").Find(&exists)
+	if exists {
+		t.Errorf("Found the tuple {user1 = 1, user2 = 2, who_sent = 0} even though it should be deleted")
 	}
 }
