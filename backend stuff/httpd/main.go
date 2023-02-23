@@ -14,6 +14,8 @@ var globalDB *gorm.DB
 
 const DSN string = "root:password@tcp(127.0.0.1:3306)/somedb?charset=utf8mb4&parseTime=True&loc=Local"
 
+// example route: http://localhost:9000/users
+
 func initializeRouter() {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", handlers.GetUsers(globalDB)).Methods("GET")
@@ -30,6 +32,9 @@ func initializeRouter() {
 	r.HandleFunc("/friends/sendFriendRequest", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
 	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
+	r.HandleFunc("/friends/acceptFriendRequest", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
+	r.HandleFunc("/friends/declineFriendRequest", handlers.DeclineFriendRequest(globalDB)).Methods("DELETE")
+	r.HandleFunc("/friends/removeFriend", handlers.RemoveFriend(globalDB)).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
 }
@@ -47,5 +52,4 @@ func main() {
 	globalDB.AutoMigrate(&handlers.Friend{})
 
 	initializeRouter()
-
 }
