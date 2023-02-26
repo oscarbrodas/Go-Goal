@@ -4,20 +4,23 @@ import (
 	"encoding/json"
 	"go-goal/platform/user"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
-func SignUp(A *user.Repo) http.HandlerFunc {
+func SignUp(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		newUser := user.User{}
 		json.NewDecoder(r.Body).Decode(&newUser)
 		var response bool
-		accounts := A.GetAll()
+		var accounts []user.User
+		db.Find(&accounts)
 		if FoundUser(newUser, accounts) {
 			response = false
 		} else {
 			response = true
-			A.Add(newUser)
+			db.Create(&newUser)
 		}
 		json.NewEncoder(w).Encode(response)
 	}

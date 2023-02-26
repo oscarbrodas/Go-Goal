@@ -8,15 +8,24 @@ import (
 
 	"go-goal/httpd/handler"
 	"go-goal/platform/user"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func main() {
-	accounts := user.New()
-	r := mux.NewRouter()
-	//s := r.Host("/api").Subrouter() // Wasn't working, need to investigate
+	db, err := gorm.Open(sqlite.Open("../platform/user/user.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
 
-	r.HandleFunc("/api/login", handler.CheckLogin(accounts)).Methods("GET")
-	r.HandleFunc("/api/sign-up", handler.SignUp(accounts)).Methods("POST")
+	db.AutoMigrate(&user.User{})
+
+	r := mux.NewRouter()
+	s := r.PathPrefix("/api").Subrouter()
+
+	s.HandleFunc("/login", handler.CheckLogin(db)).Methods("GET")
+	s.HandleFunc("/sign-up", handler.SignUp(db)).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":9000", r))
 }

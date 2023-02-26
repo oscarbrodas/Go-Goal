@@ -1,2 +1,2 @@
-dev:
-	go run httpd/main.go
+all:
+	$(MAKE) -C httpd dev

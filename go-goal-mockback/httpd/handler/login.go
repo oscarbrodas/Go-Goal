@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"go-goal/platform/user"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 type loginInput struct {
@@ -20,11 +22,11 @@ type loginOutput struct {
 	Password  string `json:"password"`
 }
 
-func CheckLogin(G *user.Repo) http.HandlerFunc {
+func CheckLogin(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-
-		accounts := G.GetAll()
+		var accounts []user.User
+		db.Find(&accounts)
 		var loginInfo loginInput
 		var response loginOutput
 

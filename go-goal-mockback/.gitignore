@@ -1,0 +1,2 @@
+# Hides the executable created by the makefiles
+/httpd/httpd.exe
