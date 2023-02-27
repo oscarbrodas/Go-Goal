@@ -15,35 +15,35 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.slides1[0] = {
       id: 1,
-      src: '../assets/dashboard_images/balls.jpg',
+      src: '../assets/dashboard_images/p.png',
       title: '',
       subtitle: ''
     }
 
     this.slides1[1] = {
       id: 2,
-      src: '../assets/dashboard_images/amongoose.jpg',
+      src: '../assets/dashboard_images/p.png',
       title: '',
       subtitle: ''
     }
 
     this.slides1[2] = {
       id: 3,
-      src: '../assets/dashboard_images/white_women.png',
+      src: '../assets/dashboard_images/p.png',
       title: '',
       subtitle: ''
     }
 
     this.slides1[3] = {
       id: 4,
-      src: '../assets/dashboard_images/deep.jpg',
+      src: '../assets/dashboard_images/p.png',
       title: '',
       subtitle: ''
     }
 
     this.slides1[4] = {
       id: 5,
-      src: '../assets/dashboard_images/roc.jpg'
+      src: '../assets/dashboard_images/p.png'
     }
 
     this.slides1[5] = {
