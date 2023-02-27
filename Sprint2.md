@@ -24,17 +24,21 @@
 
 - TestCreateUser2(): to create a user and return an error when the email is in use
 
+- TestCheckLogin1(): log in when the email and password are correct
+
+- TestCheckLogin2(): log in when the email is correct but password is not
+
 ## Backend API
 ### User
 - User: the strructure of the User object. The variable names are case sensitive
 
-  - id: unique id of the user
+  - ID: unique id of the user
   
-  - created_at: do not worry about this. Time and date the user was created at
+  - CreatedAt: do not worry about this. Time and date the user was created at
   
-  - updated_at: do not worry about this. Time and date the user was updated at
+  - UpdatedAt: do not worry about this. Time and date the user was updated at
   
-  - deleted_at: do not worry about this. Time and date the user was deleted at
+  - DeletedAt: do not worry about this. Time and date the user was deleted at
   
   - Username: username
   
@@ -61,17 +65,25 @@
   - Input: no body is required. The URL must contain the id of the user you are trying to get, such as getting user with id 9, you need to use "/users?id=9"
   
   - Output: "ThisUser" as a user object, and "ErrorExist" as a bool
+
+- CheckLogin(): GET
+
+  - Notes: Email and Password must be correct or the user object returned will be giberish
+
+  - Input: "Email" and "Password" of type string
+
+  - Output: "FindEmail" and "FindPassword" of type bool. "ThisUser" which is the user object
   
 ### Friend
 - Friend: the strructure of the Friend object. The variable names are case sensitive
 
-  - id: do not worry about this. Unique id of the relationship
+  - ID: do not worry about this. Unique id of the relationship
   
-  - created_at: do not worry about this. Time and date the user was created at
+  - CreatedAt: do not worry about this. Time and date the user was created at
   
-  - updated_at: do not worry about this. Time and date the user was updated at
+  - UpdatedAt: do not worry about this. Time and date the user was updated at
   
-  - deleted_at: do not worry about this. Time and date the user was deleted at
+  - DeletedAt: do not worry about this. Time and date the user was deleted at
   
   - User1: id of User1
   
