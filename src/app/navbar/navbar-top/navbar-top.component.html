@@ -1,0 +1,19 @@
+<!-- This is the top navbar that is shown on every page -->
+<mat-toolbar class="color-grad-navbar">
+
+    <span class="title-left">
+        <img src="assets\gg.png" alt="" height="55" width="55" routerLink="../main" style="cursor: pointer;">
+    </span>
+
+
+    <span *ngIf="!screenThin">
+        <img src="assets\gogoal.png" alt="" height="75" width="200">
+    </span>
+
+    <span>
+        <button class="button" routerLink="../login" id = "navBarLogin">Login</button>
+        <button class="button" routerLink="../sign-up" id = "navBarSignUp">Sign Up</button>
+    </span>
+
+
+</mat-toolbar>
