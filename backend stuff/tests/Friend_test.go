@@ -9,16 +9,14 @@ import (
 	"reflect"
 	"testing"
 
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
-
-const DSN string = "root:password@tcp(127.0.0.1:3306)/testdb?charset=utf8mb4&parseTime=True&loc=Local"
 
 var globalDB *gorm.DB
 
 func initializeTestDatabase() {
-	db, err := gorm.Open(mysql.Open(DSN), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		panic("database failed to open")
 	}

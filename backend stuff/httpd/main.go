@@ -6,13 +6,15 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"gorm.io/driver/mysql"
+	// "gorm.io/driver/mysql"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 var globalDB *gorm.DB
 
-const DSN string = "root:password@tcp(127.0.0.1:3306)/somedb?charset=utf8mb4&parseTime=True&loc=Local"
+// mySQL DSN string is no longer needed since we are using sqlite
+// const DSN string = "root:password@tcp(127.0.0.1:3306)/somedb?charset=utf8mb4&parseTime=True&loc=Local"
 
 // example route: http://localhost:9000/users
 
@@ -38,7 +40,7 @@ func initializeRouter() {
 }
 
 func main() {
-	db, err := gorm.Open(mysql.Open(DSN), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("main.db"), &gorm.Config{})
 	if err != nil {
 		panic("database failed to open")
 	}
