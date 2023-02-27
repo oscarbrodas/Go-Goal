@@ -18,11 +18,9 @@ const DSN string = "root:password@tcp(127.0.0.1:3306)/somedb?charset=utf8mb4&par
 
 func initializeRouter() {
 	r := mux.NewRouter()
-	r.HandleFunc("/users", handlers.GetUsers(globalDB)).Methods("GET")
-	r.HandleFunc("/users/{id}", handlers.GetUser(globalDB)).Methods("GET")
+	r.HandleFunc("/users", handlers.GetUser(globalDB)).Methods("GET")
 	r.HandleFunc("/users", handlers.CreateUser(globalDB)).Methods("POST")
 	r.HandleFunc("/users/{id}", handlers.UpdateUser(globalDB)).Methods("PUT")
-	r.HandleFunc("/users/{id}", handlers.DeleteUser(globalDB)).Methods("DELETE")
 	r.HandleFunc("/login", handlers.CheckLogin(globalDB)).Methods("GET")
 
 	r.HandleFunc("/goals/{userID}", handlers.CreateGoal(globalDB)).Methods("POST")

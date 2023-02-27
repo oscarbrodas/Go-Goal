@@ -140,7 +140,8 @@ func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 		var user User
 		var friends []Friend
 		returnInfo := struct { // need to be standardized
-			IDs []uint
+			IDs        []uint
+			ErrorExist bool
 		}{}
 
 		json.NewDecoder(r.Body).Decode(&user)
