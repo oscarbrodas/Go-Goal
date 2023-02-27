@@ -7,3 +7,8 @@ Go-Goal is a website dedicated to the tracking and reaching of personalized goal
 - Oscar Rodas (thescar101) -- _Back-End_
 - Nathan De Jesus (AvalonAce) -- _Front-End_
 - Sam Glickman (ThatOneGuySam) -- _Front-End_
+
+Angular Installations
+---
+- Angular Material
+- Angular CoreUI

@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
 import { BackendConnectService } from '../backend-connect.service';
 import { LoginPageComponent } from './login-page.component';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor() { } // INJECT: BACKEND SERVICE
-
+  constructor(private backend: BackendConnectService) { } // INJECT: BACKEND SERVICE
   user: userInfo = {
     loggedIn: false,
-    username: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
+    Username: '',
+    FirstName: '',
+    LastName: '',
+    Email: '',
+    Password: ''
 
   }
+  users: userInfo[] = [];
   loginFailed: boolean = false;
 
   getUser(): userInfo { return this.user }
@@ -27,11 +28,11 @@ export class LoginService {
   clearUser(): void {
     this.user = {
       loggedIn: false,
-      username: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
+      Username: '',
+      FirstName: '',
+      LastName: '',
+      Email: '',
+      Password: ''
 
     }
   }
@@ -39,9 +40,10 @@ export class LoginService {
 
   login(): void {
     // ADD: Get and submit loginForm to backend for verification from loginComponent
+    
     // ADD: Get Data using http, update current user data and loggedin status in login service
     if (this.user.loggedIn) {
-      // this.backend.getLoginInfo().subscribe(this.user => this.user = this.user); 
+      this.backend.getLoginInfo().subscribe(users => this.users = users); 
       console.log("Successfully logged in.");
     }
     else {
@@ -50,7 +52,7 @@ export class LoginService {
     }
 
     this.verifyLogin(this.user);
-
+    this.users = []
   }
 
   verifyLogin(user: userInfo): void {
@@ -76,11 +78,11 @@ export class LoginService {
 
 export interface userInfo { // ADD: User data as necessary 
   loggedIn: boolean;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+  Username: string;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Password: string;
 
 
 }
