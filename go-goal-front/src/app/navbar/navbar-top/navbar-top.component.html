@@ -1,19 +1,19 @@
 <mat-toolbar class="color-grad-navbar">
 
-    <!-- Change this to a logo-->
     <span class="title-left">
-        <a routerLink="../main">Main</a>
+        <img src="assets\gg.png" alt="" height="55" width="55" routerLink="../main"
+            style="cursor: pointer; margin-top: 5px;">
     </span>
 
-    <div class="title-center">
-        <b><i>Go-Goal</i></b>
-    </div>
 
-    <span class="title-right">
+    <span *ngIf="!screenThin">
+        <img src="assets\gogoal.png" alt="" height="75" width="200" style="margin-top: 5px;">
+    </span>
+
+    <span>
         <button class="button" routerLink="../login">Login</button>
-    </span>
-    <span class="title-right">
         <button class="button" routerLink="../sign-up">Sign Up</button>
     </span>
+
 
 </mat-toolbar>

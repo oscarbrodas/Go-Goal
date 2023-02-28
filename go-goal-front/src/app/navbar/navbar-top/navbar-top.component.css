@@ -1,26 +1,20 @@
 .color-grad-navbar {
     background: rgb(254, 255, 0);
-    background: linear-gradient(90deg, rgba(254, 255, 0, 1) 0%, rgba(0, 255, 16, 1) 53%);
+    background: linear-gradient(90deg, rgba(254, 255, 0, 1) 0%, rgba(102, 255, 26, 1) 53%);
     box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.75);
     -webkit-box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 0px 3px 1px 0px rgba(0, 0, 0, 0.75);
-}
 
-.title-center {
-    font-family: Verdana, Geneva, sans-serif;
-    font-size: 32px;
-    flex: 1 1 auto;
-    text-align: center;
-}
-
-.title-right {
-    font-family: Verdana, Geneva, sans-serif;
-
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
 }
 
 button {
     background-color: #202020;
-    border: none;
+    border: solid 2px;
+    border-color: #202020;
     color: white;
     padding: 15px 32px;
     text-align: center;

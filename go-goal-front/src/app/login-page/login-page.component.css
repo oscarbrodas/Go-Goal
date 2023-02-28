@@ -1,34 +1,39 @@
-body{
+body {
     text-align: center;
     padding-top: 3vmax;
-    
+
 }
-.title{
+
+.title {
     font-size: 5vmax;
     padding-bottom: 3vmax;
 }
-.login{
-    margin-top:2vmax;
+
+.login {
+    margin-top: 2vmax;
     font-size: 1vmax;
-    font-weight:bolder;
-    text-align:center;
-    
+    font-weight: bolder;
+    text-align: center;
+
 }
-.form{
+
+.form {
     margin-top: 1vmax;
 }
-button{
+
+button {
     margin-top: 25px;
     margin-bottom: 15px;
     height: 4vmax;
     width: 20%;
-    background-color:#00FF04;
+    background-color: #66ff1a;
     border-style: dashed;
     font-weight: bold;
     font-size: 2vmax;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-button:hover{
-    height:4.2vmax;
-    width:21%;
+
+button:hover {
+    height: 4.2vmax;
+    width: 21%;
 }
