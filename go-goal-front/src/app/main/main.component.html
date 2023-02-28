@@ -1,3 +1,27 @@
-<p>main works!</p>
+<div class="background">
+    <!-- 
+    This is the dashboard component. It will be the main page of the app for new users. It will display information about the website to prompt new users to join. The final version should be a professional looking page with a clean design that is responsive. Check out other websites for inspiration.
+-->
+    <!-- Info Slider 1-->
+    <section class="firstsect">
+        <div class="carousel1">
+            <c-carousel [dark]="true" [interval]="0" class="slider1">
+                <c-carousel-indicators></c-carousel-indicators>
+                <c-carousel-inner class="imgs1">
+                    <c-carousel-item *ngFor="let slide of slides1; index as i;">
+                        <img [src]="slide.src" alt="{{slide.title}}" class="d-block w-100" loading="lazy"
+                            class="imgs1" />
+                        <c-carousel-caption class="d-none d-md-block">
+                            <h3>{{slide.title}}</h3>
+                            <p>{{slide.subtitle}}</p>
+                        </c-carousel-caption>
+                    </c-carousel-item>
+                </c-carousel-inner>
+                <c-carousel-control [routerLink] caption="Previous" direction="prev"></c-carousel-control>
+                <c-carousel-control [routerLink] caption="Next" direction="next"
+                    style="position: absolute; right: 5%;"></c-carousel-control>
+            </c-carousel>
+        </div>
+    </section>
 
-
+</div>

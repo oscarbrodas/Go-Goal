@@ -2,11 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { userInfo } from './login-page/login.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class BackendConnectService {
-  backendURL = "localhost:9000/api/"
+  backendURL = "http://localhost:9000/api/"
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -14,11 +13,28 @@ export class BackendConnectService {
 
   }
 
-  public getLoginInfo(): Observable<userInfo[]> {
-    return this.http.get<userInfo[]>(`${this.backendURL}login`);
-  }
-  public signThemUp(userData: userInfo): Observable<userInfo>{
+  public getLoginInfo(li: loginInfo): Observable<userInfo> {
+    return this.http.get<userInfo>(`${this.backendURL}login`) // SOMEHOW SEND THE LOGIN INFO TO THE BACKEND FOR THIS TO WORK
+  };
+
+  public signThemUp(userData: userInfo): Observable<userInfo> {
     return this.http.post<userInfo>(`${this.backendURL}sign-up`, userData, this.httpOptions)
   }
 
+}
+
+export interface userInfo { // ADD: User data as necessary 
+  loggedIn: boolean;
+  Username: string;
+  FirstName: string;
+  LastName: string;
+  Email: string;
+  Password: string;
+
+
+}
+
+export interface loginInfo {
+  username: string;
+  password: string;
 }

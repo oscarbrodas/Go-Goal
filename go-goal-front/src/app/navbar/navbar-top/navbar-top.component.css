@@ -9,6 +9,9 @@
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
+
+    position: fixed;
+    top: 0px;
 }
 
 button {
@@ -16,7 +19,7 @@ button {
     border: solid 2px;
     border-color: #202020;
     color: white;
-    padding: 15px 32px;
+    padding: 10px 15px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
