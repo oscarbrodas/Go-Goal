@@ -1,11 +1,11 @@
 package main
 
 import (
-	"go-goal/httpd/handlers"
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"go-goal/httpd/handler"
+
 	// "gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -16,29 +16,6 @@ var globalDB *gorm.DB
 // mySQL DSN string is no longer needed since we are using sqlite
 // const DSN string = "root:password@tcp(127.0.0.1:3306)/somedb?charset=utf8mb4&parseTime=True&loc=Local"
 
-// example route: http://localhost:9000/users
-
-func initializeRouter() {
-	r := mux.NewRouter()
-	r.HandleFunc("/users", handlers.GetUser(globalDB)).Methods("GET")
-	r.HandleFunc("/users", handlers.CreateUser(globalDB)).Methods("POST")
-	r.HandleFunc("/users/{id}", handlers.UpdateUser(globalDB)).Methods("PUT")
-	r.HandleFunc("/login", handlers.CheckLogin(globalDB)).Methods("GET")
-
-	r.HandleFunc("/goals/{userID}", handlers.CreateGoal(globalDB)).Methods("POST")
-	r.HandleFunc("/goals/{userID}", handlers.GetGoals(globalDB)).Methods("GET")
-
-	r.HandleFunc("/friends", handlers.GetAllFriends(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/sendFriendRequest", handlers.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
-	r.HandleFunc("/friends/getOutgoingFriendRequests", handlers.GetOutgoingFriendRequests(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/getIngoingFriendRequests", handlers.GetIngoingFriendRequests(globalDB)).Methods("GET")
-	r.HandleFunc("/friends/acceptFriendRequest", handlers.AcceptFriendRequest(globalDB)).Methods("PUT")
-	r.HandleFunc("/friends/declineFriendRequest", handlers.DeclineFriendRequest(globalDB)).Methods("DELETE")
-	r.HandleFunc("/friends/removeFriend", handlers.RemoveFriend(globalDB)).Methods("DELETE")
-
-	log.Fatal(http.ListenAndServe(":9000", r)) // :9000 is the port
-}
-
 func main() {
 	db, err := gorm.Open(sqlite.Open("main.db"), &gorm.Config{})
 	if err != nil {
@@ -47,9 +24,12 @@ func main() {
 	globalDB = db
 
 	// MAKE SURE TO AUTOMIGRATE BEFORE INITALIZEROUTER
-	globalDB.AutoMigrate(&handlers.User{})
-	globalDB.AutoMigrate(&handlers.Goal{})
-	globalDB.AutoMigrate(&handlers.Friend{})
+	globalDB.AutoMigrate(&handler.User{})
+	globalDB.AutoMigrate(&handler.Goal{})
+	globalDB.AutoMigrate(&handler.Friend{})
 
-	initializeRouter()
+	host := "127.0.0.1:9000" // :9000 is the port
+	if err := http.ListenAndServe(host, httpHandler()); err != nil {
+		log.Fatalf("Failed to listen on %s: %v", host, err)
+	}
 }

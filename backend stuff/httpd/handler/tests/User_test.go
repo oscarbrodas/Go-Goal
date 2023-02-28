@@ -1,9 +1,9 @@
-package test
+package handler_test
 
 import (
 	"bytes"
 	"encoding/json"
-	"go-goal/httpd/handlers"
+	"go-goal/httpd/handler"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -21,13 +21,13 @@ func TestGetUser(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handlers.GetUser(globalDB)(w, r)
+	handler.GetUser(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
 
 	returnInfo := struct {
-		ThisUser   handlers.User
+		ThisUser   handler.User
 		ErrorExist bool
 	}{}
 	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
@@ -44,7 +44,7 @@ func TestGetUser(t *testing.T) {
 func TestCreateUser1(t *testing.T) {
 	initializeTestDatabase()
 
-	var user handlers.User
+	var user handler.User
 	user.Username = "dwan12345"
 	user.FirstName = "don"
 	user.LastName = "chen"
@@ -60,7 +60,7 @@ func TestCreateUser1(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handlers.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB)(w, r)
 
 	returnInfo := struct {
 		Successful bool
@@ -72,8 +72,8 @@ func TestCreateUser1(t *testing.T) {
 		t.Errorf("Expected {Successful:true, ErrorExist:false, EmailExist:false}, but got %v", returnInfo)
 	}
 
-	var inputtedUser handlers.User
-	globalDB.Model(&handlers.User{}).Raw("SELECT username, first_name, last_name, email, password FROM users WHERE id = ?", 1).Scan(&inputtedUser)
+	var inputtedUser handler.User
+	globalDB.Model(&handler.User{}).Raw("SELECT username, first_name, last_name, email, password FROM users WHERE id = ?", 1).Scan(&inputtedUser)
 	if !reflect.DeepEqual(user, inputtedUser) { // reflect.DeepEqual() is needed to compare slices and structs
 		t.Errorf("Expected %v, but got %v", user, inputtedUser)
 	}
@@ -85,7 +85,7 @@ func TestCreateUser2(t *testing.T) {
 
 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
 
-	var user handlers.User
+	var user handler.User
 	user.Username = "dwan12345"
 	user.FirstName = "don"
 	user.LastName = "chen"
@@ -101,7 +101,7 @@ func TestCreateUser2(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handlers.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB)(w, r)
 
 	returnInfo := struct {
 		Successful bool
@@ -115,47 +115,46 @@ func TestCreateUser2(t *testing.T) {
 }
 
 // idk if this test if appropriate, so it might be rewritten
-/*
-func TestUpdateUser(t *testing.T) {
-	initializeTestDatabase()
 
-	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+// func TestUpdateUser(t *testing.T) {
+// 	initializeTestDatabase()
 
-	var user handlers.User
-	user.Username = "newUserName"
-	user.FirstName = "don"
-	user.LastName = "chen"
-	user.Email = "1@gmail.com"
-	user.Password = "pw"
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
-	w := httptest.NewRecorder()
-	r, err := http.NewRequest("PUT", "", &buf)
-	if err != nil {
-		panic(err)
-	}
-	handlers.UpdateUser(globalDB)(w, r)
+// 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
 
-	returnInfo := struct {
-		Successful bool
-		ErrorExist bool
-		ThisUser   handlers.User
-	}{}
-	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
-	if returnInfo.ErrorExist {
-		t.Errorf("There was an error")
-	}
+// 	var user handler.User
+// 	user.Username = "newUserName"
+// 	user.FirstName = "don"
+// 	user.LastName = "chen"
+// 	user.Email = "1@gmail.com"
+// 	user.Password = "pw"
+// 	var buf bytes.Buffer
+// 	err := json.NewEncoder(&buf).Encode(user)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	w := httptest.NewRecorder()
+// 	r, err := http.NewRequest("PUT", "", &buf)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	handler.UpdateUser(globalDB)(w, r)
 
-	var inputtedUser handlers.User
-	globalDB.Model(&handlers.User{}).Raw("SELECT username, first_name, last_name, email, password FROM users WHERE id = ?", 1).Scan(&inputtedUser)
-	if !reflect.DeepEqual(user, inputtedUser) { // reflect.DeepEqual() is needed to compare slices and structs
-		t.Errorf("Expected %v, but got %v", user, inputtedUser)
-	}
-}
-*/
+// 	returnInfo := struct {
+// 		Successful bool
+// 		ErrorExist bool
+// 		ThisUser   handler.User
+// 	}{}
+// 	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+// 	if returnInfo.ErrorExist {
+// 		t.Errorf("There was an error")
+// 	}
+
+// 	var inputtedUser handler.User
+// 	globalDB.Model(&handler.User{}).Raw("SELECT username, first_name, last_name, email, password FROM users WHERE id = ?", 1).Scan(&inputtedUser)
+// 	if !reflect.DeepEqual(user, inputtedUser) { // reflect.DeepEqual() is needed to compare slices and structs
+// 		t.Errorf("Expected %v, but got %v", user, inputtedUser)
+// 	}
+// }
 
 // this unit does not work for some reason
 // tests login when email and password are correct
@@ -223,12 +222,12 @@ func TestCheckLogin2(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handlers.CheckLogin(globalDB)(w, r)
+	handler.CheckLogin(globalDB)(w, r)
 
 	returnInfo := struct {
 		FindEmail    bool
 		FindPassword bool
-		User         handlers.User
+		User         handler.User
 	}{}
 	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
 	if !returnInfo.FindEmail || returnInfo.FindPassword {

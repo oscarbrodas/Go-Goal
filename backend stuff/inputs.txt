@@ -1,4 +1,4 @@
-http://localhost:9000/users
+http://localhost:9000/api/users
 {
     "FirstName":"Don",
     "LastName":"Chen",
@@ -18,7 +18,7 @@ http://localhost:9000/users
     "Password":"rot123123"
 }
 
-http://localhost:9000/goals/{userID}
+http://localhost:9000/api/goals/{userID}
 {
     "Title":"My first goal",
     "Description":"This is my very first goal! I hope I accomplish it"
