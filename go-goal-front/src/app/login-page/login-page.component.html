@@ -1,0 +1,22 @@
+<body>
+    <b class="title">LOGIN</b>
+    <br>
+    <div class="login">
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <label class="form">Username: </label>
+            <input type="text" class="form" name="Username" id="username" formControlName="username">
+            <br>
+            <label class="form">Password: </label>
+            <input type="password" class="form" name="Password" id="password" formControlName="password">
+            <br>
+            <button type="submit">Log In</button>
+
+            <br>
+            <a routerLink="../sign-up">Don't have an account? Sign up here!</a>
+        </form>
+
+        <p *ngIf="checkFailedLogin()">Login Failed. Please try again</p>
+    </div>
+</body>

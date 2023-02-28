@@ -1,0 +1,4 @@
+dev: 
+	go build
+	./httpd
+	
