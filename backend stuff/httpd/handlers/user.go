@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -18,8 +19,7 @@ type User struct {
 	Password  string
 }
 
-// checks if email exists, if not then creates the user
-// returns json of whether email was found and whether a new user was created
+// input json must contain all information of the user
 func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -27,24 +27,32 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 		json.NewDecoder(r.Body).Decode(&user)
 
 		returnInfo := struct { // this json return must be standardized
-			FindEmail   bool
-			UserCreated bool
+			Successful bool
+			ErrorExist bool
+			EmailExist bool
 		}{}
 
-		c := int64(0)
-		globalDB.Model(&User{}).Where("email = ?", user.Email).Count(&c)
-		if c > 0 {
-			returnInfo.FindEmail = true
+		err := globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", user.Email).Find(&returnInfo.EmailExist).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
 		}
 
-		if !returnInfo.FindEmail {
-			globalDB.Create(&user)
-			returnInfo.UserCreated = true
+		if !returnInfo.EmailExist && !returnInfo.ErrorExist {
+			r := globalDB.Create(&user)
+			if r.Error != nil {
+				returnInfo.ErrorExist = true
+				json.NewEncoder(w).Encode(returnInfo)
+				fmt.Println("Error in CreateUser")
+				fmt.Println(user)
+				return
+			}
+			returnInfo.Successful = true
 		}
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
 
+// this function is not neccessary. the route is removed
 func GetUsers(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -55,31 +63,52 @@ func GetUsers(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// input URL must has id of user
 func GetUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		otherID := r.URL.Query().Get("id")
+		returnInfo := struct {
+			ThisUser   User
+			ErrorExist bool
+		}{}
+		err := globalDB.Model(&User{}).First(&returnInfo.ThisUser, otherID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+		}
 
-		var user User
-		params := mux.Vars(r)
-		globalDB.First(&user, params["id"]) //grabs {id} from r.handleFunc in main
-
-		json.NewEncoder(w).Encode(user)
+		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
 
+// the structure of UpdateUser needs to be discussed, currently this is not working
+// input json must contain id of user and all of the fields
 func UpdateUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var user User
-		params := mux.Vars(r)
-		globalDB.First(&user, params["id"])
 		json.NewDecoder(r.Body).Decode(&user)
-		globalDB.Save(&user)
+		returnInfo := struct {
+			ErrorExist bool
+			Successful bool
+			ThisUser   User
+		}{}
 
-		json.NewEncoder(w).Encode(user)
+		var placeHolderUser User
+		err := globalDB.Model(&user).Find(placeHolderUser, returnInfo.ThisUser.ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%d", returnInfo.ThisUser.ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
 
+// delete user is complicated. the route is removed
 func DeleteUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -107,23 +136,16 @@ func CheckLogin(globalDB *gorm.DB) http.HandlerFunc {
 		returnInfo := struct { // the names of this json return must be standardized
 			FindEmail    bool
 			FindPassword bool
-			User         User
+			ThisUser     User
 		}{}
 
 		json.NewDecoder(r.Body).Decode(&emailAndPassword)
 
-		c := int64(0)
-		globalDB.Model(&User{}).Where("email = ?", emailAndPassword.Email).Count(&c)
-		if c > 0 {
-			returnInfo.FindEmail = true
-		}
-		globalDB.Model(&User{}).Where("email = ? AND password = ?", emailAndPassword.Email, emailAndPassword.Password).Count(&c)
-		if c > 0 {
-			returnInfo.FindPassword = true
-		}
+		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", emailAndPassword.Email).Find(&returnInfo.FindEmail)
+		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ? AND password = ?", emailAndPassword.Email, emailAndPassword.Password).Find(&returnInfo.FindPassword)
 
 		if returnInfo.FindEmail && returnInfo.FindPassword {
-			globalDB.Where("email = ?", emailAndPassword.Email).First(&returnInfo.User)
+			globalDB.Where("email = ?", emailAndPassword.Email).First(&returnInfo.ThisUser)
 		}
 		json.NewEncoder(w).Encode(returnInfo)
 	}
