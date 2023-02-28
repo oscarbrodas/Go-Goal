@@ -1,14 +1,31 @@
 import { Injectable } from '@angular/core';
-import { BackendConnectService } from '../backend-connect.service';
+import { BackendConnectService, userInfo } from '../backend-connect.service';
 import { LoginPageComponent } from './login-page.component';
 import { HttpClient } from '@angular/common/http';
+import { ActivationStart, Router, ActivatedRoute } from '@angular/router';
+import { loginInfo } from '../backend-connect.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor(private backend: BackendConnectService) { } // INJECT: BACKEND SERVICE
+  loginFailed: boolean = false;
+  loggedIn: boolean = false;
+
+  constructor(private backend: BackendConnectService, private route: ActivatedRoute, private router: Router) {
+
+    // Checks if user leaves login page, if so, resets loginFailed to false
+    this.router.events.subscribe((event) => {
+      if (event instanceof ActivationStart) {
+        if (this.route.component != LoginPageComponent) {
+          this.loginFailed = false;
+        }
+      }
+    });
+
+  }
+
   user: userInfo = {
     loggedIn: false,
     Username: '',
@@ -19,7 +36,7 @@ export class LoginService {
 
   }
   users: userInfo[] = [];
-  loginFailed: boolean = false;
+
 
   getUser(): userInfo { return this.user }
 
@@ -38,12 +55,12 @@ export class LoginService {
   }
 
 
-  login(): void {
+  login(): void { // DOES NOT WORK YET
     // ADD: Get and submit loginForm to backend for verification from loginComponent
-    
+
     // ADD: Get Data using http, update current user data and loggedin status in login service
     if (this.user.loggedIn) {
-      this.backend.getLoginInfo().subscribe(users => this.users = users); 
+      // this.backend.getLoginInfo().subscribe(() => { }); // ADD: Get user data from backend ONCE BACKEND IS CONNECTED
       console.log("Successfully logged in.");
     }
     else {
@@ -72,17 +89,6 @@ export class LoginService {
   }
 
 
-
-
 }
 
-export interface userInfo { // ADD: User data as necessary 
-  loggedIn: boolean;
-  Username: string;
-  FirstName: string;
-  LastName: string;
-  Email: string;
-  Password: string;
 
-
-}
