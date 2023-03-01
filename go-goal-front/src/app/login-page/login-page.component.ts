@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LoginService } from './login.service';
-import { BackendConnectService } from '../backend-connect.service';
+import { BackendConnectService, loginInfo } from '../backend-connect.service';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -16,14 +16,13 @@ export class LoginPageComponent {
     private formBuilder: FormBuilder,
     private loginService: LoginService
   ) { } // INJECT: BACKEND SERVICE as needed
-
   loginForm = this.formBuilder.group({
-    username: '',
-    password: ''
+    Email: '',
+    Password: ''
   })
-
+  loginData: loginInfo = {"Email": "", "Password": ""}; 
   onSubmit(): void {
-    this.loginService.login();
+    this.loginService.login(this.loginData);
   }
 
   checkFailedLogin(): boolean {

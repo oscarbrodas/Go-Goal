@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
@@ -14,7 +14,10 @@ export class BackendConnectService {
   }
 
   public getLoginInfo(li: loginInfo): Observable<userInfo> {
-    return this.http.get<userInfo>(`${this.backendURL}login`) // SOMEHOW SEND THE LOGIN INFO TO THE BACKEND FOR THIS TO WORK
+    let loginParams = new HttpParams()
+    loginParams = loginParams.append("Email",li.Email)
+    loginParams = loginParams.append("Password",li.Password)
+    return this.http.get<userInfo>(`${this.backendURL}login`, {params:loginParams, headers: new HttpHeaders({ 'Content-Type': 'application/json' })}) // SOMEHOW SEND THE LOGIN INFO TO THE BACKEND FOR THIS TO WORK
   };
 
   public signThemUp(userData: userInfo): Observable<userInfo> {
@@ -35,6 +38,6 @@ export interface userInfo { // ADD: User data as necessary
 }
 
 export interface loginInfo {
-  username: string;
-  password: string;
+  Email: string;
+  Password: string;
 }
