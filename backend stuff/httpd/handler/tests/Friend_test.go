@@ -1,9 +1,9 @@
-package test
+package handler_test
 
 import (
 	"bytes"
 	"encoding/json"
-	"go-goal/httpd/handlers"
+	"go-goal/httpd/handler"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -27,9 +27,9 @@ func initializeTestDatabase() {
 	globalDB.Exec("DROP TABLE friends")
 	globalDB.Exec("DROP TABLE users")
 
-	globalDB.AutoMigrate(&handlers.User{})
-	globalDB.AutoMigrate(&handlers.Goal{})
-	globalDB.AutoMigrate(&handlers.Friend{})
+	globalDB.AutoMigrate(&handler.User{})
+	globalDB.AutoMigrate(&handler.Goal{})
+	globalDB.AutoMigrate(&handler.Friend{})
 }
 
 func TestGetAllFriends(t *testing.T) {
@@ -45,7 +45,7 @@ func TestGetAllFriends(t *testing.T) {
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(4,1,1)")
 
 	// all of this just sets the input json to a user with id:1
-	var user handlers.User
+	var user handler.User
 	user.ID = 1
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(user)
@@ -65,7 +65,7 @@ func TestGetAllFriends(t *testing.T) {
 	}
 
 	// this looks weird because GetAllFriends returns a handler function
-	handlers.GetAllFriends(globalDB)(w, r)
+	handler.GetAllFriends(globalDB)(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
@@ -92,7 +92,7 @@ func TestSendFriendRequest1(t *testing.T) {
 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"3\",\"Chen\",\"3@gmail.com\",\"pw\")")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 1
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(user)
@@ -105,7 +105,7 @@ func TestSendFriendRequest1(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.SendFriendRequest(globalDB)(w, r)
+	handler.SendFriendRequest(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -125,7 +125,7 @@ func TestSendFriendRequest1(t *testing.T) {
 		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
 	}
 	var exists bool
-	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 3) AND who_sent = 1").Find(&exists)
+	globalDB.Model(&handler.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 3) AND who_sent = 1").Find(&exists)
 	if !exists {
 		t.Errorf("Did not find inserted tuple when 1 sent a friend request to 3")
 	}
@@ -140,7 +140,7 @@ func TestSendFriendRequest2(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,0)")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 1
 	expected := struct {
 		Successful bool
@@ -165,7 +165,7 @@ func TestSendFriendRequest2(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.SendFriendRequest(globalDB)(w, r)
+	handler.SendFriendRequest(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -185,7 +185,7 @@ func TestGetOutgoingFriendRequests(t *testing.T) {
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,1,2)")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 1
 	expected := struct {
 		IDs        []uint
@@ -210,7 +210,7 @@ func TestGetOutgoingFriendRequests(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.GetOutgoingFriendRequests(globalDB)(w, r)
+	handler.GetOutgoingFriendRequests(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -230,7 +230,7 @@ func TestGetIngoingFriendRequests(t *testing.T) {
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,2,1)")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 2
 	expected := struct {
 		IDs        []uint
@@ -255,7 +255,7 @@ func TestGetIngoingFriendRequests(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.GetIngoingFriendRequests(globalDB)(w, r)
+	handler.GetIngoingFriendRequests(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -273,7 +273,7 @@ func TestAcceptFriendRequest(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 2
 	expected := struct {
 		Successful bool
@@ -298,7 +298,7 @@ func TestAcceptFriendRequest(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.AcceptFriendRequest(globalDB)(w, r)
+	handler.AcceptFriendRequest(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -307,7 +307,7 @@ func TestAcceptFriendRequest(t *testing.T) {
 		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
 	}
 	var exists bool
-	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 0").Find(&exists)
+	globalDB.Model(&handler.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 0").Find(&exists)
 	if !exists {
 		t.Errorf("Did not find the tuple {user1 = 1, user2 = 2, who_sent = 0}")
 	}
@@ -321,7 +321,7 @@ func TestDeclineFriendRequest(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 2
 	expected := struct {
 		Successful bool
@@ -346,7 +346,7 @@ func TestDeclineFriendRequest(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.DeclineFriendRequest(globalDB)(w, r)
+	handler.DeclineFriendRequest(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -355,7 +355,7 @@ func TestDeclineFriendRequest(t *testing.T) {
 		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
 	}
 	var exists bool
-	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 1").Find(&exists)
+	globalDB.Model(&handler.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 1").Find(&exists)
 	if exists {
 		t.Errorf("Found the tuple {user1 = 1, user2 = 2, who_sent = 1} even though it should be deleted")
 	}
@@ -369,7 +369,7 @@ func TestRemoveFriend(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,0)")
 
-	var user handlers.User
+	var user handler.User
 	user.ID = 2
 	expected := struct {
 		Successful bool
@@ -394,7 +394,7 @@ func TestRemoveFriend(t *testing.T) {
 		panic(err)
 	}
 
-	handlers.RemoveFriend(globalDB)(w, r)
+	handler.RemoveFriend(globalDB)(w, r)
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -403,7 +403,7 @@ func TestRemoveFriend(t *testing.T) {
 		t.Errorf("Expected %+v, but got %+v", expected, returnInfo)
 	}
 	var exists bool
-	globalDB.Model(&handlers.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 0").Find(&exists)
+	globalDB.Model(&handler.Friend{}).Select("count(*) > 0").Where("(user1 = 1 AND user2 = 2) AND who_sent = 0").Find(&exists)
 	if exists {
 		t.Errorf("Found the tuple {user1 = 1, user2 = 2, who_sent = 0} even though it should be deleted")
 	}
