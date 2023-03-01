@@ -57,7 +57,7 @@ export class LoginService {
 
   login(): void { // DOES NOT WORK YET
     // ADD: Get and submit loginForm to backend for verification from loginComponent
-
+    
     // ADD: Get Data using http, update current user data and loggedin status in login service
     if (this.user.loggedIn) {
       // this.backend.getLoginInfo().subscribe(() => { }); // ADD: Get user data from backend ONCE BACKEND IS CONNECTED

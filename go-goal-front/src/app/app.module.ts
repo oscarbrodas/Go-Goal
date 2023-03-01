@@ -17,6 +17,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BackendConnectService } from './backend-connect.service'
 import { LoginService } from './login-page/login.service';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
+
+
+
+
 
 
 @NgModule({
@@ -26,7 +31,8 @@ import { LoginService } from './login-page/login.service';
     LoginPageComponent,
     SignUpComponentComponent,
     MainComponent,
-    LinkbarComponent
+    LinkbarComponent,
+    ProfilePageComponent
   ],
   imports: [
     BrowserModule,

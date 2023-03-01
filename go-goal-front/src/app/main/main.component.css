@@ -12,20 +12,10 @@
     height: 100%;
 }
 
-.firstsect {
-    width: 100vw;
-    height: 550px;
-    overflow: hidden;
-    position: relative;
-    top: 3px;
-
-    background-color: #2e2e2e;
-    display: flex;
-    align-items: center;
-}
-
 .carousel1 {
     width: 1000px;
     height: 500px;
-
+    overflow: hidden;
+    position: relative;
+    top: 2%;
 }
