@@ -52,18 +52,7 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// this function is not neccessary. the route is removed
-func GetUsers(globalDB *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-
-		var user []User
-		globalDB.Find(&user)
-		json.NewEncoder(w).Encode(user)
-	}
-}
-
-// input URL must has id of user
+// input URL must have id of user
 func GetUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -77,6 +66,151 @@ func GetUser(globalDB *gorm.DB) http.HandlerFunc {
 			returnInfo.ErrorExist = true
 		}
 
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		var newUsername string
+		json.NewDecoder(r.Body).Decode(&newUsername)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		globalDB.Model(&user).Update("username", newUsername)
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func UpdateFirstname(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		var newFirstname string
+		json.NewDecoder(r.Body).Decode(&newFirstname)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		globalDB.Model(&user).Update("first_name", newFirstname)
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		var newLastname string
+		json.NewDecoder(r.Body).Decode(&newLastname)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		globalDB.Model(&user).Update("last_name", newLastname)
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		var newEmail string
+		json.NewDecoder(r.Body).Decode(&newEmail)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		globalDB.Model(&user).Update("email", newEmail)
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		var newPassword string
+		json.NewDecoder(r.Body).Decode(&newPassword)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		globalDB.Model(&user).Update("password", newPassword)
+
+		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
@@ -105,18 +239,6 @@ func UpdateUser(globalDB *gorm.DB) http.HandlerFunc {
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
-	}
-}
-
-// delete user is complicated. the route is removed
-func DeleteUser(globalDB *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		var user User
-		params := mux.Vars(r)
-		globalDB.Delete(&user, params["id"])
-
-		json.NewEncoder(w).Encode(user)
 	}
 }
 
