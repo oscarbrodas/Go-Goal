@@ -66,6 +66,48 @@
   
   - Output: "ThisUser" as a user object, and "ErrorExist" as a bool
 
+- __UpdateUsername__ - __PUT__
+
+  - Route: __/api/users/username__
+  
+  - Input: "User" to be updated and "Username" of type string
+  
+  - Output: "User" back with the updated change 
+
+- __UpdateFirstname__ - __PUT__
+
+  - Route: __/api/users/firstname__
+  
+  - Input: "User" to be updated and "Firstname" of type string
+  
+  - Output: "User" back with the updated change 
+
+- __UpdateLastname__ - __PUT__
+
+  - Route: __/api/users/lastname__
+  
+  - Input: "User" to be updated and "Lastname" of type string
+  
+  - Output: "User" back with the updated change 
+  
+- __UpdateEmail__ - __PUT__
+
+  - Route: __/api/users/email__
+  
+  - Input: "User" to be updated and "Email" of type string
+  
+  - Output: "User" back with the updated change 
+  
+  
+- __UpdatePassword__ - __PUT__
+
+  - Route: __/api/users/password__
+  
+  - Input: "User" to be updated and "Password" of type string
+  
+  - Output: "User" back with the updated change 
+  
+  
 - __CheckLogin()__ - __GET__
 
   - Route: __/api/login__ 
