@@ -271,5 +271,4 @@ func CheckLogin(globalDB *gorm.DB) http.HandlerFunc {
 		}
 		json.NewEncoder(w).Encode(returnInfo)
 	}
-
 }

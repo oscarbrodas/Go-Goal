@@ -1,5 +1,7 @@
 http://localhost:9000/api/users
 {
+    "ID":1,
+    "Username":"dwan12345",
     "FirstName":"Don",
     "LastName":"Chen",
     "Email":"dc@gmail.com",
@@ -28,3 +30,10 @@ http://localhost:9000/api/goals/{userID}
     "Description":"idk mmmmmmmmmmmmmmmmmmmmmm"
 }
 
+{
+    "ThisUser":{"ID":4},
+    "ThisGoal":{
+        "Title":"My first goal",
+        "Description":"Some description1"
+    }
+}

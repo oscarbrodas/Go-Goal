@@ -12,8 +12,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// example route: http://localhost:9000/users
-
 func httpHandler() http.Handler {
 	r := mux.NewRouter()
 	s := r.PathPrefix("/api").Subrouter() // adds "/api" to each route
@@ -31,8 +29,9 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/login", handler.CheckLogin(globalDB)).Methods("GET")
 
 	// Create and Retrieve Goals
-	s.HandleFunc("/goals/{userID}", handler.CreateGoal(globalDB)).Methods("POST")
-	s.HandleFunc("/goals/{userID}", handler.GetGoals(globalDB)).Methods("GET")
+	s.HandleFunc("/goals", handler.CreateGoal(globalDB)).Methods("POST")
+	s.HandleFunc("/goals", handler.GetGoals(globalDB)).Methods("GET")
+	s.HandleFunc("/goals", handler.DeleteGoal(globalDB)).Methods("DELETE")
 
 	// Retrieve/Remove Friends, Handle Friend Requests
 	s.HandleFunc("/friends", handler.GetAllFriends(globalDB)).Methods("GET")
