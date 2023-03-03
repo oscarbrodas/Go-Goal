@@ -8,7 +8,6 @@ import (
 
 	"go-goal/httpd/handler"
 
-	// "gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )

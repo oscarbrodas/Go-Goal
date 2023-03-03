@@ -53,5 +53,4 @@ func TestCreateGoal(t *testing.T) {
 	if (tableGoal.Title != inputGoal.Title) && (tableGoal.Description != inputGoal.Description) && (tableGoal.UserID != inputGoal.UserID) && (tableGoal.User != inputGoal.User) {
 		t.Errorf("Expected passing in goal to be inputed into the table. Input Goal: %v Table Goal: %v", inputGoal, tableGoal)
 	}
-
 }

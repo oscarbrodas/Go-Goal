@@ -2,10 +2,9 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -14,35 +13,91 @@ type Goal struct {
 
 	Title       string
 	Description string
-	UserID      int
+	UserID      uint
 	User        User `gorm:"foreignKey:UserID"`
 }
 
+// input body contain "ThisUser" and "ThisGoal" objects
+// "ThisGoal" does not need to contain UserID attribute
 func CreateGoal(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var goal Goal
-		var err error
-		params := mux.Vars(r)
+		input := struct {
+			ThisGoal Goal
+			ThisUser User
+		}{}
+		returnInfo := struct {
+			Successful bool
+			ErrorExist bool
+		}{}
+		json.NewDecoder(r.Body).Decode(&input)
+		input.ThisGoal.UserID = uint(input.ThisUser.ID)
 
-		json.NewDecoder(r.Body).Decode(&goal)
-		goal.UserID, err = strconv.Atoi(params["userID"])
-		if err != nil {
-			panic("userID of goal POST request was not an int")
+		var userExists bool
+		globalDB.Model(&User{}).Select("count(*) > 0").Where("id = ?", input.ThisGoal.UserID).Find(&userExists)
+		if userExists {
+			result := globalDB.Model(&Goal{}).Create(&input.ThisGoal)
+			if result.Error != nil {
+				returnInfo.ErrorExist = true
+				fmt.Println(result.Error)
+			} else {
+				returnInfo.Successful = true
+			}
+		} else {
+			returnInfo.ErrorExist = true
+			fmt.Println("Error in Create Goal:")
+			fmt.Printf("User:%d does not exist\n", input.ThisGoal.UserID)
 		}
-		globalDB.Create(&goal)
-		json.NewEncoder(w).Encode(goal)
+		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
 
+// input body contain user object
 func GetGoals(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var goal []Goal
-		params := mux.Vars(r)
+		var ThisUser User
+		returnInfo := struct {
+			Successful bool
+			ErrorExist bool
+			Goals      []Goal
+		}{}
+		json.NewDecoder(r.Body).Decode(&ThisUser)
 
-		globalDB.Where("user_id = ?", params["userID"]).Find(&goal)
+		var userExists bool
+		globalDB.Model(&User{}).Select("count(*) > 0").Where("id = ?", ThisUser.ID).Find(&userExists)
 
-		json.NewEncoder(w).Encode(goal)
+		if userExists {
+			globalDB.Model(&Goal{}).Where("user_id = ?", ThisUser.ID).Find(&returnInfo.Goals)
+			returnInfo.Successful = true
+		} else {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in GetGoals\nUser:%d does not exist\n", ThisUser.ID)
+		}
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+// input body contain the goal object to delete
+func DeleteGoal(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		var ThisGoal Goal
+		returnInfo := struct {
+			Successful bool
+			ErrorExist bool
+		}{}
+		json.NewDecoder(r.Body).Decode(&ThisGoal)
+
+		result := globalDB.Delete(&ThisGoal)
+		if result.Error != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in DeleteGoal with deleting GoalID:%d\n", ThisGoal.ID)
+		} else {
+			returnInfo.Successful = true
+		}
+
+		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
