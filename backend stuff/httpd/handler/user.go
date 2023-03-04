@@ -19,31 +19,47 @@ type User struct {
 	Password  string
 }
 
+// checks if the username is good. add more rules later
+// first return is whether it exists, second is whether its a valid username or not
+func isValidUsername(globalDB *gorm.DB, username string) (bool, bool) {
+	var exists bool
+	var validName bool
+
+	globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists)
+
+	validName = !exists
+
+	return exists, validName
+}
+
 // input json must contain all information of the user
 func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var user User
-		json.NewDecoder(r.Body).Decode(&user)
+		var ThisUser User
+		json.NewDecoder(r.Body).Decode(&ThisUser)
 
 		returnInfo := struct { // this json return must be standardized
-			Successful bool
-			ErrorExist bool
-			EmailExist bool
+			Successful    bool
+			ErrorExist    bool
+			EmailExist    bool
+			UsernameExist bool
 		}{}
 
-		err := globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", user.Email).Find(&returnInfo.EmailExist).Error
+		err := globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", ThisUser.Email).Find(&returnInfo.EmailExist).Error
 		if err != nil {
 			returnInfo.ErrorExist = true
 		}
+		exists, _ := isValidUsername(globalDB, ThisUser.Username)
+		returnInfo.UsernameExist = exists
 
-		if !returnInfo.EmailExist && !returnInfo.ErrorExist {
-			r := globalDB.Create(&user)
-			if r.Error != nil {
+		if !returnInfo.EmailExist && !returnInfo.ErrorExist && !returnInfo.UsernameExist {
+			err = globalDB.Create(&ThisUser).Error
+			if err != nil {
 				returnInfo.ErrorExist = true
 				json.NewEncoder(w).Encode(returnInfo)
 				fmt.Println("Error in CreateUser")
-				fmt.Println(user)
+				fmt.Printf("%+v\n", ThisUser)
 				return
 			}
 			returnInfo.Successful = true
@@ -215,33 +231,6 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// the structure of UpdateUser needs to be discussed, currently this is not working
-// input json must contain id of user and all of the fields
-func UpdateUser(globalDB *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		var user User
-		json.NewDecoder(r.Body).Decode(&user)
-		returnInfo := struct {
-			ErrorExist bool
-			Successful bool
-			ThisUser   User
-		}{}
-
-		var placeHolderUser User
-		err := globalDB.Model(&user).Find(placeHolderUser, returnInfo.ThisUser.ID).Error
-		if err != nil {
-			returnInfo.ErrorExist = true
-			fmt.Printf("Error in update user\nCould not find user with id:%d", returnInfo.ThisUser.ID)
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		returnInfo.Successful = true
-		json.NewEncoder(w).Encode(returnInfo)
-	}
-}
-
 // must pass in json with attributes "Email" and "Password"
 // returns a struct of whether email and password exists and a user object
 // if both  email and password exists, the user object will be the corresponding user
@@ -269,6 +258,23 @@ func CheckLogin(globalDB *gorm.DB) http.HandlerFunc {
 		if returnInfo.FindEmail && returnInfo.FindPassword {
 			globalDB.Where("email = ?", emailAndPassword.Email).First(&returnInfo.ThisUser)
 		}
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+// the URL must contain the username being checked
+func CheckUsername(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		returnInfo := struct {
+			Exists    bool
+			ValidName bool
+		}{}
+		params := mux.Vars(r)
+		username := params["username"]
+
+		returnInfo.Exists, returnInfo.ValidName = isValidUsername(globalDB, username)
+
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
