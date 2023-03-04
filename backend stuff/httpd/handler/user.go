@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"go-goal/util"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,14 +21,13 @@ type User struct {
 }
 
 // checks if the username is good. add more rules later
-// first return is whether it exists, second is whether its a valid username or not
-func isValidUsername(globalDB *gorm.DB, username string) (bool, bool) {
-	var exists bool
-	var validName bool
-
+func isValidUsername(globalDB *gorm.DB, username string) (exists bool, validName bool) {
 	globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists)
-
 	validName = !exists
+
+	if username == "" {
+		validName = false
+	}
 
 	return exists, validName
 }
@@ -37,7 +37,7 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var ThisUser User
-		json.NewDecoder(r.Body).Decode(&ThisUser)
+		util.DecodeJSONRequest(&ThisUser, r.Body, w)
 
 		returnInfo := struct { // this json return must be standardized
 			Successful    bool
@@ -93,7 +93,7 @@ func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 		ID := params["id"]
 
 		var newUsername string
-		json.NewDecoder(r.Body).Decode(&newUsername)
+		util.DecodeJSONRequest(&newUsername, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -122,7 +122,8 @@ func UpdateFirstname(globalDB *gorm.DB) http.HandlerFunc {
 		ID := params["id"]
 
 		var newFirstname string
-		json.NewDecoder(r.Body).Decode(&newFirstname)
+		util.DecodeJSONRequest(&newFirstname, r.Body, w)
+
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -151,7 +152,7 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 		ID := params["id"]
 
 		var newLastname string
-		json.NewDecoder(r.Body).Decode(&newLastname)
+		util.DecodeJSONRequest(&newLastname, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -180,7 +181,7 @@ func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
 		ID := params["id"]
 
 		var newEmail string
-		json.NewDecoder(r.Body).Decode(&newEmail)
+		util.DecodeJSONRequest(&newEmail, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -209,7 +210,7 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 		ID := params["id"]
 
 		var newPassword string
-		json.NewDecoder(r.Body).Decode(&newPassword)
+		util.DecodeJSONRequest(&newPassword, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -250,7 +251,7 @@ func CheckLogin(globalDB *gorm.DB) http.HandlerFunc {
 			ThisUser     User
 		}{}
 
-		json.NewDecoder(r.Body).Decode(&emailAndPassword)
+		util.DecodeJSONRequest(&emailAndPassword, r.Body, w)
 
 		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", emailAndPassword.Email).Find(&returnInfo.FindEmail)
 		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ? AND password = ?", emailAndPassword.Email, emailAndPassword.Password).Find(&returnInfo.FindPassword)

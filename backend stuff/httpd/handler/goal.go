@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"go-goal/util"
 	"net/http"
 
 	"gorm.io/gorm"
@@ -30,7 +31,7 @@ func CreateGoal(globalDB *gorm.DB) http.HandlerFunc {
 			Successful bool
 			ErrorExist bool
 		}{}
-		json.NewDecoder(r.Body).Decode(&input)
+		util.DecodeJSONRequest(&input, r.Body, w)
 		input.ThisGoal.UserID = uint(input.ThisUser.ID)
 
 		var userExists bool
@@ -62,7 +63,7 @@ func GetGoals(globalDB *gorm.DB) http.HandlerFunc {
 			ErrorExist bool
 			Goals      []Goal
 		}{}
-		json.NewDecoder(r.Body).Decode(&ThisUser)
+		util.DecodeJSONRequest(&ThisUser, r.Body, w)
 
 		var userExists bool
 		globalDB.Model(&User{}).Select("count(*) > 0").Where("id = ?", ThisUser.ID).Find(&userExists)
@@ -88,6 +89,8 @@ func DeleteGoal(globalDB *gorm.DB) http.HandlerFunc {
 			Successful bool
 			ErrorExist bool
 		}{}
+		util.DecodeJSONRequest(&ThisGoal, r.Body, w)
+
 		json.NewDecoder(r.Body).Decode(&ThisGoal)
 
 		result := globalDB.Delete(&ThisGoal)
