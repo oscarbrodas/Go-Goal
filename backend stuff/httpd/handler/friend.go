@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -64,7 +65,8 @@ func GetAllFriends(globalDB *gorm.DB) http.HandlerFunc {
 func SendFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 
 		var thisUser User
 		returnInfo := struct { // need to be standardized
@@ -166,7 +168,8 @@ func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
@@ -200,7 +203,8 @@ func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
@@ -234,7 +238,8 @@ func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 func RemoveFriend(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
