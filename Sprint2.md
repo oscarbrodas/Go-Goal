@@ -30,15 +30,15 @@
 
 ## Backend API
 ### User
-- User: the strructure of the User object. The variable names are case sensitive
+- User: the structure of the User object. The variable names are case sensitive
 
   - ID: unique id of the user
   
-  - CreatedAt: do not worry about this. Time and date the user was created at
+  - CreatedAt: *do not worry about this* Time and date the user was created at
   
-  - UpdatedAt: do not worry about this. Time and date the user was updated at
+  - UpdatedAt: *do not worry about this* Time and date the user was updated at
   
-  - DeletedAt: do not worry about this. Time and date the user was deleted at
+  - DeletedAt: *do not worry about this* Time and date the user was deleted at
   
   - Username: username
   
@@ -50,23 +50,67 @@
   
   - Password: password
   
-- CreateUser(): POST
+- __CreateUser()__ - __POST__
 
-  - Route: /users
+  - Route: __/api/users__
   
   - Input: the body must contain user object
   
   - Output: "Successful", "ErrorExist", and "EmailExist" each as a bool detailing the result of the function
 
-- GetUser(): GET
+- __GetUser()__ - __GET__
 
-  - Route: /users?id=
+  - Route: __/api/users?id=__
   
-  - Input: no body is required. The URL must contain the id of the user you are trying to get, such as getting user with id 9, you need to use "/users?id=9"
+  - Input: no body is required. The URL must contain the id of the user you are trying to get, such as getting user with id 9, you need to use __"/api/users?id=9"__
   
   - Output: "ThisUser" as a user object, and "ErrorExist" as a bool
 
-- CheckLogin(): GET
+- __UpdateUsername__ - __PUT__
+
+  - Route: __/api/users/username__
+  
+  - Input: "User" to be updated and "Username" of type string
+  
+  - Output: "User" back with the updated change 
+
+- __UpdateFirstname__ - __PUT__
+
+  - Route: __/api/users/firstname__
+  
+  - Input: "User" to be updated and "Firstname" of type string
+  
+  - Output: "User" back with the updated change 
+
+- __UpdateLastname__ - __PUT__
+
+  - Route: __/api/users/lastname__
+  
+  - Input: "User" to be updated and "Lastname" of type string
+  
+  - Output: "User" back with the updated change 
+  
+- __UpdateEmail__ - __PUT__
+
+  - Route: __/api/users/email__
+  
+  - Input: "User" to be updated and "Email" of type string
+  
+  - Output: "User" back with the updated change 
+  
+  
+- __UpdatePassword__ - __PUT__
+
+  - Route: __/api/users/password__
+  
+  - Input: "User" to be updated and "Password" of type string
+  
+  - Output: "User" back with the updated change 
+  
+  
+- __CheckLogin()__ - __GET__
+
+  - Route: __/api/login__ 
 
   - Notes: Email and Password must be correct or the user object returned will be giberish
 
@@ -75,15 +119,15 @@
   - Output: "FindEmail" and "FindPassword" of type bool. "ThisUser" which is the user object
   
 ### Friend
-- Friend: the strructure of the Friend object. The variable names are case sensitive
+- Friend: the structure of the Friend object. The variable names are case sensitive
 
-  - ID: do not worry about this. Unique id of the relationship
+  - ID: *do not worry about this* Unique id of the relationship
   
-  - CreatedAt: do not worry about this. Time and date the user was created at
+  - CreatedAt: *do not worry about this* Time and date the user was created at
   
-  - UpdatedAt: do not worry about this. Time and date the user was updated at
+  - UpdatedAt: *do not worry about this* Time and date the user was updated at
   
-  - DeletedAt: do not worry about this. Time and date the user was deleted at
+  - DeletedAt: *do not worry about this* Time and date the user was deleted at
   
   - User1: id of User1
   
@@ -91,53 +135,53 @@
   
   - WhoSent: int value. 0 means User1 and User2 are friends, 1 means User1 sent a request to User2, 2 means User2 sent a request to User1
   
-- GetAllFriends(): GET
+- __GetAllFriends()__ - __GET__
 
-  - Route: /friends
+  - Route: __/api/friends__
   
   - Input: body must contain the user object of the current user
   
   - Output: "IDs" as an array of ints which represent the IDs of the friends of this user. "ErrorExist" as bool
   
-- SendFriendRequest(): PUT
+- __SendFriendRequest()__ - __PUT__
 
   - Notes: cannot sent a friend request if you already sent one, are already friends, or the other person sent you a request
   
-  - Route: /friends/sendFriendRequest?id=
+  - Route: __/api/friends/sendFriendRequest?id=__
   
   - Input: the body must contain the user object of the user sending the request. The URL must contain the id of the user recieving the request
   
   - Output: "Successful", "ErrorExist" as bools
   
-- GetOutgoingFriendRequests(): GET
+- __GetOutgoingFriendRequests()__ - __GET__
 
   - Notes: gets the list of people that you sent a request to
   
-  - Route: /friends/getOutgoingFriendRequests
+  - Route: __/api/friends/getOutgoingFriendRequests__
   
   - Input: body must contain the user object
   
   - Output: "IDs" as an array of user ids that you sent a request to. "ErrorExist" as a bool
   
-- GetIngoingFriendRequests(): GET
+- __GetIngoingFriendRequests()__ - __GET__
 
   - Notes: gets a list of people that sent you a request
   
-  - Route: /friends/getIngoingFriendRequests
+  - Route: __/api/friends/getIngoingFriendRequests__
   
   - Input: body must contain the user object
   
   - Output: "IDs" as an array of user ids that sent a request to you. "ErrorExist" as a bool
   
-- AcceptFriendRequest(): PUT
+- __AcceptFriendRequest()__ - __PUT__
 
-  - Route: /friends/acceptFriendRequest?id=
+  - Route: __/api/friends/acceptFriendRequest?id=__
   
   - Input: body must contain the user object. The URL must contain the id of the user that sent you the request
 
   - Output: "Successful", "ErrorExist" as bools
 
-- DeclineFriendRequest(): DELETE
+- __DeclineFriendRequest()__ - __DELETE__
 
   - Route: /friends/declineFriendRequest?id=
   
@@ -145,27 +189,42 @@
 
   - Output: "Successful", "ErrorExist" as bools
 
-- RemoveFriend(): DELETE
+- __RemoveFriend()__ - __DELETE__
 
-  - Route: /friends/removeFriend?id=
+  - Route: __/api/friends/removeFriend?id=__
   
   - Input: body must contain the user object. The URL must contain the id of the user that you are removing
 
   - Output: "Successful", "ErrorExist" as bools
-
 ### FRONTEND TESTS:
  - Sign Up Form Tests
+
    - Correctly Sign Up: Given valid info for all parameters, ensuring the page adds them to the databse and routes the user to their page
+
    - Invalid Email: Given an invalid email, ensuring the website does not take those values as an account
+
    - Insecure Password: Given a password less than 8 characters, not allowing a user to sign up until it is further secured
+
    - Already Taken Email: Does not allow an account to be signed up if the email is already in the database (THIS TEST EXISTS BUT FUNCTIONALITY IS NOT IMPLEMENTED YET)
+
    - Already Taken Username: Does not allow an account to be signed up if the username is already in the database (THIS TEST EXISTS BUT FUNCTIONALITY IS NOT IMPLEMENTED YET)
+
+
 - Login Form Tests:
+
    - Correctly Login: Login with a currently used email and password and route to the profile page on success
+
    - Wrong Password: Login with an email that's in the database but a password that is not, get a login failed message
+
    - Wrong email: Login with an email not in the database and receive a failed login message
+
    - Multiple Wrong Attempts: Try multiple login attempts on the same email, currently just check it always fails but may potentially add an account lock-out policy and check for that
+
+
 - Navigation Tests:
+
    - Main Page Suite: Try every link on the top nav bar and link bar from the main page to other pages (including itself)
+
    - Login Page Suite: Try every link on the top nav bar and link bar from the login page to other pages (including itself)
+
    - Sign Up Page Suite: Try every link on the top nav bar and link bar from the sign up page to other pages (including itself)
