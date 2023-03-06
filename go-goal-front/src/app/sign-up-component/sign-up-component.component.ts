@@ -1,19 +1,17 @@
-
 import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms'
 import { BackendConnectService, loginInfo } from '../backend-connect.service';
 import { HttpClient } from '@angular/common/http';
 import { userInfo } from '../backend-connect.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up-component',
   templateUrl: './sign-up-component.component.html',
   styleUrls: ['./sign-up-component.component.css'],
-  //providers: [BackendConnectService] Not actually needed
+  //providers: [BackendConnectService] Not ctually needed
 })
 export class SignUpComponentComponent {
-  constructor(private backend: BackendConnectService, private http: HttpClient, private router: Router) { }
+  constructor(private backend: BackendConnectService, private http: HttpClient) { }
   userData: userInfo = { loggedIn: false, FirstName: '', LastName: '', Email: '', Username: '', Password: '' };
   signUpMessage?: string;
   submitted: boolean = false;
@@ -32,7 +30,7 @@ export class SignUpComponentComponent {
     else {
       this.backend.signThemUp(userData).subscribe(() => { console.log('User Sign up request sent') })
       this.signUpMessage = 'Account Created!';
-      this.router.navigate([`/profile/${this.userData.Username}`])
+
       // TO DO: CHECK IF THE BACKEND STORED THE USER -- WORK WITH BACKEND TO DO THIS
 
 
