@@ -66,6 +66,48 @@
   
   - Output: "ThisUser" as a user object, and "ErrorExist" as a bool
 
+- __UpdateUsername__ - __PUT__
+
+  - Route: __/api/users/username__
+  
+  - Input: "User" to be updated and "Username" of type string
+  
+  - Output: "User" back with the updated change 
+
+- __UpdateFirstname__ - __PUT__
+
+  - Route: __/api/users/firstname__
+  
+  - Input: "User" to be updated and "Firstname" of type string
+  
+  - Output: "User" back with the updated change 
+
+- __UpdateLastname__ - __PUT__
+
+  - Route: __/api/users/lastname__
+  
+  - Input: "User" to be updated and "Lastname" of type string
+  
+  - Output: "User" back with the updated change 
+  
+- __UpdateEmail__ - __PUT__
+
+  - Route: __/api/users/email__
+  
+  - Input: "User" to be updated and "Email" of type string
+  
+  - Output: "User" back with the updated change 
+  
+  
+- __UpdatePassword__ - __PUT__
+
+  - Route: __/api/users/password__
+  
+  - Input: "User" to be updated and "Password" of type string
+  
+  - Output: "User" back with the updated change 
+  
+  
 - __CheckLogin()__ - __GET__
 
   - Route: __/api/login__ 
@@ -154,3 +196,35 @@
   - Input: body must contain the user object. The URL must contain the id of the user that you are removing
 
   - Output: "Successful", "ErrorExist" as bools
+### FRONTEND TESTS:
+ - Sign Up Form Tests
+
+   - Correctly Sign Up: Given valid info for all parameters, ensuring the page adds them to the databse and routes the user to their page
+
+   - Invalid Email: Given an invalid email, ensuring the website does not take those values as an account
+
+   - Insecure Password: Given a password less than 8 characters, not allowing a user to sign up until it is further secured
+
+   - Already Taken Email: Does not allow an account to be signed up if the email is already in the database (THIS TEST EXISTS BUT FUNCTIONALITY IS NOT IMPLEMENTED YET)
+
+   - Already Taken Username: Does not allow an account to be signed up if the username is already in the database (THIS TEST EXISTS BUT FUNCTIONALITY IS NOT IMPLEMENTED YET)
+
+
+- Login Form Tests:
+
+   - Correctly Login: Login with a currently used email and password and route to the profile page on success
+
+   - Wrong Password: Login with an email that's in the database but a password that is not, get a login failed message
+
+   - Wrong email: Login with an email not in the database and receive a failed login message
+
+   - Multiple Wrong Attempts: Try multiple login attempts on the same email, currently just check it always fails but may potentially add an account lock-out policy and check for that
+
+
+- Navigation Tests:
+
+   - Main Page Suite: Try every link on the top nav bar and link bar from the main page to other pages (including itself)
+
+   - Login Page Suite: Try every link on the top nav bar and link bar from the login page to other pages (including itself)
+
+   - Sign Up Page Suite: Try every link on the top nav bar and link bar from the sign up page to other pages (including itself)
