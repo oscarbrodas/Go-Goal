@@ -35,6 +35,10 @@ export class LoginService {
     Password: ''
 
   }
+  loginInfo: loginInfo = {
+    Email: '',
+    Password: ''
+  }
   users: userInfo[] = [];
 
 

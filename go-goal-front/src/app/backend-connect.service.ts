@@ -35,6 +35,6 @@ export interface userInfo { // ADD: User data as necessary
 }
 
 export interface loginInfo {
-  username: string;
-  password: string;
+  Email: string;
+  Password: string;
 }
