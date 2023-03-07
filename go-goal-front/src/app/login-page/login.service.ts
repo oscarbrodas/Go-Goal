@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Input, SimpleChanges } from '@angular/core';
 import { BackendConnectService, userInfo } from '../backend-connect.service';
 import { LoginPageComponent } from './login-page.component';
 import { HttpClient } from '@angular/common/http';
 import { ActivationStart, Router, ActivatedRoute } from '@angular/router';
 import { loginInfo } from '../backend-connect.service';
+import { NavbarTopComponent } from '../navbar/navbar-top/navbar-top.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { loginInfo } from '../backend-connect.service';
 export class LoginService {
 
   loginFailed: boolean = false;
-  loggedIn: boolean = false;
+  @Input() loggedIn: boolean = false;
 
   constructor(private backend: BackendConnectService, private route: ActivatedRoute, private router: Router) {
 
@@ -23,6 +24,10 @@ export class LoginService {
         }
       }
     });
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
 
   }
 
@@ -87,6 +92,8 @@ export class LoginService {
     this.loginFailed = false;
 
   }
+
+
 
 
 }

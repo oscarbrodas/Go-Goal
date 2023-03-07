@@ -9,6 +9,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 export class NavbarTopComponent {
 
   screenThin: boolean = false;
+  verified: boolean = false;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
