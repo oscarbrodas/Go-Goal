@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms'
+import { FormGroup, NgForm } from '@angular/forms'
 import { BackendConnectService, loginInfo } from '../backend-connect.service';
 import { HttpClient } from '@angular/common/http';
 import { userInfo } from '../backend-connect.service';
@@ -11,7 +11,13 @@ import { userInfo } from '../backend-connect.service';
   //providers: [BackendConnectService] Not ctually needed
 })
 export class SignUpComponentComponent {
-  constructor(private backend: BackendConnectService, private http: HttpClient) { }
+
+  constructor(
+    private backend: BackendConnectService,
+    private http: HttpClient
+
+  ) {
+  }
   userData: userInfo = { loggedIn: false, FirstName: '', LastName: '', Email: '', Username: '', Password: '' };
   signUpMessage?: string;
   submitted: boolean = false;

@@ -830,7 +830,7 @@ func TestCheckLogin2(t *testing.T) {
 		panic(err)
 	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("GET", "", &buf)
+	r, err := http.NewRequest("POST", "", &buf)
 	if err != nil {
 		panic(err)
 	}
