@@ -240,24 +240,21 @@ func CheckLogin(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
-		// these create temporary structs
-		emailAndPassword := struct {
-			Email    string
-			Password string
-		}{}
 		returnInfo := struct { // the names of this json return must be standardized
 			FindEmail    bool
 			FindPassword bool
 			ThisUser     User
 		}{}
 
-		util.DecodeJSONRequest(&emailAndPassword, r.Body, w)
+		params := mux.Vars(r)
+		email := params["email"]
+		password := params["password"]
 
-		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", emailAndPassword.Email).Find(&returnInfo.FindEmail)
-		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ? AND password = ?", emailAndPassword.Email, emailAndPassword.Password).Find(&returnInfo.FindPassword)
+		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", email).Find(&returnInfo.FindEmail)
+		globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ? AND password = ?", email, password).Find(&returnInfo.FindPassword)
 
 		if returnInfo.FindEmail && returnInfo.FindPassword {
-			globalDB.Where("email = ?", emailAndPassword.Email).First(&returnInfo.ThisUser)
+			globalDB.Where("email = ?", email).First(&returnInfo.ThisUser)
 		}
 		json.NewEncoder(w).Encode(returnInfo)
 	}
