@@ -43,7 +43,10 @@ export class LoginService {
 
   }
   friends: userInfo[] = [];
-
+  loginInfo: loginInfo = {
+    Email: '',
+    Password: ''
+  }
 
 
   getUser(): userInfo { return this.user }
@@ -64,25 +67,30 @@ export class LoginService {
   }
 
 
-  login(loginInfo: FormGroup): void { // DOES NOT WORK YET
+  login(li: FormGroup): void { // DOES NOT WORK YET
 
     // ADD: Get and submit loginForm to backend for verification from loginComponent
     // ADD: Get Data using http, update current user data and loggedin status in login service
-    this.backend.getLoginInfo(loginInfo).subscribe((data) => {
+
+    this.loginInfo.Email = li.value.Email;
+    this.loginInfo.Password = li.value.Password;
+
+
+    this.backend.getLoginInfo(this.loginInfo).subscribe((data) => {
       console.log("Attempting to log in...");
       console.log(data);
 
 
       // Checks if user exists in database and sets user data accordingly
-      if (data.FindEmail == true && data.FindPassword == true) {
-        this.user.loggedIn = true;
-        this.user.ID = data.ThisUser.ID;
-        this.user.Username = data.ThisUser.Username;
-        this.user.FirstName = data.ThisUser.FirstName;
-        this.user.LastName = data.ThisUser.LastName;
-        this.user.Email = data.ThisUser.Email;
-        this.user.Password = data.ThisUser.Password;
-      }
+      // if (data.FindEmail == true && data.FindPassword == true) {
+      //   this.user.loggedIn = true;
+      //   this.user.ID = data.ThisUser.ID;
+      //   this.user.Username = data.ThisUser.Username;
+      //   this.user.FirstName = data.ThisUser.FirstName;
+      //   this.user.LastName = data.ThisUser.LastName;
+      //   this.user.Email = data.ThisUser.Email;
+      //   this.user.Password = data.ThisUser.Password;
+      // }
 
       console.log(this.user);
 

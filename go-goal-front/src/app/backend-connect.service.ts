@@ -14,11 +14,8 @@ export class BackendConnectService {
 
   }
 
-  public getLoginInfo(li: FormGroup): Observable<any> {
-    let loginParams = new HttpParams()
-    loginParams = loginParams.append("Email", li.getRawValue().Email);
-    loginParams = loginParams.append("Password", li.getRawValue().Password);
-    return this.http.get<FormGroup>(`${this.backendURL}login`, { params: loginParams, headers: new HttpHeaders({ 'Content-Type': 'application/json' }) })
+  public getLoginInfo(loginInfo: loginInfo): Observable<loginInfo> {
+    return this.http.post<loginInfo>(`${this.backendURL}login`, loginInfo, this.httpOptions);
   };
 
   public signThemUp(userData: userInfo): Observable<userInfo> {
