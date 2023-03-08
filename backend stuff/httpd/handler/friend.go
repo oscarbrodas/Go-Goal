@@ -3,9 +3,11 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"go-goal/util"
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
@@ -31,20 +33,20 @@ func GetAllFriends(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var friends []Friend
-		var user User
+		var ThisUser User
 		returnInfo := struct {
 			IDs        []uint // name needs to be standardized
 			ErrorExist bool
 		}{}
-		json.NewDecoder(r.Body).Decode(&user)
+		util.DecodeJSONRequest(&ThisUser, r.Body, w)
 
-		result := globalDB.Where("(user1 = ? OR user2 = ?) AND who_sent = 0", user.ID, user.ID).Find(&friends)
+		result := globalDB.Where("(user1 = ? OR user2 = ?) AND who_sent = 0", ThisUser.ID, ThisUser.ID).Find(&friends)
 		if result.Error != nil {
 			returnInfo.ErrorExist = true
 			print(result.Error)
 		} else {
 			for i := 0; i < len(friends); i++ {
-				if friends[i].User1 != user.ID {
+				if friends[i].User1 != ThisUser.ID {
 					returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
 				} else {
 					returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
@@ -64,14 +66,15 @@ func GetAllFriends(globalDB *gorm.DB) http.HandlerFunc {
 func SendFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		json.NewDecoder(r.Body).Decode(&thisUser)
+		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool
 		var exists2 bool
@@ -109,21 +112,21 @@ func SendFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 func GetOutgoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var user User
+		var ThisUser User
 		var friends []Friend
 		returnInfo := struct { // need to be standardized
 			IDs        []uint
 			ErrorExist bool
 		}{}
 
-		json.NewDecoder(r.Body).Decode(&user)
-		globalDB.Where("user1 = ? AND who_sent = 1", user.ID).Find(&friends)
+		util.DecodeJSONRequest(&ThisUser, r.Body, w)
+		globalDB.Where("user1 = ? AND who_sent = 1", ThisUser.ID).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
 		}
 
-		json.NewDecoder(r.Body).Decode(&user)
-		globalDB.Where("user2 = ? AND who_sent = ?", user.ID, 2).Find(&friends)
+		json.NewDecoder(r.Body).Decode(&ThisUser)
+		globalDB.Where("user2 = ? AND who_sent = ?", ThisUser.ID, 2).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
 		}
@@ -137,21 +140,21 @@ func GetOutgoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var user User
+		var ThisUser User
 		var friends []Friend
 		returnInfo := struct { // need to be standardized
 			IDs        []uint
 			ErrorExist bool
 		}{}
 
-		json.NewDecoder(r.Body).Decode(&user)
-		globalDB.Where("user1 = ? AND who_sent = ?", user.ID, 2).Find(&friends)
+		util.DecodeJSONRequest(&ThisUser, r.Body, w)
+		globalDB.Where("user1 = ? AND who_sent = ?", ThisUser.ID, 2).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
 		}
 
-		json.NewDecoder(r.Body).Decode(&user)
-		globalDB.Where("user2 = ? AND who_sent = ?", user.ID, 1).Find(&friends)
+		json.NewDecoder(r.Body).Decode(&ThisUser)
+		globalDB.Where("user2 = ? AND who_sent = ?", ThisUser.ID, 1).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
 		}
@@ -166,13 +169,14 @@ func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		json.NewDecoder(r.Body).Decode(&thisUser)
+		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool //much better way to check if soemthing exists
 		var exists2 bool
@@ -200,13 +204,14 @@ func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		json.NewDecoder(r.Body).Decode(&thisUser)
+		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool //much better way to check if soemthing exists
 		var exists2 bool
@@ -234,13 +239,14 @@ func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 func RemoveFriend(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		otherID := r.URL.Query().Get("id")
+		params := mux.Vars(r)
+		otherID := params["id"]
 		var thisUser User
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		json.NewDecoder(r.Body).Decode(&thisUser)
+		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool //much better way to check if soemthing exists
 		var exists2 bool

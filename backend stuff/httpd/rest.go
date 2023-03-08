@@ -26,7 +26,8 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/users/{id}/lastname", handler.UpdateLastname(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/email", handler.UpdateEmail(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/password", handler.UpdatePassword(globalDB)).Methods("PUT")
-	s.HandleFunc("/login", handler.CheckLogin(globalDB)).Methods("POST")
+	s.HandleFunc("/login/{email}/{password}", handler.CheckLogin(globalDB)).Methods("GET")
+	s.HandleFunc("/users/checkUsername/{username}", handler.CheckUsername(globalDB)).Methods("GET")
 
 	// Create and Retrieve Goals
 	s.HandleFunc("/goals", handler.CreateGoal(globalDB)).Methods("POST")
@@ -35,12 +36,12 @@ func httpHandler() http.Handler {
 
 	// Retrieve/Remove Friends, Handle Friend Requests
 	s.HandleFunc("/friends", handler.GetAllFriends(globalDB)).Methods("GET")
-	s.HandleFunc("/friends/sendFriendRequest", handler.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
+	s.HandleFunc("/friends/sendFriendRequest/{id}", handler.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
 	s.HandleFunc("/friends/getOutgoingFriendRequests", handler.GetOutgoingFriendRequests(globalDB)).Methods("GET")
 	s.HandleFunc("/friends/getIngoingFriendRequests", handler.GetIngoingFriendRequests(globalDB)).Methods("GET")
-	s.HandleFunc("/friends/acceptFriendRequest", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
-	s.HandleFunc("/friends/declineFriendRequest", handler.DeclineFriendRequest(globalDB)).Methods("DELETE")
-	s.HandleFunc("/friends/removeFriend", handler.RemoveFriend(globalDB)).Methods("DELETE")
+	s.HandleFunc("/friends/acceptFriendRequest/{id}", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
+	s.HandleFunc("/friends/declineFriendRequest/{id}", handler.DeclineFriendRequest(globalDB)).Methods("DELETE")
+	s.HandleFunc("/friends/removeFriend/{id}", handler.RemoveFriend(globalDB)).Methods("DELETE")
 
 	// Route to serve site - MUST BE FINAL ROUTE
 	r.PathPrefix("/").Handler(AngularHandler).Methods("GET")

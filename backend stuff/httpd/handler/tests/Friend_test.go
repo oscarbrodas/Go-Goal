@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -100,12 +101,15 @@ func TestSendFriendRequest1(t *testing.T) {
 		panic(err)
 	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("POST", "/?id=3", &buf)
+	r, err := http.NewRequest("POST", "/api/friends/sendFriendRequest/3", &buf)
 	if err != nil {
 		panic(err)
 	}
 
-	handler.SendFriendRequest(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/sendFriendRequest/{id}", handler.SendFriendRequest(globalDB)).Methods("POST")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -160,12 +164,15 @@ func TestSendFriendRequest2(t *testing.T) {
 		panic(err)
 	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("POST", "/?id=2", &buf)
+	r, err := http.NewRequest("POST", "/api/friends/sendFriendRequest/2", &buf)
 	if err != nil {
 		panic(err)
 	}
 
-	handler.SendFriendRequest(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/sendFriendRequest/{id}", handler.SendFriendRequest(globalDB)).Methods("POST")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -293,12 +300,15 @@ func TestAcceptFriendRequest(t *testing.T) {
 		panic(err)
 	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("PUT", "/?id=1", &buf)
+	r, err := http.NewRequest("PUT", "/api/friends/acceptFriendRequest/1", &buf)
 	if err != nil {
 		panic(err)
 	}
 
-	handler.AcceptFriendRequest(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/acceptFriendRequest/{id}", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -341,12 +351,15 @@ func TestDeclineFriendRequest(t *testing.T) {
 		panic(err)
 	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("DELETE", "/?id=1", &buf)
+	r, err := http.NewRequest("PUT", "/api/friends/declineFriendRequest/1", &buf)
 	if err != nil {
 		panic(err)
 	}
 
-	handler.DeclineFriendRequest(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/declineFriendRequest/{id}", handler.DeclineFriendRequest(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -389,12 +402,15 @@ func TestRemoveFriend(t *testing.T) {
 		panic(err)
 	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("DELETE", "/?id=1", &buf)
+	r, err := http.NewRequest("PUT", "/api/friends/removeFriend/1", &buf)
 	if err != nil {
 		panic(err)
 	}
 
-	handler.RemoveFriend(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/removeFriend/{id}", handler.RemoveFriend(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
