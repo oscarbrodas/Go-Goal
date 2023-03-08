@@ -1,11 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class BackendConnectService {
-  backendURL = "http://localhost:9000/"
+  backendURL = "http://localhost:9000/api/"
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -13,25 +14,27 @@ export class BackendConnectService {
 
   }
 
-  public getLoginInfo(li: loginInfo): Observable<userInfo> {
-    return this.http.get<userInfo>(`${this.backendURL}login`) // SOMEHOW SEND THE LOGIN INFO TO THE BACKEND FOR THIS TO WORK
+  public getLoginInfo(li: FormGroup): Observable<any> {
+    let loginParams = new HttpParams()
+    loginParams = loginParams.append("Email", li.getRawValue().Email);
+    loginParams = loginParams.append("Password", li.getRawValue().Password);
+    return this.http.get<FormGroup>(`${this.backendURL}login`, { params: loginParams, headers: new HttpHeaders({ 'Content-Type': 'application/json' }) })
   };
 
   public signThemUp(userData: userInfo): Observable<userInfo> {
-    return this.http.post<userInfo>(`${this.backendURL}users`, userData, this.httpOptions)
+    return this.http.post<userInfo>(`${this.backendURL}users`, userData, this.httpOptions);
   }
 
 }
 
 export interface userInfo { // ADD: User data as necessary 
+  ID: number;
   loggedIn: boolean;
   Username: string;
   FirstName: string;
   LastName: string;
   Email: string;
   Password: string;
-
-
 }
 
 export interface loginInfo {

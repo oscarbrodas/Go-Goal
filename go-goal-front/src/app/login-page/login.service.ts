@@ -4,7 +4,8 @@ import { LoginPageComponent } from './login-page.component';
 import { HttpClient } from '@angular/common/http';
 import { ActivationStart, Router, ActivatedRoute } from '@angular/router';
 import { loginInfo } from '../backend-connect.service';
-import { NavbarTopComponent } from '../navbar/navbar-top/navbar-top.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +32,9 @@ export class LoginService {
 
   }
 
-  user: userInfo = {
+  @Input() user: userInfo = {
     loggedIn: false,
+    ID: 0,
     Username: '',
     FirstName: '',
     LastName: '',
@@ -40,7 +42,8 @@ export class LoginService {
     Password: ''
 
   }
-  users: userInfo[] = [];
+  friends: userInfo[] = [];
+
 
 
   getUser(): userInfo { return this.user }
@@ -50,6 +53,7 @@ export class LoginService {
   clearUser(): void {
     this.user = {
       loggedIn: false,
+      ID: 0,
       Username: '',
       FirstName: '',
       LastName: '',
@@ -60,10 +64,32 @@ export class LoginService {
   }
 
 
-  login(): void { // DOES NOT WORK YET
-    // ADD: Get and submit loginForm to backend for verification from loginComponent
+  login(loginInfo: FormGroup): void { // DOES NOT WORK YET
 
+    // ADD: Get and submit loginForm to backend for verification from loginComponent
     // ADD: Get Data using http, update current user data and loggedin status in login service
+    this.backend.getLoginInfo(loginInfo).subscribe((data) => {
+      console.log("Attempting to log in...");
+      console.log(data);
+
+
+      // Checks if user exists in database and sets user data accordingly
+      if (data.FindEmail == true && data.FindPassword == true) {
+        this.user.loggedIn = true;
+        this.user.ID = data.ThisUser.ID;
+        this.user.Username = data.ThisUser.Username;
+        this.user.FirstName = data.ThisUser.FirstName;
+        this.user.LastName = data.ThisUser.LastName;
+        this.user.Email = data.ThisUser.Email;
+        this.user.Password = data.ThisUser.Password;
+      }
+
+      console.log(this.user);
+
+    });
+
+
+
     if (this.user.loggedIn) {
       // this.backend.getLoginInfo().subscribe(() => { }); // ADD: Get user data from backend ONCE BACKEND IS CONNECTED
       console.log("Successfully logged in.");
@@ -74,7 +100,7 @@ export class LoginService {
     }
 
     this.verifyLogin(this.user);
-    this.users = []
+    this.friends = []
   }
 
   verifyLogin(user: userInfo): void {

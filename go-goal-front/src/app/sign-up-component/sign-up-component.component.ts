@@ -18,7 +18,7 @@ export class SignUpComponentComponent {
 
   ) {
   }
-  userData: userInfo = { loggedIn: false, FirstName: '', LastName: '', Email: '', Username: '', Password: '' };
+  userData: userInfo = { loggedIn: false, ID: 0, FirstName: '', LastName: '', Email: '', Username: '', Password: '' };
   signUpMessage?: string;
   submitted: boolean = false;
   users: userInfo[] = [];

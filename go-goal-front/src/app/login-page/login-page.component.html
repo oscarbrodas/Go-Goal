@@ -6,14 +6,13 @@
             <b class="title">LOGIN</b>
             <div class="login">
 
-                <form (submit)="Submit(loginForm)">
+                <form [formGroup]="loginForm" (ngSubmit)="Submit(loginForm)">
 
                     <label class="form">Email: </label>
-                    <input type="text" class="form" name="Email" formControlName="Email" [(ngModel)]="loginForm.Email">
+                    <input type="text" class="form" name="Email" formControlName="Email">
                     <br>
                     <label class="form">Password: </label>
-                    <input type="password" class="form" name="Password" formControlName="Password"
-                        [(ngModel)]="loginForm.Password">
+                    <input type="password" class="form" name="Password" formControlName="Password">
                     <br>
                     <button type="submit" name="loginButton">Log In</button>
 
