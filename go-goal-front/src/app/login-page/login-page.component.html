@@ -21,6 +21,7 @@
                 </form>
 
                 <p *ngIf="checkFailedLogin()">Login Failed. Please try again</p>
+                <p *ngIf="checkSuccessLogin()">Login successful! Redirecting...</p>
             </div>
         </body>
     </div>

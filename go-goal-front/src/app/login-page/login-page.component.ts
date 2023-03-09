@@ -33,6 +33,10 @@ export class LoginPageComponent {
     return this.loginService.loginFailed
   }
 
+  checkSuccessLogin(): boolean {
+    return this.loginService.loginSuccess
+  }
+
 
 }
 

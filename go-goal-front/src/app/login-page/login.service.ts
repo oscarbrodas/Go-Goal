@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class LoginService {
 
   loginFailed: boolean = false;
+  loginSuccess: boolean = false;
   @Input() loggedIn: boolean = false;
 
   constructor(private backend: BackendConnectService, private route: ActivatedRoute, private router: Router) {
@@ -84,12 +85,15 @@ export class LoginService {
         this.user.LastName = data.ThisUser.LastName;
         this.user.Email = data.ThisUser.Email;
         this.user.Password = data.ThisUser.Password;
+        this.loginFailed = false;
+        this.loginSuccess = true;
 
         console.log("Successfully logged in.");
       }
       else {
         console.log('ERROR: Login in status failed to update');
         this.loginFailed = true;
+        this.loginSuccess = false;
       }
 
     });
@@ -105,6 +109,7 @@ export class LoginService {
     } // CHANGE & ADD: Reroute to User Page
     else {
       this.loginFailed = true;
+      this.loginSuccess = false;
     }
   }
 
@@ -113,6 +118,7 @@ export class LoginService {
     this.clearUser();
     this.loginFailed = false;
     this.loggedIn = false;
+    this.loginSuccess = false;
 
   }
 
