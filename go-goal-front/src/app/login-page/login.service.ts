@@ -68,52 +68,41 @@ export class LoginService {
 
 
   login(li: FormGroup): void { // DOES NOT WORK YET
-
-    // ADD: Get and submit loginForm to backend for verification from loginComponent
-    // ADD: Get Data using http, update current user data and loggedin status in login service
-
     this.loginInfo.Email = li.value.Email;
     this.loginInfo.Password = li.value.Password;
 
-
+    // GET REQUEST FOR USER INFORMATION
     this.backend.getLoginInfo(this.loginInfo).subscribe((data) => {
       console.log("Attempting to log in...");
-      console.log(data);
-
 
       // Checks if user exists in database and sets user data accordingly
-      // if (data.FindEmail == true && data.FindPassword == true) {
-      //   this.user.loggedIn = true;
-      //   this.user.ID = data.ThisUser.ID;
-      //   this.user.Username = data.ThisUser.Username;
-      //   this.user.FirstName = data.ThisUser.FirstName;
-      //   this.user.LastName = data.ThisUser.LastName;
-      //   this.user.Email = data.ThisUser.Email;
-      //   this.user.Password = data.ThisUser.Password;
-      // }
+      if (data.FindEmail == true && data.FindPassword == true) {
+        this.user.loggedIn = true;
+        this.user.ID = data.ThisUser.ID;
+        this.user.Username = data.ThisUser.Username;
+        this.user.FirstName = data.ThisUser.FirstName;
+        this.user.LastName = data.ThisUser.LastName;
+        this.user.Email = data.ThisUser.Email;
+        this.user.Password = data.ThisUser.Password;
 
-      console.log(this.user);
+        console.log("Successfully logged in.");
+      }
+      else {
+        console.log('ERROR: Login in status failed to update');
+        this.loginFailed = true;
+      }
 
     });
 
-
-
-    if (this.user.loggedIn) {
-      // this.backend.getLoginInfo().subscribe(() => { }); // ADD: Get user data from backend ONCE BACKEND IS CONNECTED
-      console.log("Successfully logged in.");
-    }
-    else {
-      console.log('ERROR: Login in status failed to update');
-      this.loginFailed = true;
-    }
-
     this.verifyLogin(this.user);
-    this.friends = []
+    this.friends = [] // ADD: Get friends list from backend
   }
 
   verifyLogin(user: userInfo): void {
 
-    if (user.loggedIn) { } // CHANGE & ADD: Reroute to User Page
+    if (user.loggedIn) {
+
+    } // CHANGE & ADD: Reroute to User Page
     else {
       this.loginFailed = true;
     }
@@ -121,9 +110,9 @@ export class LoginService {
 
   logout(): void {
     // ADD: Logout functionality as needed
-
     this.clearUser();
     this.loginFailed = false;
+    this.loggedIn = false;
 
   }
 
