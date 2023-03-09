@@ -1,7 +1,7 @@
 .bar {
     background-color: rgba(0, 0, 0, 1);
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     height: 200px;
     position: relative;
     bottom: 0px;
