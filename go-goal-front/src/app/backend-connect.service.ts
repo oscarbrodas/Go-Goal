@@ -18,8 +18,8 @@ export class BackendConnectService {
     return this.http.post<JSON>(`${this.backendURL}login`, loginInfo, this.httpOptions);
   };
 
-  public signThemUp(userData: userInfo): Observable<userInfo> {
-    return this.http.post<userInfo>(`${this.backendURL}users`, userData, this.httpOptions);
+  public signThemUp(userData: userInfo): Observable<any> {
+    return this.http.post<JSON>(`${this.backendURL}users`, userData, this.httpOptions);
   }
 
 }

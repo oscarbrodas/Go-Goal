@@ -5,28 +5,26 @@
             <b class="title">Create Account</b>
             <br>
             <div class="signup">
-                <form (submit)="Submit(userData)">
+                <form [formGroup]="userForm" (submit)="Submit(userForm)">
                     <label for="FirstName">First Name: </label>
                     <input type="text" class="form" name="FirstName" placeholder="First Name"
-                        [(ngModel)]="userData.FirstName">
+                        formControlName="FirstName">
                     <br>
                     <label for="LastName">Last Name: </label>
-                    <input type="text" class="form" name="LastName" placeholder="Last Name"
-                        [(ngModel)]="userData.LastName">
+                    <input type="text" class="form" name="LastName" placeholder="Last Name" formControlName="LastName">
                     <br>
                     <label for="Email">Email: </label>
-                    <input type="text" class="form" name="Email" placeholder="Email" [(ngModel)]="userData.Email">
+                    <input type="text" class="form" name="Email" placeholder="Email" formControlName="Email">
                     <br>
                     <label for="Username">Username: </label>
-                    <input type="text" class="form" name="Username" placeholder="Username"
-                        [(ngModel)]="userData.Username">
+                    <input type="text" class="form" name="Username" placeholder="Username" formControlName="Username">
                     <br>
                     <label for="Password">Password: </label>
                     <input type="password" class="form" name="Password" placeholder="********"
-                        [(ngModel)]="userData.Password">
+                        formControlName="Password">
                     <br>
                     <div class="button">
-                        <button type="submit" formControlName="signUpButton">Sign Up</button>
+                        <button type="submit">Sign Up</button>
                     </div>
                 </form>
             </div>

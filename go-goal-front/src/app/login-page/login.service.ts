@@ -78,6 +78,7 @@ export class LoginService {
 
       // Checks if user exists in database and sets user data accordingly
       if (data.FindEmail == true && data.FindPassword == true) {
+        console.log("Successfully logged in.");
         this.user.loggedIn = true;
         this.user.ID = data.ThisUser.ID;
         this.user.Username = data.ThisUser.Username;
@@ -87,8 +88,10 @@ export class LoginService {
         this.user.Password = data.ThisUser.Password;
         this.loginFailed = false;
         this.loginSuccess = true;
+        this.loggedIn = true;
 
-        console.log("Successfully logged in.");
+        this.friends = [] // ADD: Get friends list from backend
+
       }
       else {
         console.log('ERROR: Login in status failed to update');
@@ -96,10 +99,9 @@ export class LoginService {
         this.loginSuccess = false;
       }
 
-    });
+      this.verifyLogin(this.user);
 
-    this.verifyLogin(this.user);
-    this.friends = [] // ADD: Get friends list from backend
+    });
   }
 
   verifyLogin(user: userInfo): void {
