@@ -80,7 +80,7 @@ export class SignUpComponentComponent {
         this.loginForm.controls['Password'].setValue(this.userData.Password);
         this.loginService.login(this.loginForm);
         // DO: Reroute to User Page
-
+        this.signUpMessage = 'Account Created! Redirecting...'
       });
     }
   }
