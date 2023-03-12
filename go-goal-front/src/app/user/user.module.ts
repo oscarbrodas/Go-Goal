@@ -12,4 +12,7 @@ import { GoalsComponent } from './goals/goals.component';
     CommonModule
   ]
 })
-export class UserModule { }
+export class UserModule {
+
+
+}
