@@ -17,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BackendConnectService } from './backend-connect.service'
 import { LoginService } from './login-page/login.service';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { LoginService } from './login-page/login.service';
     LoginPageComponent,
     SignUpComponentComponent,
     MainComponent,
-    LinkbarComponent
+    LinkbarComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
