@@ -7,4 +7,11 @@ import { Component } from '@angular/core';
 })
 export class UserComponent {
 
+  constructor() { }
+
+  ngOnInit() {
+    console.log("User Loaded");
+
+  }
+
 }
