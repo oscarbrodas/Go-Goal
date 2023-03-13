@@ -1,4 +1,4 @@
-import { Injectable, Input, SimpleChanges } from '@angular/core';
+import { Injectable, SimpleChanges } from '@angular/core';
 import { BackendConnectService, userInfo } from '../backend-connect.service';
 import { LoginPageComponent } from './login-page.component';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ export class LoginService {
 
   loginFailed: boolean = false;
   loginSuccess: boolean = false;
-  @Input() loggedIn: boolean = false;
+  loggedIn: boolean = false;
 
   constructor(private backend: BackendConnectService, private route: ActivatedRoute, private router: Router) {
 
@@ -30,10 +30,10 @@ export class LoginService {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
+    console.log(changes);
   }
 
-  @Input() user: userInfo = {
+  user: userInfo = {
     loggedIn: false,
     ID: 0,
     Username: '',
@@ -51,9 +51,9 @@ export class LoginService {
 
 
   getUser(): userInfo { return this.user }
-
   loggedInStatus(): boolean { return this.user.loggedIn }
 
+  // Clears User
   clearUser(): void {
     this.user = {
       loggedIn: false,
@@ -67,14 +67,14 @@ export class LoginService {
     }
   }
 
-
-  login(li: FormGroup): void { // DOES NOT WORK YET
+  // Logs in user
+  login(li: FormGroup): void {
     this.loginInfo.Email = li.value.Email;
     this.loginInfo.Password = li.value.Password;
 
     // GET REQUEST FOR USER INFORMATION
+    console.log("Attempting to log in...");
     this.backend.getLoginInfo(this.loginInfo).subscribe((data) => {
-      console.log("Attempting to log in...");
 
       // Checks if user exists in database and sets user data accordingly
       if (data.FindEmail == true && data.FindPassword == true) {
@@ -92,6 +92,8 @@ export class LoginService {
 
         this.friends = [] // ADD: Get friends list from backend
 
+        this.verifyLogin(this.user);
+
       }
       else {
         console.log('ERROR: Login in status failed to update');
@@ -99,17 +101,19 @@ export class LoginService {
         this.loginSuccess = false;
       }
 
-      this.verifyLogin(this.user);
-
     });
+
+
   }
 
   verifyLogin(user: userInfo): void {
 
     if (user.loggedIn) {
-
-    } // CHANGE & ADD: Reroute to User Page
+      console.log('Redirecting to user page...');
+      this.router.navigate(['/user/' + this.user.ID + '/home']);
+    }
     else {
+      console.log("Unable to verify login.");
       this.loginFailed = true;
       this.loginSuccess = false;
     }
