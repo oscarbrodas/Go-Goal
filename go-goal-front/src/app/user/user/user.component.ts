@@ -1,7 +1,9 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { Subscription } from 'cypress/types/net-stubbing';
+import { Component, OnInit } from '@angular/core';
 import { userInfo } from 'src/app/backend-connect.service';
 import { LoginService } from 'src/app/login-page/login.service';
+import { UserService } from '../user.service';
+
+export let browserRefresh: boolean = false;
 
 @Component({
   selector: 'app-user',
@@ -10,7 +12,6 @@ import { LoginService } from 'src/app/login-page/login.service';
 })
 export class UserComponent implements OnInit {
 
-  logggedIn: boolean = false;
   user: userInfo = {
     loggedIn: false,
     ID: 0,
@@ -22,19 +23,32 @@ export class UserComponent implements OnInit {
   }
   friends: userInfo[] = [];
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService, private userService: UserService) {
+
   }
 
+  // Checks if user is logs in and saves data for refresh or redirect
   ngOnInit() {
-    console.log('User page loaded.');
-    this.logggedIn = this.loginService.loggedIn;
-    this.user = this.loginService.user;
-    console.log(this.user);
+    // Debugging Purposes
+    // console.log('User page loaded.');
 
+    if (this.userService.isLoggedIn() && !this.user.loggedIn) {
+      this.user = this.userService.getUserData();
+      // console.log('Returing user data from user service.');
+    }
+    else {
+      this.user = this.loginService.user;
+      this.userService.setUserData(this.user);
+      // console.log('saving user data to user service.');
+    }
 
+    // Debugging Purposes
+    if (this.user.loggedIn) {
+      console.log('' + this.user.FirstName + ' ' + this.user.LastName + ' is logged in.');
+    }
   }
+
 
 
 
 }
-
