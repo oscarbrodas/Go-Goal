@@ -3,8 +3,6 @@ import { userInfo } from 'src/app/backend-connect.service';
 import { LoginService } from 'src/app/login-page/login.service';
 import { UserService } from '../user.service';
 
-export let browserRefresh: boolean = false;
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -34,7 +32,7 @@ export class UserComponent implements OnInit {
 
     if (this.userService.isLoggedIn() && !this.user.loggedIn) {
       this.user = this.userService.getUserData();
-      // console.log('Returing user data from user service.');
+      //console.log('Returing user data from user service.');
     }
     else {
       this.user = this.loginService.user;
@@ -47,7 +45,6 @@ export class UserComponent implements OnInit {
       console.log('' + this.user.FirstName + ' ' + this.user.LastName + ' is logged in.');
     }
   }
-
 
 
 

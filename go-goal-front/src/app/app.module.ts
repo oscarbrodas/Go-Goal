@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms'
 import { AppRoutingModule } from './app-routing.module';
 import { CarouselModule, CardComponent, CardModule } from '@coreui/angular';
@@ -36,6 +38,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
+    MatDialogModule,
+    MatButtonModule,
     HttpClientModule,
     FormsModule,
     CarouselModule,

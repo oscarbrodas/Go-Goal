@@ -10,10 +10,16 @@
         <img src="assets\gogoal.png" alt="" height="75" width="200">
     </span>
 
-    <span *ngIf="!verified">
+    <span *ngIf="!verified; else elseBlock">
         <button class="button" routerLink="../login" id="navBarLogin">Login</button>
         <button class="button" routerLink="../sign-up" id="navBarSignUp">Sign Up</button>
     </span>
 
+    <ng-template #elseBlock>
+        <span>
+            <button class="button" routerLink="../profile" id="navBarProfile">Profile</button>
+            <button class="button" (click)="logout()" id="navBarLogout">Logout</button>
+        </span>
+    </ng-template>
 
 </mat-toolbar>

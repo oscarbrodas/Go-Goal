@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivationStart, Router, ActivatedRoute } from '@angular/router';
 import { loginInfo } from '../backend-connect.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { UserService } from '../user/user.service';
 
 
 @Injectable({
@@ -16,7 +17,7 @@ export class LoginService {
   loginSuccess: boolean = false;
   loggedIn: boolean = false;
 
-  constructor(private backend: BackendConnectService, private route: ActivatedRoute, private router: Router) {
+  constructor(private backend: BackendConnectService, private route: ActivatedRoute, private router: Router, private userService: UserService) {
 
     // Checks if user leaves login page, if so, resets loginFailed to false
     this.router.events.subscribe((event) => {
@@ -110,7 +111,10 @@ export class LoginService {
 
     if (user.loggedIn) {
       console.log('Redirecting to user page...');
-      this.router.navigate(['/user/' + this.user.ID + '/home']);
+      this.router.navigate(['/user/' + this.user.ID + '/home']).then(() => {
+        window.location.reload();
+      });
+
     }
     else {
       console.log("Unable to verify login.");
@@ -126,6 +130,13 @@ export class LoginService {
     this.loggedIn = false;
     this.loginSuccess = false;
 
+    this.userService.clearUserData();
+    this.userService.cleanStorage();
+    this.userService.loggedIn = false;
+
+    this.router.navigate(['/main']).then(() => {
+      window.location.reload();
+    });
   }
 
 

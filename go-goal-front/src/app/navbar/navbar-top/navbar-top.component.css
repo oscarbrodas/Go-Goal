@@ -36,3 +36,39 @@ button:hover {
     border: solid 2px;
 
 }
+
+h1 {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 30px;
+    color: #202020;
+    margin: 5%;
+    padding: 0px;
+    text-align: center;
+}
+
+.content {
+    width: 350;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    padding: 20px 10px 20px 10px;
+
+}
+
+.title {
+    text-align: center;
+    color: aliceblue;
+}
+
+.dialog-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+}

@@ -7,10 +7,13 @@ import { userInfo } from '../backend-connect.service';
 export class UserService {
   private storageName: string = 'user';
 
+  public loggedIn: boolean = false;
+
   constructor() { }
 
   setUserData(data: userInfo) {
     localStorage.setItem(this.storageName, JSON.stringify(data));
+    this.loggedIn = true;
   }
 
   getUserData(): userInfo {
@@ -20,6 +23,7 @@ export class UserService {
 
   clearUserData() {
     localStorage.removeItem(this.storageName);
+
   }
 
   cleanStorage() {
@@ -27,9 +31,22 @@ export class UserService {
   }
 
   isLoggedIn(): boolean {
+
+
     let data = localStorage.getItem(this.storageName);
-    return JSON.parse(data!).loggedIn;
+    if (data == null) {
+      return false;
+    }
+    else {
+      return JSON.parse(data!).loggedIn;
+    }
+
+
+
 
   }
+
+
+
 
 }
