@@ -34,6 +34,10 @@ export class LoginService {
     console.log(changes);
   }
 
+  ngOnDestory(): void {
+    this.router.ngOnDestroy();
+  }
+
   user: userInfo = {
     loggedIn: false,
     ID: 0,
