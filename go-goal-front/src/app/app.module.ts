@@ -9,7 +9,7 @@ import { CarouselModule, CardComponent, CardModule } from '@coreui/angular';
 import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarTopComponent } from './navbar/navbar-top/navbar-top.component';
 import { MainComponent } from './main/main.component';
 import { LoginPageComponent } from './login-page/login-page.component';

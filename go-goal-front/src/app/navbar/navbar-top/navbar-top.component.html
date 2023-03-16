@@ -16,10 +16,41 @@
     </span>
 
     <ng-template #elseBlock>
-        <span>
-            <button class="button" routerLink="../profile" id="navBarProfile">Profile</button>
-            <button class="button" (click)="logout()" id="navBarLogout">Logout</button>
-        </span>
+        <div class="profile" (click)="toggleMenu()">
+            <button class="account-button">
+                <mat-icon class="account-cc">account_circle</mat-icon>
+            </button>
+            <div class="sub-menu-wrap">
+                <div @menuTrigger class="sub-menu" *ngIf="subMenu">
+                    <div class="uer-info">
+                        <h2>{{username}}</h2>
+                    </div>
+
+                    <a (click)="profilePage()" class="sub-menu-link">
+                        <p>Profile</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="goalsPage()" class="sub-menu-link">
+                        <p>My Goals</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="discoverPage()" class="sub-menu-link">
+                        <p>Discover</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="settingsPage()" class="sub-menu-link">
+                        <p>Settings</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="logout()" class="sub-menu-link">
+                        <p>Logout</p>
+                        <span>></span>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
     </ng-template>
 
 </mat-toolbar>

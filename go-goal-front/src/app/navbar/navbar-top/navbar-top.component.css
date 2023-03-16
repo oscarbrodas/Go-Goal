@@ -72,3 +72,87 @@ h1 {
     justify-content: center;
     align-items: center;
 }
+
+.account-button {
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 50px;
+}
+
+.account-cc {
+    padding-right: 100px;
+    position: relative;
+    right: 16%;
+}
+
+.sub-menu-wrap {
+    position: absolute;
+    top: 110%;
+    right: -1%;
+    min-width: 200px;
+    max-width: fit-content;
+    height: fit-content;
+    max-height: 400px;
+
+
+}
+
+.sub-menu {
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 5px;
+    padding: 5px 10px 0px 10px;
+}
+
+.uer-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+
+    border-bottom: 2px solid aliceblue;
+}
+
+.uer-info h2 {
+    font-weight: 400;
+    font-size: 25px;
+
+    color: aliceblue;
+    padding-top: 10px;
+
+}
+
+.sub-menu-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    margin: 12px 0;
+    cursor: pointer;
+}
+
+.sub-menu-link p {
+    width: 100%;
+    color: aliceblue;
+    position: relative;
+    left: 5px;
+}
+
+.sub-menu-link span {
+    font-size: 22px;
+    color: aliceblue;
+    position: relative;
+    bottom: 5px;
+    right: 25px;
+    transition: transform 0.5s ease-in-out;
+}
+
+.sub-menu-link:hover span {
+    transform: translate(5px);
+}
+
+.sub-menu-link:hover {
+    font-weight: 600;
+}
