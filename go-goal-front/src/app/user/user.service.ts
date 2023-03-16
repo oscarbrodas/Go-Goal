@@ -11,10 +11,6 @@ export class UserService {
 
   constructor() { }
 
-  ngOnDestroy() {
-    this.cleanStorage();
-  }
-
   setUserData(data: userInfo) {
     localStorage.setItem(this.storageName, JSON.stringify(data));
     this.loggedIn = true;
