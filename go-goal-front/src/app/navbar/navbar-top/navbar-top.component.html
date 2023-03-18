@@ -20,8 +20,8 @@
             <button class="account-button">
                 <mat-icon class="account-cc">account_circle</mat-icon>
             </button>
-            <div class="sub-menu-wrap">
-                <div @menuTrigger class="sub-menu" *ngIf="subMenu">
+            <div class="sub-menu-wrap" [@menuTrigger]="subMenu ? true : false">
+                <div class="sub-menu">
                     <div class="uer-info">
                         <h2>{{username}}</h2>
                     </div>

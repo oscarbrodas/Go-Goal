@@ -12,19 +12,24 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
   styleUrls: ['./navbar-top.component.css'],
   animations: [
     trigger('menuTrigger', [
-      transition('void => *', [
+
+      state('true', style({ position: '*', right: '-5px' })),
+      state('false', style({ position: '*', right: '-400px' })),
+
+      transition('false => true', [
         animate(450, keyframes([
-          style({ transform: 'translateX(400px)', offset: 0 }),
-          style({ transform: 'translateX(0px', offset: 0.45 }),
-          style({ transform: 'translateX(15px)', offset: 0.5 }),
-          style({ transform: 'translateX(0px)', offset: 0.6 }),
-          style({ transform: 'translateX(3px)', offset: 0.65 }),
-          style({ transform: 'translateX(0px)', offset: 0.75 }),
-          style({ transform: 'translateX(1px)', offset: 0.85 }),
-          style({ transform: 'translateX(0)', offset: 1 }),
+          style({ offset: 0 }),
+          style({ transform: 'translateX(-395px)', offset: 0.45 }),
+          style({ transform: 'translateX(-380px)', offset: 0.5 }),
+          style({ transform: 'translateX(-395px)', offset: 0.6 }),
+          style({ transform: 'translateX(-392px)', offset: 0.65 }),
+          style({ transform: 'translateX(-395px)', offset: 0.75 }),
+          style({ transform: 'translateX(-394px)', offset: 0.85 }),
+          style({ transform: 'translateX(-395px)', offset: 1 }),
         ]))
       ]),
-      transition('* => void', [
+
+      transition('true => false', [
         animate(200, keyframes([
           style({ transform: 'translateX(0px)', offset: 0 }),
           style({ transform: 'translateX(400px)', offset: 1 }),
@@ -79,14 +84,12 @@ export class NavbarTopComponent {
 
   }
   logout() {
-    this.subMenu = false;
     this.openDialog('500ms', '50ms');
 
 
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.subMenu = false;
     const dialogRef = this.dialog.open(logoutDialog, {
       width: '250px',
       enterAnimationDuration,
@@ -116,6 +119,7 @@ export class logoutDialog {
 
   onNoClick(): void {
     this.dialogRef.close();
+
   }
 }
 
