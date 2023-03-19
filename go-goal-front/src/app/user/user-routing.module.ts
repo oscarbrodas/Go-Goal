@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { UserComponent } from './user/user.component';
+import { GoalsComponent } from './goals/goals.component';
 
 const routes: Routes = [
   { path: 'home', component: UserComponent },
-  { path: 'goals', component: NotFoundComponent },
+  { path: 'goals', component: GoalsComponent },
   { path: 'discover', component: NotFoundComponent },
   { path: 'settings', component: NotFoundComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
