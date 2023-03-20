@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"go-goal/util"
 	"net/http"
 	"strconv"
 
@@ -32,21 +31,26 @@ func printError(thisUser uint, otherUser string, funcName string, message string
 func GetAllFriends(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+
+		var userID uint64
+		params := mux.Vars(r)
+		userID, err := strconv.ParseUint(params["id"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
 		var friends []Friend
-		var ThisUser User
 		returnInfo := struct {
 			IDs        []uint // name needs to be standardized
 			ErrorExist bool
 		}{}
-		util.DecodeJSONRequest(&ThisUser, r.Body, w)
 
-		result := globalDB.Where("(user1 = ? OR user2 = ?) AND who_sent = 0", ThisUser.ID, ThisUser.ID).Find(&friends)
+		result := globalDB.Where("(user1 = ? OR user2 = ?) AND who_sent = 0", userID, userID).Find(&friends)
 		if result.Error != nil {
 			returnInfo.ErrorExist = true
 			print(result.Error)
 		} else {
 			for i := 0; i < len(friends); i++ {
-				if friends[i].User1 != ThisUser.ID {
+				if friends[i].User1 != uint(userID) {
 					returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
 				} else {
 					returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
@@ -57,46 +61,48 @@ func GetAllFriends(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// input json must contain the user who is sending the request
-// input paramas must contain id of the user who is recieving friend request
-// cannot send a request if you already sent one
-// cannot send a request if the other person sent you one
-// cannot send a request if you are already friends
-// returns if the request failed or succeeded
+// errorExist is true even if no error, but just invalid send friend request
 func SendFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		params := mux.Vars(r)
-		otherID := params["id"]
 
-		var thisUser User
+		var senderID uint64
+		var recieverID uint64
+		params := mux.Vars(r)
+		senderID, err := strconv.ParseUint(params["sender"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		recieverID, err = strconv.ParseUint(params["reciever"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool
 		var exists2 bool
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ?", otherID, thisUser.ID).Find(&exists1)
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ?", thisUser.ID, otherID).Find(&exists2)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ?", recieverID, senderID).Find(&exists1)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ?", senderID, recieverID).Find(&exists2)
 
 		if exists1 || exists2 {
 			returnInfo.ErrorExist = true
 		} else {
-			otherIDInt, err := strconv.Atoi(otherID)
 			if err != nil {
-				printError(thisUser.ID, otherID, "SendFriendRequest", "Input parameter in URL was not a number")
+				printError(uint(senderID), params["reciever"], "SendFriendRequest", "Input parameter in URL was not a number")
 				returnInfo.ErrorExist = true
 				json.NewEncoder(w).Encode(returnInfo)
 				return
 			}
 
-			friendInput := Friend{User1: thisUser.ID, User2: uint(otherIDInt), WhoSent: 1}
+			friendInput := Friend{User1: uint(senderID), User2: uint(recieverID), WhoSent: 1}
 			result := globalDB.Model(&Friend{}).Create(&friendInput)
 			if result.Error != nil {
 				returnInfo.ErrorExist = true
-				printError(thisUser.ID, otherID, "SendFriendRequest", "Error when inserting")
+				printError(uint(senderID), params["reciever"], "SendFriendRequest", "Error when inserting")
 			} else {
 				returnInfo.Successful = true
 			}
@@ -106,27 +112,29 @@ func SendFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// the input json must be of the user object
-// returns a json of an array of the user IDs named "IDs"
-// currently, i do not see a way for this to generate an error
 func GetOutgoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var ThisUser User
+
+		var userID uint64
+		params := mux.Vars(r)
+		userID, err := strconv.ParseUint(params["id"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		var friends []Friend
 		returnInfo := struct { // need to be standardized
 			IDs        []uint
 			ErrorExist bool
 		}{}
 
-		util.DecodeJSONRequest(&ThisUser, r.Body, w)
-		globalDB.Where("user1 = ? AND who_sent = 1", ThisUser.ID).Find(&friends)
+		globalDB.Where("user1 = ? AND who_sent = 1", userID).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
 		}
 
-		json.NewDecoder(r.Body).Decode(&ThisUser)
-		globalDB.Where("user2 = ? AND who_sent = ?", ThisUser.ID, 2).Find(&friends)
+		globalDB.Where("user2 = ? AND who_sent = ?", userID, 2).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
 		}
@@ -140,21 +148,26 @@ func GetOutgoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		var ThisUser User
+
+		var userID uint64
+		params := mux.Vars(r)
+		userID, err := strconv.ParseUint(params["id"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		var friends []Friend
 		returnInfo := struct { // need to be standardized
 			IDs        []uint
 			ErrorExist bool
 		}{}
 
-		util.DecodeJSONRequest(&ThisUser, r.Body, w)
-		globalDB.Where("user1 = ? AND who_sent = ?", ThisUser.ID, 2).Find(&friends)
+		globalDB.Where("user1 = ? AND who_sent = ?", userID, 2).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User2)
 		}
 
-		json.NewDecoder(r.Body).Decode(&ThisUser)
-		globalDB.Where("user2 = ? AND who_sent = ?", ThisUser.ID, 1).Find(&friends)
+		globalDB.Where("user2 = ? AND who_sent = ?", userID, 1).Find(&friends)
 		for i := 0; i < len(friends); i++ {
 			returnInfo.IDs = append(returnInfo.IDs, friends[i].User1)
 		}
@@ -163,70 +176,80 @@ func GetIngoingFriendRequests(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// input params must contain the id of the user that sent the friend request
-// input json must be of the user who accepted
-// returns json of what happened
 func AcceptFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		var senderID uint64
+		var recieverID uint64
 		params := mux.Vars(r)
-		otherID := params["id"]
-		var thisUser User
+		senderID, err := strconv.ParseUint(params["sender"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		recieverID, err = strconv.ParseUint(params["accepter"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool //much better way to check if soemthing exists
 		var exists2 bool
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 1", otherID, thisUser.ID).Find(&exists1)
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 2", thisUser.ID, otherID).Find(&exists2)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 1", senderID, recieverID).Find(&exists1)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 2", recieverID, senderID).Find(&exists2)
 
 		if exists1 {
 			returnInfo.Successful = true
-			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 1", otherID, thisUser.ID).Update("who_sent", 0)
+			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 1", senderID, recieverID).Update("who_sent", 0)
 		} else if exists2 {
 			returnInfo.Successful = true
-			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 2", thisUser.ID, otherID).Update("who_sent", 0)
+			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 2", recieverID, senderID).Update("who_sent", 0)
 		} else {
 			returnInfo.ErrorExist = true
-			printError(thisUser.ID, otherID, "AcceptFriendRequest", "")
+			printError(uint(recieverID), params["sender"], "AcceptFriendRequest", "")
 		}
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
 
-// input params must contain the id of the user that sent the friend request
-// input json must be of the user who declined
-// returns json of what happened
 func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		var senderID uint64
+		var recieverID uint64
 		params := mux.Vars(r)
-		otherID := params["id"]
-		var thisUser User
+		senderID, err := strconv.ParseUint(params["sender"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		recieverID, err = strconv.ParseUint(params["decliner"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool //much better way to check if soemthing exists
 		var exists2 bool
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 1", otherID, thisUser.ID).Find(&exists1)
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 2", thisUser.ID, otherID).Find(&exists2)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 1", senderID, recieverID).Find(&exists1)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 2", recieverID, senderID).Find(&exists2)
 
 		if exists1 {
 			returnInfo.Successful = true
-			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 1", otherID, thisUser.ID).Delete(&Friend{})
+			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 1", senderID, recieverID).Delete(&Friend{})
 		} else if exists2 {
 			returnInfo.Successful = true
-			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 2", thisUser.ID, otherID).Delete(&Friend{})
+			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = 2", recieverID, senderID).Delete(&Friend{})
 		} else {
 			returnInfo.ErrorExist = true
-			printError(thisUser.ID, otherID, "DeclineFriendRequest", "")
+			printError(uint(recieverID), params["sender"], "DeclineFriendRequest", "")
 		}
 
 		json.NewEncoder(w).Encode(returnInfo)
@@ -239,29 +262,37 @@ func DeclineFriendRequest(globalDB *gorm.DB) http.HandlerFunc {
 func RemoveFriend(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		var remover uint64
+		var removedFriend uint64
 		params := mux.Vars(r)
-		otherID := params["id"]
-		var thisUser User
+		remover, err := strconv.ParseUint(params["remover"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+		removedFriend, err = strconv.ParseUint(params["friend"], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
 		returnInfo := struct { // need to be standardized
 			Successful bool
 			ErrorExist bool
 		}{}
-		util.DecodeJSONRequest(&thisUser, r.Body, w)
 
 		var exists1 bool //much better way to check if soemthing exists
 		var exists2 bool
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 0", thisUser.ID, otherID).Find(&exists1)
-		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 0", otherID, thisUser.ID).Find(&exists2)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 0", remover, removedFriend).Find(&exists1)
+		globalDB.Model(&Friend{}).Select("count(*) > 0").Where("user1 = ? AND user2 = ? AND who_sent = 0", removedFriend, remover).Find(&exists2)
 
 		if exists1 {
-			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", thisUser.ID, otherID, 0).Delete(&Friend{})
+			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", remover, removedFriend, 0).Delete(&Friend{})
 			returnInfo.Successful = true
 		} else if exists2 {
-			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", otherID, thisUser.ID, 0).Delete(&Friend{})
+			globalDB.Model(&Friend{}).Where("user1 = ? AND user2 = ? AND who_sent = ?", removedFriend, remover, 0).Delete(&Friend{})
 			returnInfo.Successful = true
 		} else {
 			returnInfo.ErrorExist = true
-			printError(thisUser.ID, otherID, "RemoveFriend", "")
+			printError(uint(remover), params["friend"], "RemoveFriend", "")
 		}
 
 		json.NewEncoder(w).Encode(returnInfo)
