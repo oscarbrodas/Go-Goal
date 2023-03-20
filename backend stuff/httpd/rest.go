@@ -30,9 +30,9 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/users/checkUsername/{username}", handler.CheckUsername(globalDB)).Methods("GET")
 
 	// Create and Retrieve Goals
-	s.HandleFunc("/goals", handler.CreateGoal(globalDB)).Methods("POST")
-	s.HandleFunc("/goals", handler.GetGoals(globalDB)).Methods("GET")
-	s.HandleFunc("/goals", handler.DeleteGoal(globalDB)).Methods("DELETE")
+	s.HandleFunc("/goals/{id}", handler.CreateGoal(globalDB)).Methods("POST")
+	s.HandleFunc("/goals/{id}", handler.GetGoals(globalDB)).Methods("GET")
+	s.HandleFunc("/goals/{goalID}", handler.DeleteGoal(globalDB)).Methods("DELETE")
 
 	// Retrieve/Remove Friends, Handle Friend Requests
 	s.HandleFunc("/friends", handler.GetAllFriends(globalDB)).Methods("GET")
