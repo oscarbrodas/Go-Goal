@@ -5,7 +5,7 @@ import { catchError, retry } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class BackendConnectService {
-  backendURL = "http://localhost:9000/api/"
+  backendURL = "http://localhost:9000/"
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -18,7 +18,7 @@ export class BackendConnectService {
   };
 
   public signThemUp(userData: userInfo): Observable<userInfo> {
-    return this.http.post<userInfo>(`${this.backendURL}sign-up`, userData, this.httpOptions)
+    return this.http.post<userInfo>(`${this.backendURL}users`, userData, this.httpOptions)
   }
 
 }
@@ -35,6 +35,6 @@ export interface userInfo { // ADD: User data as necessary
 }
 
 export interface loginInfo {
-  username: string;
-  password: string;
+  Email: string;
+  Password: string;
 }
