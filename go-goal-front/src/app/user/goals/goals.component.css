@@ -17,3 +17,52 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7d7e7d', endColorstr='#0e0e0e', GradientType=1);
     /* IE6-9 fallback on horizontal gradient */
 }
+
+.content {
+    width: 70vw;
+    height: 70vh;
+    position: absolute;
+    right: -10px;
+    top: 70px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.list {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: green;
+}
+
+.goal {
+    width: 90%;
+    height: 70%;
+    background: greenyellow;
+
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.complete-b {
+    aspect-ratio: 1/1;
+    background: white;
+    border-radius: 20%;
+    border: 3px solid black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    left: 90%;
+    bottom: 50%;
+}

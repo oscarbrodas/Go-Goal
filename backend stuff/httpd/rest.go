@@ -26,21 +26,22 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/users/{id}/lastname", handler.UpdateLastname(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/email", handler.UpdateEmail(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/password", handler.UpdatePassword(globalDB)).Methods("PUT")
-	s.HandleFunc("/login", handler.CheckLogin(globalDB)).Methods("POST")
+	s.HandleFunc("/login/{email}/{password}", handler.CheckLogin(globalDB)).Methods("GET")
+	s.HandleFunc("/users/checkUsername/{username}", handler.CheckUsername(globalDB)).Methods("GET")
 
 	// Create and Retrieve Goals
-	s.HandleFunc("/goals", handler.CreateGoal(globalDB)).Methods("POST")
-	s.HandleFunc("/goals", handler.GetGoals(globalDB)).Methods("GET")
-	s.HandleFunc("/goals", handler.DeleteGoal(globalDB)).Methods("DELETE")
+	s.HandleFunc("/goals/{id}", handler.CreateGoal(globalDB)).Methods("POST")
+	s.HandleFunc("/goals/{id}", handler.GetGoals(globalDB)).Methods("GET")
+	s.HandleFunc("/goals/{goalID}", handler.DeleteGoal(globalDB)).Methods("DELETE")
 
 	// Retrieve/Remove Friends, Handle Friend Requests
-	s.HandleFunc("/friends", handler.GetAllFriends(globalDB)).Methods("GET")
-	s.HandleFunc("/friends/sendFriendRequest", handler.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
-	s.HandleFunc("/friends/getOutgoingFriendRequests", handler.GetOutgoingFriendRequests(globalDB)).Methods("GET")
-	s.HandleFunc("/friends/getIngoingFriendRequests", handler.GetIngoingFriendRequests(globalDB)).Methods("GET")
-	s.HandleFunc("/friends/acceptFriendRequest", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
-	s.HandleFunc("/friends/declineFriendRequest", handler.DeclineFriendRequest(globalDB)).Methods("DELETE")
-	s.HandleFunc("/friends/removeFriend", handler.RemoveFriend(globalDB)).Methods("DELETE")
+	s.HandleFunc("/friends/{id}", handler.GetAllFriends(globalDB)).Methods("GET")
+	s.HandleFunc("/friends/sendFriendRequest/{sender}/{reciever}", handler.SendFriendRequest(globalDB)).Methods("POST") // the route should be changed
+	s.HandleFunc("/friends/getOutgoingFriendRequests/{id}", handler.GetOutgoingFriendRequests(globalDB)).Methods("GET")
+	s.HandleFunc("/friends/getIngoingFriendRequests/{id}", handler.GetIngoingFriendRequests(globalDB)).Methods("GET")
+	s.HandleFunc("/friends/acceptFriendRequest/{sender}/{accepter}", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
+	s.HandleFunc("/friends/declineFriendRequest/{sender}/{decliner}", handler.DeclineFriendRequest(globalDB)).Methods("DELETE")
+	s.HandleFunc("/friends/removeFriend/{remover}/{friend}", handler.RemoveFriend(globalDB)).Methods("DELETE")
 
 	// Route to serve site - MUST BE FINAL ROUTE
 	r.PathPrefix("/").Handler(AngularHandler).Methods("GET")

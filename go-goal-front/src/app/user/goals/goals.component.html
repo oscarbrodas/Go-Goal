@@ -1,4 +1,14 @@
 <div class="page">
     <div class="sidebar"></div>
-    <div class="content"></div>
+    <div class="content">
+        <div class="list">
+            <div class="goal" *ngFor="let u of userGoals">
+                <p>{{u.Title}}</p>
+                <p>{{u.Description}}</p>
+                <button class="complete-b">
+                    <mat-icon>done</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

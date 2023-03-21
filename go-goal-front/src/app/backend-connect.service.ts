@@ -15,11 +15,15 @@ export class BackendConnectService {
   }
 
   public getLoginInfo(loginInfo: loginInfo): Observable<any> {
-    return this.http.post<JSON>(`${this.backendURL}login`, loginInfo, this.httpOptions);
+    return this.http.get<JSON>(`${this.backendURL}login/${loginInfo.Email}/${loginInfo.Password}`);
   };
 
   public signThemUp(userData: userInfo): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}users`, userData, this.httpOptions);
+  }
+
+  public getGoals(): Observable<any> {
+    return this.http.get<JSON>(`${this.backendURL}goals`, this.httpOptions);
   }
 
 }
