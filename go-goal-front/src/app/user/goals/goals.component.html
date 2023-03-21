@@ -1,10 +1,12 @@
 <div class="page">
     <div class="sidebar"></div>
     <div class="content">
-        <div class="list">
+        <div @goals class="list">
             <div class="goal" *ngFor="let u of userGoals">
-                <p>{{u.Title}}</p>
-                <p>{{u.Description}}</p>
+                <div class="desc">
+                    <p>{{u.Title}}</p>
+                    <p>{{u.Description}}</p>
+                </div>
                 <button class="complete-b">
                     <mat-icon>done</mat-icon>
                 </button>

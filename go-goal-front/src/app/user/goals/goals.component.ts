@@ -1,12 +1,26 @@
 import { Component } from '@angular/core';
 import { parse } from '@fortawesome/fontawesome-svg-core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
+import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
 
 @Component({
   selector: 'app-goals',
   templateUrl: './goals.component.html',
-  styleUrls: ['./goals.component.css']
+  styleUrls: ['./goals.component.css'],
+  animations: [
+    trigger('goals', [
+      transition('void => *', [
+        animate(400, keyframes([
+          style({ offset: 0, position: 'relative', top: '-500px' }),
+          style({ transform: 'translateY(500px)', offset: 0.6 }),
+          style({ transform: 'translateY(480px)', offset: 0.7 }),
+          style({ transform: 'translateY(480px)', offset: 0.8 }),
+          style({ transform: 'translateY(500px)', offset: 1 }),
+        ]))
+      ]),
+    ])
+  ]
 })
 export class GoalsComponent {
 
