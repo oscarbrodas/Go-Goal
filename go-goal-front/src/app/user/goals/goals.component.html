@@ -1,7 +1,12 @@
 <div class="page">
-    <div class="sidebar"></div>
+    <div @sidebar class="sidebar">
+        <button class="create-b"></button>
+        <div class="form"></div>
+        <button class="delete-g"></button>
+        <button class="complete-g"></button>
+    </div>
     <div class="content">
-        <div @goals class="list">
+        <div [@goals]="userGoals.length" class="list">
             <div class="goal" *ngFor="let u of userGoals">
                 <div class="desc">
                     <p>{{u.Title}}</p>

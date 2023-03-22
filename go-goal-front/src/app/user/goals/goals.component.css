@@ -82,3 +82,24 @@
     align-self: center;
     position: relative;
 }
+
+.sidebar {
+    width: 400px;
+    min-width: fit-content;
+    height: 700px;
+    min-height: fit-content;
+
+    position: absolute;
+    left: -20px;
+    top: 118px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: center;
+
+    background: black;
+    color: white;
+    border-radius: 10px;
+    outline: rgba(102, 255, 26, 1) 2px solid;
+}

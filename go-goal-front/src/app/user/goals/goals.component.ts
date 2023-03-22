@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { parse } from '@fortawesome/fontawesome-svg-core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
-import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
+import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -11,20 +12,38 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
   animations: [
     trigger('goals', [
       transition('void => *', [
-        animate(400, keyframes([
-          style({ offset: 0, position: 'relative', top: '-500px' }),
-          style({ transform: 'translateY(500px)', offset: 0.6 }),
-          style({ transform: 'translateY(480px)', offset: 0.7 }),
-          style({ transform: 'translateY(480px)', offset: 0.8 }),
-          style({ transform: 'translateY(500px)', offset: 1 }),
-        ]))
+        query(':enter', [
+          style({ opacity: 1, transform: 'translateY(-500px)' }),
+          stagger(200, [
+            animate(650, keyframes([
+              style({ offset: 0, position: 'relative', top: '-500px' }),
+              style({ transform: 'translateY(500px)', offset: 0.6 }),
+              style({ transform: 'translateY(490px)', offset: 0.7 }),
+              style({ transform: 'translateY(490px)', offset: 0.9 }),
+              style({ transform: 'translateY(500px)', offset: 1, opacity: 1 }),
+            ]))
+          ])
+        ])
       ]),
+    ]),
+    trigger('sidebar', [
+      transition('void => *', [
+        animate('1200ms ease-out', keyframes([
+          style({ offset: 0, left: '-500px' }),
+          style({ transform: 'translateX(10px)', offset: 0.45 }),
+          style({ transform: 'translateX(480px)', offset: 1 }),
+        ]))
+      ])
     ])
   ]
 })
 export class GoalsComponent {
 
   userGoals: goal[];
+  newGoalTime: boolean = false;
+  goalTitle = new FormControl('');
+  goalDescription = new FormControl('');
+
 
   constructor(private backend: BackendConnectService) {
     this.userGoals = [
@@ -44,10 +63,17 @@ export class GoalsComponent {
     ];
   }
 
+  newGoal() {
+    this.newGoalTime = !this.newGoalTime;
+  }
+
   // getGoals(): JSON {
 
   //   return JSON.parse(this.backend.getGoals());
   // }
+
+  addGoal() {
+  }
 
 }
 
