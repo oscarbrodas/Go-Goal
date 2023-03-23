@@ -5,6 +5,10 @@
     background: grey;
     color: black;
 
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7d7e7d+0,0e0e0e+100;Black+3D */
     background: rgba(125, 126, 125, 0.4);
     /* Old browsers */
@@ -19,18 +23,22 @@
 }
 
 .content {
-    width: 70vw;
+    width: 80vw;
+    max-width: 90vw;
     min-width: 350px;
-    height: 70vh;
+    height: 90vh;
+    max-height: fit-content;
     min-height: fit-content;
-    position: absolute;
-    right: -10px;
-    top: 70px;
+
+    top: 60px;
+
 
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: left;
+    flex-grow: 2;
+    overflow: hidden;
 }
 
 .list {
@@ -41,6 +49,8 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+
+    padding-top: 50px;
 }
 
 .goal {
@@ -83,15 +93,26 @@
     position: relative;
 }
 
+.left-side {
+    max-width: 25vw;
+    width: 100%;
+    min-width: none;
+    height: 90vh;
+    display: flex;
+    justify-content: left;
+
+}
+
 .sidebar {
-    width: 400px;
-    min-width: fit-content;
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+
     height: 700px;
     min-height: fit-content;
 
     position: absolute;
-    left: -20px;
-    top: 118px;
+    top: 108px;
 
     display: flex;
     flex-direction: column;
@@ -102,4 +123,32 @@
     color: white;
     border-radius: 10px;
     outline: rgba(102, 255, 26, 1) 2px solid;
+}
+
+@media only screen and (width <=1200px) {
+    .sidebar {
+        left: -280px;
+        transition: 0.5s;
+    }
+}
+
+@media only screen and (1200px <width <=1285px) {
+    .sidebar {
+        left: 20px;
+        transition: 0.5s;
+    }
+}
+
+@media only screen and (1286px <=width <=1800px) {
+    .sidebar {
+        left: 50px;
+        transition: 0.5s;
+    }
+}
+
+@media only screen and (width >1800px) {
+    .sidebar {
+        left: 150px;
+        transition: 0.5s;
+    }
 }

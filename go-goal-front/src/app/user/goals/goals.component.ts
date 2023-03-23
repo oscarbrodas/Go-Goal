@@ -30,8 +30,8 @@ import { FormControl } from '@angular/forms';
       transition('void => *', [
         animate('1200ms ease-out', keyframes([
           style({ offset: 0, left: '-500px' }),
-          style({ transform: 'translateX(10px)', offset: 0.45 }),
-          style({ transform: 'translateX(480px)', offset: 1 }),
+          style({ left: '-400px', offset: 0.45 }),
+          style({ left: '*', offset: 1 }),
         ]))
       ])
     ])
