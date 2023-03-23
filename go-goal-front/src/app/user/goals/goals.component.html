@@ -3,12 +3,20 @@
         <div @sidebar class="sidebar">
             <h1>Goals</h1>
             <div class="buttons">
-                <button class="create-b" (click)="newGoalTime = !newGoalTime">Create Goal</button>
-                <div class=" form">
-                </div>
-                <button class="delete-g">Delete Goal</button>
-                <button class="complete-g">Completed</button>
+                <button class="create-b" (click)="newGoalTime = !newGoalTime">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button class="delete-g">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button class="complete-g">
+                    <mat-icon>done_all</mat-icon>
+                </button>
             </div>
+            <!-- <div class="form">
+                <input type="text" class="goalname"><input type="text" class="goaldescription"><button
+                    class="create"></button>
+            </div> -->
             <div class="new-goal" *ngIf="newGoalTime">
                 NEW GOAL
             </div>
@@ -26,6 +34,10 @@
                 <button class="complete-b">
                     <mat-icon>done</mat-icon>
                 </button>
+                <!-- <div class="complete-banner">
+                    <p>Complete?</p>
+                </div> -->
+
             </div>
         </div>
     </div>

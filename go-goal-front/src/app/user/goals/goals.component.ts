@@ -41,6 +41,7 @@ export class GoalsComponent {
 
   userGoals: goal[];
   newGoalTime: boolean = false;
+  completeGoalTime: boolean = false;
   goalTitle = new FormControl('');
   goalDescription = new FormControl('');
 
