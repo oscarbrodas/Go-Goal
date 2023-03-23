@@ -1,11 +1,20 @@
 <div class="page">
     <div class="left-side">
         <div @sidebar class="sidebar">
-            <button class="create-b"></button>
-            <div class="form"></div>
-            <button class="delete-g"></button>
-            <button class="complete-g"></button>
+            <h1>Goals</h1>
+            <div class="buttons">
+                <button class="create-b" (click)="newGoalTime = !newGoalTime">Create Goal</button>
+                <div class=" form">
+                </div>
+                <button class="delete-g">Delete Goal</button>
+                <button class="complete-g">Completed</button>
+            </div>
+            <div class="new-goal" *ngIf="newGoalTime">
+                NEW GOAL
+            </div>
+            <div class="experience">XP POINTS IN-PROGRESS</div>
         </div>
+
     </div>
     <div class="content">
         <div [@goals]="userGoals.length" class="list">
