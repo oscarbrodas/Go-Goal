@@ -13,13 +13,14 @@
                     <mat-icon>done_all</mat-icon>
                 </button>
             </div>
-            <!-- <div class="form">
-                <input type="text" class="goalname"><input type="text" class="goaldescription"><button
-                    class="create"></button>
-            </div> -->
             <div class="new-goal" *ngIf="newGoalTime">
                 NEW GOAL
+                <div class="form" *ngIf="newGoalTime">
+                    <input type="text" class="goalname"><input type="text" class="goaldescription"><button
+                        class="create"></button>
+                </div>
             </div>
+
             <div class="experience">XP POINTS IN-PROGRESS</div>
         </div>
 

@@ -25,13 +25,31 @@ import { FormControl } from '@angular/forms';
           ])
         ])
       ]),
-    ]),
+      transition(':leave', [
+        query(':leave', [
+          stagger(200, [
+            animate(150, keyframes([
+              style({ offset: 0 }),
+              style({ transform: 'translateY(-500px)', offset: 0.9 }),
+            ]))
+          ])
+        ])
+      ])
+    ],
+    ), // end of goals trigger
     trigger('sidebar', [
       transition('void => *', [
         animate('1200ms ease-out', keyframes([
           style({ offset: 0, left: '-500px' }),
           style({ left: '-400px', offset: 0.45 }),
           style({ left: '*', offset: 1 }),
+        ]))
+      ]),
+      transition(':leave', [
+        animate('1200ms ease-out', keyframes([
+          style({ offset: 0, left: '*' }),
+          style({ left: '-400px', offset: 0.45 }),
+          style({ left: '-500px', offset: 1 }),
         ]))
       ])
     ])
