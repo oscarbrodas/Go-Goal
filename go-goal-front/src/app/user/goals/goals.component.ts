@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { parse } from '@fortawesome/fontawesome-svg-core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
 import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -27,10 +27,10 @@ import { FormControl } from '@angular/forms';
       ]),
       transition(':leave', [
         query(':leave', [
-          stagger(200, [
-            animate(150, keyframes([
+          stagger(250, [
+            animate(250, keyframes([
               style({ offset: 0 }),
-              style({ transform: 'translateY(-500px)', offset: 0.9 }),
+              style({ transform: 'translateX(2000px)', offset: 1 }),
             ]))
           ])
         ])
@@ -38,7 +38,8 @@ import { FormControl } from '@angular/forms';
     ],
     ), // end of goals trigger
     trigger('sidebar', [
-      transition('void => *', [
+
+      transition(':enter', [
         animate('1200ms ease-out', keyframes([
           style({ offset: 0, left: '-500px' }),
           style({ left: '-400px', offset: 0.45 }),
@@ -60,11 +61,13 @@ export class GoalsComponent {
   userGoals: goal[];
   newGoalTime: boolean = false;
   completeGoalTime: boolean = false;
-  goalTitle = new FormControl('');
-  goalDescription = new FormControl('');
+  newGoal = this.formBuilder.group({
+    Title: new FormControl(""),
+    Description: new FormControl(""),
+  });
 
 
-  constructor(private backend: BackendConnectService) {
+  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder) {
     this.userGoals = [
       { Title: "Goal 1", Description: "Fix Bike", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
       { Title: "Goal 2", Description: "Ride Bike", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
@@ -82,16 +85,15 @@ export class GoalsComponent {
     ];
   }
 
-  newGoal() {
-    this.newGoalTime = !this.newGoalTime;
-  }
-
   // getGoals(): JSON {
 
   //   return JSON.parse(this.backend.getGoals());
   // }
 
   addGoal() {
+
+
+    this.newGoalTime = false;
   }
 
 }

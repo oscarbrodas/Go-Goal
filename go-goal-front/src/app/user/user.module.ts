@@ -6,6 +6,7 @@ import { UserComponent } from './user/user.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GoalsComponent } from './goals/goals.component';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     UserRoutingModule,
-    MatIconModule
+    MatIconModule,
+    ReactiveFormsModule
   ]
 })
 export class UserModule { }

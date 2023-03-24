@@ -1,24 +1,24 @@
 <div class="page">
     <div class="left-side">
-        <div @sidebar class="sidebar">
-            <h1>Goals</h1>
+        <div [@sidebar]="newGoalTime" class="sidebar">
+            <h1>Your Goals</h1>
             <div class="buttons">
                 <button class="create-b" (click)="newGoalTime = !newGoalTime">
                     <mat-icon>add</mat-icon>
                 </button>
-                <button class="delete-g">
+                <button class="delete-g" (click)="newGoalTime = false">
                     <mat-icon>delete</mat-icon>
                 </button>
-                <button class="complete-g">
+                <button class="complete-g" (click)="newGoalTime = false">
                     <mat-icon>done_all</mat-icon>
                 </button>
             </div>
             <div class="new-goal" *ngIf="newGoalTime">
-                NEW GOAL
-                <div class="form" *ngIf="newGoalTime">
-                    <input type="text" class="goalname"><input type="text" class="goaldescription"><button
-                        class="create"></button>
-                </div>
+                <form [formGroup]="newGoal" class="form" (ngSubmit)="addGoal()">
+                    <input type="text" class="titl-box" formControlName="Title" placeholder="Title">
+                    <textarea class="desc-box" formControlName="Description" placeholder="Description"></textarea>
+                    <button class="submit">Add</button>
+                </form>
             </div>
 
             <div class="experience">XP POINTS IN-PROGRESS</div>
