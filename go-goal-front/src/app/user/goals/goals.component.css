@@ -26,7 +26,7 @@
     width: 80vw;
     max-width: 90vw;
     min-width: 350px;
-    height: 90vh;
+    height: 100vh;
     max-height: fit-content;
     min-height: fit-content;
 
@@ -43,15 +43,39 @@
 
 .list {
     width: 90%;
-    height: 90%;
+    height: 98%;
     min-height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
 
-    padding-top: 50px;
+    padding-top: 86px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    overflow: auto;
+
 }
+
+.list::-webkit-scrollbar {
+    width: 15px;
+    position: absolute;
+    top: 20px;
+}
+
+.list::-webkit-scrollbar-button,
+.list::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 20px;
+
+    max-height: 20px;
+}
+
 
 .goal {
     width: 90%;

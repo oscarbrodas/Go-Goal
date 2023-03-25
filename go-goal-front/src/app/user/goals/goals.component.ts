@@ -5,6 +5,7 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query }
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 
+
 @Component({
   selector: 'app-goals',
   templateUrl: './goals.component.html',
@@ -27,16 +28,27 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
       ]),
       transition(':leave', [
         query(':leave', [
-          stagger(250, [
-            animate(250, keyframes([
-              style({ offset: 0 }),
-              style({ transform: 'translateX(2000px)', offset: 1 }),
-            ]))
-          ])
+          animate(250, keyframes([
+            style({ offset: 0 }),
+            style({ opacity: '0.5', offset: 0.5 }),
+            style({ offset: 1, opacity: 0 }),
+          ]))
         ])
       ])
     ],
-    ), // end of goals trigger
+    ),
+    trigger('goal', [
+      transition(':enter', [
+        style({ opacity: 1, transform: 'translateY(-500px)' }),
+        animate(650, keyframes([
+          style({ offset: 0, position: 'relative', top: '-500px' }),
+          style({ transform: 'translateY(500px)', offset: 0.6 }),
+          style({ transform: 'translateY(490px)', offset: 0.7 }),
+          style({ transform: 'translateY(490px)', offset: 0.9 }),
+          style({ transform: 'translateY(500px)', offset: 1, opacity: 1 }),
+        ]))
+      ]),
+    ]),
     trigger('sidebar', [
 
       transition(':enter', [
@@ -58,9 +70,11 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 })
 export class GoalsComponent {
 
+  initList: boolean = true;
+  addToList: boolean = false;
+
   userGoals: goal[];
-  newGoalTime: boolean = false;
-  completeGoalTime: boolean = false;
+  norm: boolean = true; deleteTime: boolean = false; editTime: boolean = false; completeGoalTime: boolean = false;
   newGoal = this.formBuilder.group({
     Title: new FormControl(""),
     Description: new FormControl(""),
@@ -69,21 +83,22 @@ export class GoalsComponent {
 
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder) {
     this.userGoals = [
-      { Title: "Goal 1", Description: "Fix Bike", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
-      { Title: "Goal 2", Description: "Ride Bike", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
-      { Title: "Goal 3", Description: "Ride Wife", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
+      { Title: "Goal 1", Description: "Fix Bike", UserID: 2, },
+      { Title: "Goal 2", Description: "Ride Bike", UserID: 2, },
+      { Title: "Goal 3", Description: "Ride Wife", UserID: 2, },
 
     ];
   }
 
   ngOnInit(): void {
     this.userGoals = [
-      { Title: "Goal 1", Description: "Fix Bike", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
-      { Title: "Goal 2", Description: "Ride Bike", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
-      { Title: "Goal 3", Description: "Ride Wife", UserID: 2, User: { FirstName: "Test", LastName: "Test", Email: "Test", Password: "Test", Username: "test", loggedIn: true, ID: 2 } },
+      { Title: "Goal 1", Description: "Fix Bike", UserID: 2, },
+      { Title: "Goal 2", Description: "Ride Bike", UserID: 2, },
+      { Title: "Goal 3", Description: "Ride Wife", UserID: 2 },
 
     ];
   }
+
 
   // getGoals(): JSON {
 
@@ -91,9 +106,60 @@ export class GoalsComponent {
   // }
 
   addGoal() {
+    if (this.newGoal.value.Title == "") {
+      alert("Please enter a title");
+      return;
+    }
+    if (this.newGoal.value.Description == "") {
+      alert("Please enter a description");
+      return;
+    }
 
+    this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, UserID: 2, completed: false });
 
-    this.newGoalTime = false;
+    // add goal to backend
+
+  }
+  normalize() {
+    this.norm = true
+    this.deleteTime = false;
+    this.editTime = false;
+    this.completeGoalTime = false;
+  }
+  deleteGoal() {
+    this.norm = false;
+    this.deleteTime = true;
+    this.editTime = false;
+    this.completeGoalTime = false;
+  }
+  editGoal() {
+    this.norm = false;
+    this.deleteTime = false;
+    this.editTime = true;
+    this.completeGoalTime = false;
+  }
+  completeGoal(goal: goal) {
+    this.norm = false;
+    this.deleteTime = false;
+    this.editTime = false;
+    this.completeGoalTime = true;
+  }
+
+  goalButton(goal: goal) {
+
+    if (this.norm) {
+      this.userGoals.forEach((item, index) => {
+        if (item === goal) item.completed = true;
+      });
+    }
+    else if (this.deleteTime) {
+    }
+    else if (this.editTime) {
+    }
+    else {
+
+    }
+
   }
 
 }
@@ -102,6 +168,6 @@ export interface goal {
   Title: string;
   Description: string;
   UserID: number;
-  User: userInfo;
+  completed?: boolean;
 }
 
