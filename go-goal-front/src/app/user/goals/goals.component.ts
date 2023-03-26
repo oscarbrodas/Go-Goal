@@ -117,29 +117,32 @@ export class GoalsComponent {
       alert("Please enter a title");
       return;
     }
-    if (this.newGoal.value.Description == "") {
+    else if (this.newGoal.value.Description == "null") {
       alert("Please enter a description");
       return;
     }
+    else {
+      // Send goals to backend
+      this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description }, this.userService.getUserData().ID).subscribe((data) => { });
 
-    // Send goals to backend
-    this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description }, this.userService.getUserData().ID).subscribe((data) => { });
+      // Push to list, delay to allow backend to update
+      this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, completed: false });
 
-    // Push to list, delay to allow backend to update
-    this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, completed: false });
+      // Clear form
+      this.newGoal.reset();
+      this.normalize();
 
-    // Clear form
-    this.newGoal.reset();
-    this.normalize();
-
-    // Update goalID
-    this.backend.getGoals(this.userService.getUserData().ID).subscribe((data) => {
-      this.userGoals[this.userGoals.length - 1].goalID = data.Goals[data.Goals.length - 1].ID;
-    });
+      // Update goalID
+      this.backend.getGoals(this.userService.getUserData().ID).subscribe((data) => {
+        this.userGoals[this.userGoals.length - 1].goalID = data.Goals[data.Goals.length - 1].ID;
+      });
 
 
-    // Log
-    console.log('New goal added');
+      // Log
+      console.log('New goal added');
+    }
+
+
   }
   normalize() {
     this.norm = true
