@@ -15,14 +15,14 @@ import { UserService } from '../user.service';
     trigger('goals', [
       transition('void => *', [
         query(':enter', [
-          style({ opacity: 1, transform: 'translateY(-500px)' }),
+          style({ opacity: 1, transform: 'translateY(-2500px)' }),
           stagger(200, [
             animate(650, keyframes([
-              style({ offset: 0, position: 'relative', top: '-500px' }),
-              style({ transform: 'translateY(500px)', offset: 0.6 }),
-              style({ transform: 'translateY(490px)', offset: 0.7 }),
-              style({ transform: 'translateY(490px)', offset: 0.9 }),
-              style({ transform: 'translateY(500px)', offset: 1, opacity: 1 }),
+              style({ offset: 0, position: 'relative', top: '-2500px' }),
+              style({ transform: 'translateY(2500px)', offset: 0.6 }),
+              style({ transform: 'translateY(2490px)', offset: 0.7 }),
+              style({ transform: 'translateY(2490px)', offset: 0.9 }),
+              style({ transform: 'translateY(2500px)', offset: 1, opacity: 1 }),
             ]))
           ])
         ], { optional: true })
@@ -40,13 +40,13 @@ import { UserService } from '../user.service';
     ),
     trigger('goal', [
       transition(':enter', [
-        style({ opacity: 1, transform: 'translateY(-500px)' }),
+        style({ opacity: 1, transform: 'translateY(-2500px)' }),
         animate(650, keyframes([
-          style({ offset: 0, position: 'relative', top: '-500px' }),
-          style({ transform: 'translateY(500px)', offset: 0.6 }),
-          style({ transform: 'translateY(490px)', offset: 0.7 }),
-          style({ transform: 'translateY(490px)', offset: 0.9 }),
-          style({ transform: 'translateY(500px)', offset: 1, opacity: 1 }),
+          style({ offset: 0, position: 'relative', top: '-2500px' }),
+          style({ transform: 'translateY(2500px)', offset: 0.6 }),
+          style({ transform: 'translateY(2490px)', offset: 0.7 }),
+          style({ transform: 'translateY(2490px)', offset: 0.9 }),
+          style({ transform: 'translateY(2500px)', offset: 1, opacity: 1 }),
         ]))
       ]),
     ]),
@@ -73,6 +73,7 @@ export class GoalsComponent {
 
   initList: boolean = true;
   addToList: boolean = false;
+  listLoaded: boolean = false;
 
   userGoals: goal[] = [];
   norm: boolean = true; deleteTime: boolean = false; editTime: boolean = false; completeGoalTime: boolean = false;
@@ -99,6 +100,7 @@ export class GoalsComponent {
         this.userGoals = [];
         data.Goals.forEach((item: any) => {
           this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, completed: false });
+          this.listLoaded = true;
         });
       }
       else {
@@ -123,12 +125,18 @@ export class GoalsComponent {
     // Send goals to backend
     this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description }, this.userService.getUserData().ID).subscribe((data) => { });
 
-    // Push to list
+    // Push to list, delay to allow backend to update
     this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, completed: false });
 
     // Clear form
     this.newGoal.reset();
     this.normalize();
+
+    // Update goalID
+    this.backend.getGoals(this.userService.getUserData().ID).subscribe((data) => {
+      this.userGoals[this.userGoals.length - 1].goalID = data.Goals[data.Goals.length - 1].ID;
+    });
+
 
     // Log
     console.log('New goal added');

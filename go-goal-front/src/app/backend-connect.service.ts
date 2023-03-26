@@ -30,8 +30,6 @@ export class BackendConnectService {
   }
 
   public deleteGoals(gID: Number): Observable<any> {
-    console.log(gID);
-
     return this.http.delete<JSON>(`${this.backendURL}goals/${gID}`, this.httpOptions);
   }
 
