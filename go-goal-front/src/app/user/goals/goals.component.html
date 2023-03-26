@@ -3,13 +3,13 @@
         <div @sidebar class="sidebar">
             <h1>Your Goals</h1>
             <div class="buttons">
-                <button (click)="norm ? editGoal() : normalize()">
+                <button (click)="norm ? editMode() : normalize()">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="norm ? deleteGoal() : normalize()">
+                <button (click)="norm ? deleteMode() : normalize()">
                     <mat-icon>delete</mat-icon>
                 </button>
-                <button>
+                <button (click)="norm ? completeMode() : normalize()">
                     <mat-icon>done_all</mat-icon>
                 </button>
             </div>

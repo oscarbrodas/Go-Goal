@@ -51,9 +51,8 @@
     align-items: center;
 
     padding-top: 86px;
-    overflow-y: hidden;
     scrollbar-width: none;
-    overflow: auto;
+    overflow-y: auto;
 
 }
 

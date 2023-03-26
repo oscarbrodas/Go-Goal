@@ -3,6 +3,7 @@ import { parse } from '@fortawesome/fontawesome-svg-core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
 import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UserService } from '../user.service';
 
 
 
@@ -24,7 +25,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
               style({ transform: 'translateY(500px)', offset: 1, opacity: 1 }),
             ]))
           ])
-        ])
+        ], { optional: true })
       ]),
       transition(':leave', [
         query(':leave', [
@@ -33,7 +34,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
             style({ opacity: '0.5', offset: 0.5 }),
             style({ offset: 1, opacity: 0 }),
           ]))
-        ])
+        ], { optional: true }),
       ])
     ],
     ),
@@ -73,7 +74,7 @@ export class GoalsComponent {
   initList: boolean = true;
   addToList: boolean = false;
 
-  userGoals: goal[];
+  userGoals: goal[] = [];
   norm: boolean = true; deleteTime: boolean = false; editTime: boolean = false; completeGoalTime: boolean = false;
   newGoal = this.formBuilder.group({
     Title: new FormControl(""),
@@ -81,29 +82,33 @@ export class GoalsComponent {
   });
 
 
-  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder) {
-    this.userGoals = [
-      { Title: "Goal 1", Description: "Fix Bike", UserID: 2, },
-      { Title: "Goal 2", Description: "Ride Bike", UserID: 2, },
-      { Title: "Goal 3", Description: "Ride Wife", UserID: 2, },
-
-    ];
+  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService) {
   }
 
   ngOnInit(): void {
-    this.userGoals = [
-      { Title: "Goal 1", Description: "Fix Bike", UserID: 2, },
-      { Title: "Goal 2", Description: "Ride Bike", UserID: 2, },
-      { Title: "Goal 3", Description: "Ride Wife", UserID: 2 },
-
-    ];
+    // Backend call to get goals
+    this.getGoals();
   }
 
+  getGoals() {
+    this.backend.getGoals(this.userService.getUserData().ID).subscribe((data) => {
+      if (!data.Successful || data.ErrorExist || data == null) {
+        console.log("Error getting goals (getGoals)");
+      }
+      else if (data.Goals.length > 0) {
+        this.userGoals = [];
+        data.Goals.forEach((item: any) => {
+          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, completed: false });
+        });
+      }
+      else {
+        this.userGoals = [];
+      }
 
-  // getGoals(): JSON {
+    });
 
-  //   return JSON.parse(this.backend.getGoals());
-  // }
+
+  }
 
   addGoal() {
     if (this.newGoal.value.Title == "") {
@@ -115,10 +120,18 @@ export class GoalsComponent {
       return;
     }
 
-    this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, UserID: 2, completed: false });
+    // Send goals to backend
+    this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description }, this.userService.getUserData().ID).subscribe((data) => { });
 
-    // add goal to backend
+    // Push to list
+    this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, completed: false });
 
+    // Clear form
+    this.newGoal.reset();
+    this.normalize();
+
+    // Log
+    console.log('New goal added');
   }
   normalize() {
     this.norm = true
@@ -126,19 +139,19 @@ export class GoalsComponent {
     this.editTime = false;
     this.completeGoalTime = false;
   }
-  deleteGoal() {
+  deleteMode() {
     this.norm = false;
     this.deleteTime = true;
     this.editTime = false;
     this.completeGoalTime = false;
   }
-  editGoal() {
+  editMode() {
     this.norm = false;
     this.deleteTime = false;
     this.editTime = true;
     this.completeGoalTime = false;
   }
-  completeGoal(goal: goal) {
+  completeMode() {
     this.norm = false;
     this.deleteTime = false;
     this.editTime = false;
@@ -148,11 +161,23 @@ export class GoalsComponent {
   goalButton(goal: goal) {
 
     if (this.norm) {
-      this.userGoals.forEach((item, index) => {
-        if (item === goal) item.completed = true;
+      this.userGoals.forEach((item) => {
+        if (item === goal) {
+          item.completed = true;
+        }
       });
+
+      // ADD: Complete goal in backend
     }
     else if (this.deleteTime) {
+      this.userGoals.forEach((item, index) => {
+        if (item === goal) {
+          this.backend.deleteGoals(item.goalID).subscribe((data) => { });
+          this.userGoals.splice(index, 1);
+          console.log("Deleted goal: " + item.Title);
+
+        }
+      });
     }
     else if (this.editTime) {
     }
@@ -167,7 +192,7 @@ export class GoalsComponent {
 export interface goal {
   Title: string;
   Description: string;
-  UserID: number;
+  goalID: number;
   completed?: boolean;
 }
 
