@@ -1,15 +1,15 @@
-<div *ngIf="listLoaded" class="page">
+<div class="page">
     <div class="left-side">
         <div @sidebar class="sidebar">
             <h1>Your Goals</h1>
             <div class="buttons">
-                <button (click)="norm ? editMode() : normalize()">
+                <button (click)="editMode()">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="norm ? deleteMode() : normalize()">
+                <button (click)="deleteMode()">
                     <mat-icon>delete</mat-icon>
                 </button>
-                <button (click)="norm ? completeMode() : normalize()">
+                <button (click)="completeMode()">
                     <mat-icon>done_all</mat-icon>
                 </button>
             </div>
@@ -25,9 +25,9 @@
         </div>
 
     </div>
-    <div class="content">
-        <div @goals class="list">
-            <div @goal class="goal" *ngFor="let u of userGoals">
+    <div *ngIf="listLoaded" class="content">
+        <div [@goals]="userGoals.length" class="list">
+            <div class="goal" *ngFor="let u of userGoals">
                 <div class="desc">
                     <p>{{u.Title}}</p>
                     <p>{{u.Description}}</p>

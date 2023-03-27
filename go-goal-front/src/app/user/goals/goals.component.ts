@@ -13,43 +13,26 @@ import { UserService } from '../user.service';
   styleUrls: ['./goals.component.css'],
   animations: [
     trigger('goals', [
-      transition('void => *', [
+      transition('* <=> *', [
         query(':enter', [
-          style({ opacity: 1, transform: 'translateY(-2500px)' }),
+          style({ top: '-2000px' }),
           stagger(200, [
-            animate(650, keyframes([
-              style({ offset: 0, position: 'relative', top: '-2500px' }),
-              style({ transform: 'translateY(2500px)', offset: 0.6 }),
-              style({ transform: 'translateY(2490px)', offset: 0.7 }),
-              style({ transform: 'translateY(2490px)', offset: 0.9 }),
-              style({ transform: 'translateY(2500px)', offset: 1, opacity: 1 }),
+            animate('1250ms ease-out', keyframes([
+              style({ offset: 0, position: 'relative', top: '-2000px' }),
+              style({ transform: 'translateY(2000px)', offset: 0.6 }),
+              style({ transform: 'translateY(1990px)', offset: 0.7 }),
+              style({ transform: 'translateY(2000px)', offset: 0.8 }),
+              style({ transform: 'translateY(1999px)', offset: 0.9 }),
+              style({ transform: 'translateY(2000px)', offset: 1, opacity: 1 }),
             ]))
           ])
-        ], { optional: true })
-      ]),
-      transition(':leave', [
-        query(':leave', [
-          animate(250, keyframes([
-            style({ offset: 0 }),
-            style({ opacity: '0.5', offset: 0.5 }),
-            style({ offset: 1, opacity: 0 }),
-          ]))
         ], { optional: true }),
-      ])
+        query(':leave', [
+          animate('0.5s', style({ opacity: 0 }))
+        ], { optional: true }),
+      ]),
     ],
     ),
-    trigger('goal', [
-      transition(':enter', [
-        style({ opacity: 1, transform: 'translateY(-2500px)' }),
-        animate(650, keyframes([
-          style({ offset: 0, position: 'relative', top: '-2500px' }),
-          style({ transform: 'translateY(2500px)', offset: 0.6 }),
-          style({ transform: 'translateY(2490px)', offset: 0.7 }),
-          style({ transform: 'translateY(2490px)', offset: 0.9 }),
-          style({ transform: 'translateY(2500px)', offset: 1, opacity: 1 }),
-        ]))
-      ]),
-    ]),
     trigger('sidebar', [
 
       transition(':enter', [
@@ -89,6 +72,7 @@ export class GoalsComponent {
   ngOnInit(): void {
     // Backend call to get goals
     this.getGoals();
+
   }
 
   getGoals() {
@@ -109,7 +93,7 @@ export class GoalsComponent {
 
     });
 
-
+    this.listLoaded = true;
   }
 
   addGoal() {
@@ -152,21 +136,29 @@ export class GoalsComponent {
   }
   deleteMode() {
     this.norm = false;
-    this.deleteTime = true;
+    this.deleteTime = !this.deleteTime;
     this.editTime = false;
     this.completeGoalTime = false;
+
+    if (!this.deleteTime) this.normalize();
   }
   editMode() {
     this.norm = false;
     this.deleteTime = false;
-    this.editTime = true;
+    this.editTime = !this.editTime;
     this.completeGoalTime = false;
+
+    if (!this.editTime) this.normalize();
   }
   completeMode() {
     this.norm = false;
     this.deleteTime = false;
     this.editTime = false;
-    this.completeGoalTime = true;
+    this.completeGoalTime = !this.completeGoalTime;
+
+    if (!this.completeGoalTime) this.normalize();
+
+
   }
 
   goalButton(goal: goal) {
