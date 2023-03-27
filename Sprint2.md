@@ -68,56 +68,64 @@
 
 - __UpdateUsername__ - __PUT__
 
-  - Route: __/api/users/username__
+  - Route: __/api/users/{id}/username__
   
-  - Input: "User" to be updated and "Username" of type string
+  - Input: The User ID (In the Route) to be updated and the new "Username" of type string
   
   - Output: "User" back with the updated change 
 
 - __UpdateFirstname__ - __PUT__
 
-  - Route: __/api/users/firstname__
+  - Route: __/api/users/{id}/firstname__
   
-  - Input: "User" to be updated and "Firstname" of type string
+  - Input: The User ID (In the Route) to be updated and "Firstname" of type string
   
   - Output: "User" back with the updated change 
 
 - __UpdateLastname__ - __PUT__
 
-  - Route: __/api/users/lastname__
+  - Route: __/api/users/{id}/lastname__
   
-  - Input: "User" to be updated and "Lastname" of type string
+  - Input: The User ID (In the Route) to be updated and "Lastname" of type string
   
   - Output: "User" back with the updated change 
   
 - __UpdateEmail__ - __PUT__
 
-  - Route: __/api/users/email__
+  - Route: __/api/users/{id}/email__
   
-  - Input: "User" to be updated and "Email" of type string
+  - Input: The User ID (In the Route) to be updated and "Email" of type string
   
   - Output: "User" back with the updated change 
   
-  
+ 
 - __UpdatePassword__ - __PUT__
 
-  - Route: __/api/users/password__
+  - Route: __/api/users/{id}password__
   
-  - Input: "User" to be updated and "Password" of type string
+  - Input: The User ID (In the Route) to be updated and "Password" of type string
   
   - Output: "User" back with the updated change 
   
   
 - __CheckLogin()__ - __GET__
 
-  - Route: __/api/login__ 
+  - Route: __/api/login/{email}/{password}__ 
 
   - Notes: Email and Password must be correct or the user object returned will be giberish
 
-  - Input: "Email" and "Password" of type string
+  - Input: "Email" and "Password" of type string passed in the route.
 
   - Output: "FindEmail" and "FindPassword" of type bool. "ThisUser" which is the user object
-  
+
+- __CheckUsername()__ - __GET__
+
+  - Route: __/api/login/{username}__ 
+
+  - Input: "Username" of type string passed in the route.
+
+  - Output: "Exists" and "ValidName", boolean values to validate the "Username" with.
+  - 
 ### Friend
 - Friend: the structure of the Friend object. The variable names are case sensitive
 
@@ -137,9 +145,9 @@
   
 - __GetAllFriends()__ - __GET__
 
-  - Route: __/api/friends__
+  - Route: __/api/friends{id}__
   
-  - Input: body must contain the user object of the current user
+  - Input: User ID is passed in the route for the user retrieving friends from.
   
   - Output: "IDs" as an array of ints which represent the IDs of the friends of this user. "ErrorExist" as bool
   
@@ -147,55 +155,97 @@
 
   - Notes: cannot sent a friend request if you already sent one, are already friends, or the other person sent you a request
   
-  - Route: __/api/friends/sendFriendRequest?id=__
+  - Route: __/api/friends/sendFriendRequest/{sender}/{reciever}__
   
-  - Input: the body must contain the user object of the user sending the request. The URL must contain the id of the user recieving the request
+  - Input: Sender's ID and Reciever's ID passed in the route
   
   - Output: "Successful", "ErrorExist" as bools
   
 - __GetOutgoingFriendRequests()__ - __GET__
 
-  - Notes: gets the list of people that you sent a request to
+  - Notes: gets the list of people the user sent a request to
   
-  - Route: __/api/friends/getOutgoingFriendRequests__
+  - Route: __/api/friends/getOutgoingFriendRequests/{id}__
   
-  - Input: body must contain the user object
+  - Input: User ID passed in route.
   
   - Output: "IDs" as an array of user ids that you sent a request to. "ErrorExist" as a bool
   
 - __GetIngoingFriendRequests()__ - __GET__
 
-  - Notes: gets a list of people that sent you a request
+  - Notes: gets a list of people that sent the user a request
   
-  - Route: __/api/friends/getIngoingFriendRequests__
+  - Route: __/api/friends/getIngoingFriendRequests/{id}__
   
-  - Input: body must contain the user object
+  - Input: User ID passed in route.
   
   - Output: "IDs" as an array of user ids that sent a request to you. "ErrorExist" as a bool
   
 - __AcceptFriendRequest()__ - __PUT__
 
-  - Route: __/api/friends/acceptFriendRequest?id=__
+  - Route: __/api/friends/acceptFriendRequest/{sender}/{reciever}__
   
-  - Input: body must contain the user object. The URL must contain the id of the user that sent you the request
+  - Input: Sender/Reciever Pair of IDs passed in route.
 
-  - Output: "Successful", "ErrorExist" as bools
+  - Output: "Successful", "ErrorExist" as bools.
 
 - __DeclineFriendRequest()__ - __DELETE__
 
-  - Route: /friends/declineFriendRequest?id=
+  - Route: __/api/friends/declineFriendRequest/{sender}/{decliner}__
   
-  - Input: body must contain the user object. The URL must contain the id of the user that sent you the request
+  - Input: Sender/Decliner pair of IDs passed in route.
 
   - Output: "Successful", "ErrorExist" as bools
 
 - __RemoveFriend()__ - __DELETE__
 
-  - Route: __/api/friends/removeFriend?id=__
+  - Route: __/api/friends/removeFriend/{remover}/{friend}__
   
-  - Input: body must contain the user object. The URL must contain the id of the user that you are removing
+  - Input: Remover/Friend pair of IDs passed in route.
 
   - Output: "Successful", "ErrorExist" as bools
+
+### Goal
+- Goal: the structure of the Goal object. The variable names are case sensitive
+
+  - ID: *do not worry about this* Unique id of the relationship
+  
+  - CreatedAt: *do not worry about this* Time and date the user was created at
+  
+  - UpdatedAt: *do not worry about this* Time and date the user was updated at
+  
+  - DeletedAt: *do not worry about this* Time and date the user was deleted at
+  
+  - Title: title of the goal (String)
+  
+  - Description: description of the goal (String)
+  
+  - UserID: id of user who has the goal
+
+- __CreateGoal()__ - __POST__
+
+  - Route: __/api/goal/{id}__
+  
+  - Input: Route holds user id and the body take the goal structure
+  
+  - Output: "Successful", "ErrorExist", and the created Goal. 
+
+- __GetGoals()__ - __GET__
+
+  - Route: __/api/goals/{id}__
+  
+  - Input: User ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist", and a list of goals is returned.
+
+- __DeleteUser()__ - __DELETE__
+
+  - Route: __/api/gaols/{id}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
+  
 ### FRONTEND TESTS:
  - Sign Up Form Tests
 
