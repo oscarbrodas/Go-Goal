@@ -1,0 +1,47 @@
+<div class="page">
+    <div class="left-side">
+        <div @sidebar class="sidebar">
+            <h1>Your Goals</h1>
+            <div class="buttons">
+                <button (click)="norm ? editMode() : normalize()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button (click)="norm ? deleteMode() : normalize()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button (click)="norm ? completeMode() : normalize()">
+                    <mat-icon>done_all</mat-icon>
+                </button>
+            </div>
+            <div class="new-goal">
+                <form [formGroup]="newGoal" class="form" (ngSubmit)="addGoal()">
+                    <input type="text" class="titl-box" formControlName="Title" placeholder="Title">
+                    <textarea class="desc-box" formControlName="Description" placeholder="Description"></textarea>
+                    <button class="submit">Add</button>
+                </form>
+            </div>
+
+            <div class="experience">XP POINTS IN-PROGRESS</div>
+        </div>
+
+    </div>
+    <div class="content">
+        <div @goals class="list">
+            <div @goal class="goal" *ngFor="let u of userGoals">
+                <div class="desc">
+                    <p>{{u.Title}}</p>
+                    <p>{{u.Description}}</p>
+                </div>
+                <button class="complete-b" (click)="goalButton(u)">
+                    <mat-icon *ngIf="norm">done</mat-icon>
+                    <mat-icon *ngIf="deleteTime">delete</mat-icon>
+                    <mat-icon *ngIf="editTime">edit</mat-icon>
+                </button>
+                <!-- <div class="complete-banner">
+                    <p>Complete?</p>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>

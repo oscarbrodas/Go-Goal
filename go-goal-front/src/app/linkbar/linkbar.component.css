@@ -1,12 +1,10 @@
 .bar {
     background-color: rgba(0, 0, 0, 1);
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     height: 200px;
-    position: fixed;
+    position: relative;
     bottom: 0px;
-
-    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
 
     border-top: 5px solid #17191c;
     border-bottom: 25px solid rgba(102, 255, 26, 1);

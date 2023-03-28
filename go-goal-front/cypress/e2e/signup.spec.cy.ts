@@ -9,7 +9,7 @@ describe('My First Tests', () => {
     cy.get('[name="Username"]').type('TheTestPerson123')
     cy.get('[name="Password"]').type('TestingTesting123')
     cy.get('[formControlName="signUpButton"]').click()
-    cy.url().should('include','TheTestPerson123')
+    cy.contains("Account Created")
   })
 
   it('Submitting with no info', ()=>{

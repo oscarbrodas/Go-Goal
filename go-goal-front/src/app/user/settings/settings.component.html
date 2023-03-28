@@ -1,0 +1,34 @@
+<div class = "page">
+        <div class="container">
+            <div class = "panel">
+            <div class = "row">
+                <img class = "pic" src="../assets/dashboard_images/p.png">
+            </div>
+            <div class="row">
+                Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}  
+                <button (click)="edit('Name:')">Edit</button>
+            </div>
+            <div class="row">
+                Email: {{this.profileData.Email}}
+                <button (click)="edit('Email:')">Edit</button>
+            </div>
+            </div>
+            <div class = "panel">
+    a
+            </div>
+            <div class = "panel">
+    a
+            </div>
+        </div>
+        <div class="overlay" *ngIf="this.editing">
+            <div class="pop-up">
+                <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)">
+                    <label>{{this.title}} </label>
+                    <input type="text" class="form" name="data" formControlName="data">
+                    <input *ngIf="this.double" type="text" class="form" name="data2" formControlName="data2">
+                <button (click)="close()">Cancel</button>
+                <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>

@@ -36,3 +36,126 @@ button:hover {
     border: solid 2px;
 
 }
+
+h1 {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 30px;
+    color: #202020;
+    margin: 5%;
+    padding: 0px;
+    text-align: center;
+}
+
+.content {
+    width: 350;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    padding: 20px 10px 20px 10px;
+
+}
+
+.title {
+    text-align: center;
+    color: aliceblue;
+}
+
+.dialog-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+}
+
+.account-button {
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    width: 50px;
+}
+
+.account-cc {
+    padding-right: 100px;
+    position: relative;
+    right: 16%;
+}
+
+.sub-menu-wrap {
+    position: absolute;
+    top: 110%;
+    min-width: 200px;
+    max-width: fit-content;
+    height: fit-content;
+    max-height: 400px;
+
+}
+
+.sub-menu {
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 5px;
+    padding: 5px 10px 0px 10px;
+}
+
+.uer-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+
+    border-bottom: 2px solid aliceblue;
+}
+
+.uer-info h2 {
+    font-weight: 400;
+    font-size: 25px;
+
+    color: aliceblue;
+    padding-top: 10px;
+
+}
+
+.sub-menu-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    margin: 12px 0;
+    cursor: pointer;
+}
+
+.sub-menu-link p {
+    width: 100%;
+    color: aliceblue;
+    position: relative;
+    left: 5px;
+}
+
+.sub-menu-link span {
+    font-size: 22px;
+    color: aliceblue;
+    position: relative;
+    bottom: 5px;
+    right: 25px;
+    transition: transform 0.5s ease-in-out;
+}
+
+.logout-logo {
+    position: relative;
+    right: -5px;
+}
+
+.sub-menu-link:hover span {
+    transform: translate(5px);
+}
+
+.sub-menu-link:hover {
+    font-weight: 600;
+}
