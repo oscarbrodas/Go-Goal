@@ -130,6 +130,38 @@ func DeleteGoal(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// input body contain the goal object to update to
+func UpdateGoal(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		var goalID uint64
+		params := mux.Vars(r)
+		returnInfo := struct {
+			Successful bool
+			ErrorExist bool
+		}{}
+		goalID, err := strconv.ParseUint(params["goalID"], 10, 64)
+		if err != nil {
+			fmt.Println(err)
+			returnInfo.ErrorExist = true
+		}
+
+		var newGoal Goal
+		util.DecodeJSONRequest(&newGoal, r.Body, w)
+
+		result := globalDB.Model(&newGoal).Where("id = ?", goalID).Select("Title", "Description", "Completed").Updates(
+			Goal{Title: newGoal.Title, Description: newGoal.Description, Completed: newGoal.Completed})
+		if result.Error != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in UpdateGoal with updating GoalID:%d\n", goalID)
+		} else {
+			returnInfo.Successful = true
+		}
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
 func AddBenchmark(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
