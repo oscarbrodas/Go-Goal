@@ -177,8 +177,10 @@ func TestUpdateUsername1(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	returnInfo := struct {
-		ErrorExist bool
-		Successful bool
+		ErrorExist    bool
+		Successful    bool
+		UsernameExist bool
+		UsernameValid bool
 	}{}
 
 	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
@@ -197,52 +199,6 @@ func TestUpdateUsername1(t *testing.T) {
 }
 
 // Updating a table with a two users, updating the second user, correct id given
-func TestUpdateUsername2(t *testing.T) {
-	initializeTestDatabase()
-
-	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"preserved\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
-	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"old\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\")")
-
-	updatedUsername := "new"
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedUsername)
-
-	req, err := http.NewRequest("PUT", "/api/users/2/username", &buf)
-	if err != nil {
-		t.Fatal(err)
-	}
-	w := httptest.NewRecorder()
-
-	router := mux.NewRouter()
-	router.HandleFunc("/api/users/{id}/username", handler.UpdateUsername(globalDB)).Methods("PUT")
-	router.ServeHTTP(w, req)
-
-	returnInfo := struct {
-		ErrorExist bool
-		Successful bool
-	}{}
-
-	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
-	if !returnInfo.Successful || returnInfo.ErrorExist {
-		t.Errorf("Expected {Successful:True, ErrorExist:false} , but got %v", returnInfo)
-	}
-
-	var preservedUser handler.User
-	var updatedUser handler.User
-
-	globalDB.Model(&preservedUser).First(&preservedUser, 1)
-	globalDB.Model(&updatedUser).First(&updatedUser, 2)
-
-	if preservedUser.Username != "preserved" {
-		t.Errorf("Expected to preserve username as \"%s\", but it is \"%s\"", "preserved", preservedUser.Username)
-	}
-
-	if updatedUser.Username != updatedUsername {
-		t.Errorf("Expected to update username to \"%s\", but it is \"%s\"", updatedUsername, updatedUser.Username)
-	}
-
-}
-
 func TestUpdateUsername2(t *testing.T) {
 	initializeTestDatabase()
 
@@ -354,22 +310,20 @@ func TestUpdateUsername4(t *testing.T) {
 	var buf1 bytes.Buffer
 	var buf2 bytes.Buffer
 
-	err := json.NewEncoder(&buf1).Encode(updatedUsername1)
-	err := json.NewEncoder(&buf2).Encode(updatedUsername2)
+	err1 := json.NewEncoder(&buf1).Encode(updatedUsername1)
+	err2 := json.NewEncoder(&buf2).Encode(updatedUsername2)
 
-
-	req1, err := http.NewRequest("PUT", "/api/users/2/username", &buf1)
-	if err != nil {
-		t.Fatal(err)
+	req1, err1 := http.NewRequest("PUT", "/api/users/2/username", &buf1)
+	if err1 != nil {
+		t.Fatal(err1)
 	}
-	req2, err := http.NewRequest("PUT", "/api/users/1/username", &buf2)
-	if err != nil {
-		t.Fatal(err)
+	req2, err2 := http.NewRequest("PUT", "/api/users/1/username", &buf2)
+	if err2 != nil {
+		t.Fatal(err2)
 	}
 
 	w1 := httptest.NewRecorder()
 	w2 := httptest.NewRecorder()
-
 
 	router := mux.NewRouter()
 	router.HandleFunc("/api/users/{id}/username", handler.UpdateUsername(globalDB)).Methods("PUT")
@@ -393,7 +347,11 @@ func TestUpdateUsername4(t *testing.T) {
 	json.NewDecoder(w2.Result().Body).Decode(&returnInfo2)
 
 	if returnInfo1.Successful || !returnInfo1.ErrorExist || !returnInfo1.UsernameExist {
-		t.Errorf("Expected {Successful:false, ErrorExist:True, UsernameExist:True} , but got %v", returnInfo)
+		t.Errorf("Expected {Successful:false, ErrorExist:True, UsernameExist:True} , but got %v", returnInfo1)
+	}
+
+	if returnInfo2.Successful || !returnInfo2.ErrorExist || !returnInfo2.UsernameExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:True, UsernameExist:True} , but got %v", returnInfo1)
 	}
 
 	var preservedUser1 handler.User
@@ -828,6 +786,77 @@ func TestUpdateEmail3(t *testing.T) {
 	}
 }
 
+func TestUpdateEmail4(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC1\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC2\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\")")
+
+	updatedEmail1 := "1@gmail.com"
+	updatedEmail2 := "2@gmail.com"
+
+	var buf1 bytes.Buffer
+	var buf2 bytes.Buffer
+
+	err1 := json.NewEncoder(&buf1).Encode(updatedEmail1)
+	err2 := json.NewEncoder(&buf2).Encode(updatedEmail2)
+
+	req1, err1 := http.NewRequest("PUT", "/api/users/2/email", &buf1)
+	if err1 != nil {
+		t.Fatal(err1)
+	}
+	req2, err2 := http.NewRequest("PUT", "/api/users/1/email", &buf2)
+	if err2 != nil {
+		t.Fatal(err2)
+	}
+
+	w1 := httptest.NewRecorder()
+	w2 := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/users/{id}/email", handler.UpdateEmail(globalDB)).Methods("PUT")
+	router.ServeHTTP(w1, req1)
+	router.ServeHTTP(w2, req2)
+
+	returnInfo1 := struct {
+		ErrorExist bool
+		Successful bool
+		EmailExist bool
+		EmailValid bool
+	}{}
+	returnInfo2 := struct {
+		ErrorExist bool
+		Successful bool
+		EmailExist bool
+		EmailValid bool
+	}{}
+
+	json.NewDecoder(w1.Result().Body).Decode(&returnInfo1)
+	json.NewDecoder(w2.Result().Body).Decode(&returnInfo2)
+
+	if returnInfo1.Successful || !returnInfo1.ErrorExist || !returnInfo1.EmailExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:True, UsernameExist:True} , but got %v", returnInfo1)
+	}
+
+	if returnInfo2.Successful || !returnInfo2.ErrorExist || !returnInfo2.EmailExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:True, UsernameExist:True} , but got %v", returnInfo1)
+	}
+
+	var preservedUser1 handler.User
+	var preservedUser2 handler.User
+
+	globalDB.Model(&preservedUser1).First(&preservedUser1, 1)
+	globalDB.Model(&preservedUser2).First(&preservedUser2, 2)
+
+	if preservedUser1.Email != "1@gmail.com" {
+		t.Errorf("Expected to preserve email as \"%s\", but it is \"%s\"", "1@gmail.com", preservedUser1.Email)
+	}
+
+	if preservedUser2.Email != "2@gmail.com" {
+		t.Errorf("Expected to preserve email as \"%s\", but it is \"%s\"", "2@gmail.com", preservedUser2.Username)
+	}
+}
+
 // Updating a table with a single user, correct id given
 func TestUpdatePassword1(t *testing.T) {
 	initializeTestDatabase()
@@ -964,6 +993,44 @@ func TestUpdatePassword3(t *testing.T) {
 	err = globalDB.Model(&handler.User{}).First(&updatedUser, 3).Error
 	if err == nil { // There should not be a third user
 		t.Errorf("Expected error, but user exsists: %v", updatedUser)
+	}
+}
+
+func TestAddXP(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"old\", \"50\")")
+
+	additionalXP := 50
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(additionalXP)
+
+	req, err := http.NewRequest("PUT", "/api/users/1/xp", &buf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/users/{id}/xp", handler.AddXP(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, req)
+
+	returnInfo := struct {
+		ErrorExist bool
+		Successful bool
+	}{}
+
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !returnInfo.Successful || returnInfo.ErrorExist {
+		t.Errorf("Expected {Successful:True, ErrorExist:false} , but got %v", returnInfo)
+	}
+
+	var user handler.User
+
+	globalDB.Model(&user).First(&user, 1)
+
+	if user.XP != 100 {
+		t.Errorf("Expected to update xp to \"%d\", but it is \"%d\"", 100, user.XP)
 	}
 }
 

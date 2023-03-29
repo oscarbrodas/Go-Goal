@@ -127,7 +127,7 @@ func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(returnInfo)
 			return
 		}
-		if returnInfo.UsernameValid {
+		if !returnInfo.UsernameValid {
 			returnInfo.ErrorExist = true
 			returnInfo.Successful = false
 			fmt.Printf("Error: Username not valid.")
@@ -213,15 +213,35 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+			EmailExist bool
+			EmailValid bool
+		}{}
+
 		params := mux.Vars(r)
 		ID := params["id"]
 
 		var newEmail string
 		util.DecodeJSONRequest(&newEmail, r.Body, w)
-		returnInfo := struct { // Don't need to pass new or old information, should already have it
-			ErrorExist bool
-			Successful bool
-		}{}
+
+		returnInfo.EmailExist, returnInfo.EmailValid = IsValidEmail(globalDB, newEmail)
+
+		if returnInfo.EmailExist {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			fmt.Printf("Error: Email already exists.")
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+		if !returnInfo.EmailValid {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			fmt.Printf("Error: Email not valid.")
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
 
 		var user User
 		err := globalDB.Model(&User{}).First(&user, ID).Error
@@ -292,7 +312,7 @@ func AddXP(globalDB *gorm.DB) http.HandlerFunc {
 
 		newXP += user.XP
 
-		globalDB.Model(&user).Update("password", newXP)
+		globalDB.Model(&user).Update("xp", newXP)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
