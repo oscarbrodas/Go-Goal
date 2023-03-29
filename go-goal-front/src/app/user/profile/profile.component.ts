@@ -4,8 +4,8 @@ import { BackendConnectService, userInfo } from 'src/app/backend-connect.service
 import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
-import {Router, ActivatedRoute, Params} from '@angular/router';
-import {goal} from '../goals/goals.component';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { goal } from '../goals/goals.component';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +15,7 @@ import {goal} from '../goals/goals.component';
 export class ProfileComponent {
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) {
   }
-  user: userInfo = {ID: 0, FirstName: "error", LastName: "error", Username: "error", Password: "Not to View", Email: "error", loggedIn: false};
+  user: userInfo = { ID: 0, FirstName: "error", LastName: "error", Username: "error", Password: "Not to View", Email: "error", loggedIn: false };
   theUser: boolean = false;
   id: number = 0;
   userGoals: goal[] = [];
@@ -23,7 +23,7 @@ export class ProfileComponent {
   theCount: number = 0;
   requested: boolean = false;
   added: boolean = false; //These booleans will be implemented when friends added into system
-  ngOnInit(){
+  ngOnInit() {
     this.activatedRoute.params.subscribe((url) => {
       console.log(url["id"]);
       this.id = url["id"];
@@ -43,31 +43,31 @@ export class ProfileComponent {
       else if (data.Goals.length > 0) {
         this.userGoals = [];
         data.Goals.forEach((item: any) => {
-          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, completed: false });
+          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: false });
         });
       }
       else {
-        this.userGoals = [{Title: "No goals yet", Description: "It looks like this journey is just beginning!", goalID: -1, completed: false}];
+        this.userGoals = [{ Title: "No goals yet", Description: "It looks like this journey is just beginning!", goalID: -1, Completed: false }];
       }
-      if(this.userGoals.length >= 3){
-        this.topUserGoals = this.userGoals.slice(0,3);
-      }else{
+      if (this.userGoals.length >= 3) {
+        this.topUserGoals = this.userGoals.slice(0, 3);
+      } else {
         this.topUserGoals = this.userGoals;
       }
       this.theCount = this.topUserGoals.length;
     })
 
   }
-  FriendRequest(): void{
+  FriendRequest(): void {
     //to add, command to send friend request when button clicked
     this.requested = true;
   }
-  more(): void{
-      if(this.userGoals.length-this.theCount > 3){
-        this.topUserGoals = this.topUserGoals.concat(this.userGoals.slice(this.theCount,this.theCount+3))
-      }else{
-        this.topUserGoals = this.userGoals;
-      }
-      this.theCount = this.topUserGoals.length;
+  more(): void {
+    if (this.userGoals.length - this.theCount > 3) {
+      this.topUserGoals = this.topUserGoals.concat(this.userGoals.slice(this.theCount, this.theCount + 3))
+    } else {
+      this.topUserGoals = this.userGoals;
+    }
+    this.theCount = this.topUserGoals.length;
   }
 }
