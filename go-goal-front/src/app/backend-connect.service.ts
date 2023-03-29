@@ -24,12 +24,31 @@ export class BackendConnectService {
   public signThemUp(userData: userInfo): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}users`, userData, this.httpOptions);
   }
-
+  public getInfo(userID: number): Observable<any>{
+    return this.http.get<JSON>(`${this.backendURL}users?id=${userID}`);
+  }
+  public updateFirstName(userID: number, newName: string): Observable<any>{
+    return this.http.put(`${this.backendURL}users/${userID}/firstname`, {"new": newName}, this.httpOptions)
+  }
+  public updateLastName(userID: number, newName: string): Observable<any>{
+    return this.http.put(`${this.backendURL}users/${userID}/lastname`, newName, this.httpOptions)
+  }
+  public updateEmail(userID: number, newName: string): Observable<any>{
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/email`, {newName}, this.httpOptions)
+  }
+  public updateUsername(userID: number, newName: string): Observable<any>{
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/username`, {newName}, this.httpOptions)
+  }
+  public updatePassword(userID: number, newName: string): Observable<any>{
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/password`, {newName}, this.httpOptions)
+  }
   public createGoal(goalData: any, ID: Number): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}goals/${ID}`, goalData, this.httpOptions);
   }
 
   public deleteGoals(gID: Number): Observable<any> {
+    console.log(gID);
+
     return this.http.delete<JSON>(`${this.backendURL}goals/${gID}`, this.httpOptions);
   }
 

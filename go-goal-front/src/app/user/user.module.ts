@@ -7,12 +7,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GoalsComponent } from './goals/goals.component';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SettingsComponent } from './settings/settings.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
   declarations: [
     UserComponent,
-    GoalsComponent
+    GoalsComponent,
+    SettingsComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

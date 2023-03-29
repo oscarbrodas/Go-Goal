@@ -1,0 +1,42 @@
+<div class="page">
+    <div class="details">
+        <div class = "row">
+            <img class = "pic" src="../assets/dashboard_images/p.png">
+        </div>
+        <div class="row">
+            {{this.user.FirstName}} {{this.user.LastName}}
+        </div>
+        <div class="row">
+            <i class ="row">{{this.user.Username}}</i>
+        </div>
+        <div class ="row">
+            <button *ngIf="!this.theUser && !this.added && !this.requested" (click)="FriendRequest()">Add Friend</button>
+            <p *ngIf="this.requested" class="pending">Request Pending</p>
+            <p *ngIf="this.added" class="accepted">Friend</p>
+            <button *ngIf="this.theUser" routerLink="../settings">Go To Account Settings</button>
+        </div>
+    </div>
+    <div class="goal-outline">
+        <h1>Top Goals</h1>
+        <div class="goal" *ngFor="let u of topUserGoals">
+            <div class="desc">
+                <p>{{u.Title}}</p>
+                <p>{{u.Description}}</p>
+            </div>
+        </div>
+        <div routerLink="../goals" *ngIf="this.theUser" class="allGoals"><i>Go to all your goals</i></div>
+        <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i>More</i></div>
+    </div>
+    <div class="friend-outline">
+        <h1 *ngIf="!this.theUser">Mutual Friends</h1>
+        <h1 *ngIf="this.theUser">Friends</h1>
+        <div class="friends"></div>
+        <h1 *ngIf="this.theUser">Pending Requests</h1>
+    </div>
+    <!--
+    This is eventually to make into a panel that shows suggested friends or goals, not implemented yet
+        <div *ngIf="this.theUser" class ="discover-outline">
+        C
+    </div>
+    -->
+</div>
