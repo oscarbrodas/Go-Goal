@@ -63,6 +63,7 @@ export class GoalsComponent {
   newGoal = this.formBuilder.group({
     Title: new FormControl(""),
     Description: new FormControl(""),
+    goalID: new FormControl(0)
   });
 
 
@@ -83,7 +84,7 @@ export class GoalsComponent {
       else if (data.Goals.length > 0) {
         this.userGoals = [];
         data.Goals.forEach((item: any) => {
-          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, completed: false });
+          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: false });
           this.listLoaded = true;
         });
       }
@@ -107,10 +108,13 @@ export class GoalsComponent {
     }
     else {
       // Send goals to backend
-      this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description }, this.userService.getUserData().ID).subscribe((data) => { });
+      this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description, Completed: false }, this.userService.getUserData().ID).subscribe((data) => {
+        console.log(data);
+
+      });
 
       // Push to list, delay to allow backend to update
-      this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, completed: false });
+      this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, Completed: false });
 
       // Clear form
       this.newGoal.reset();
@@ -121,18 +125,46 @@ export class GoalsComponent {
         this.userGoals[this.userGoals.length - 1].goalID = data.Goals[data.Goals.length - 1].ID;
       });
 
-
       // Log
       console.log('New goal added');
     }
 
 
+
+
   }
+
+  editGoal() {
+    if (this.newGoal.value.Title == "" || this.newGoal.value.Description == "") {
+      alert("Please enter a valid title and description");
+      return;
+    }
+
+    this.userGoals.forEach((item) => {
+      if (item.goalID == this.newGoal.value.goalID) {
+        // Edit List
+        item.Description = this.newGoal.value.Description!;
+        item.Title = this.newGoal.value.Title!;
+
+        // Edit goal in backend
+        this.backend.updateGoal({ Title: item.Title, Description: item.Description }, item.goalID).subscribe((data) => { });
+      }
+    });
+
+    // Clear form
+    this.newGoal.reset();
+
+    // Log
+    console.log("Goal edited");
+
+  }
+
   normalize() {
     this.norm = true
     this.deleteTime = false;
     this.editTime = false;
     this.completeGoalTime = false;
+    this.newGoal.reset();
   }
   deleteMode() {
     this.norm = false;
@@ -166,7 +198,7 @@ export class GoalsComponent {
     if (this.norm) {
       this.userGoals.forEach((item) => {
         if (item === goal) {
-          item.completed = true;
+          item.Completed = true;
         }
       });
 
@@ -183,6 +215,14 @@ export class GoalsComponent {
       });
     }
     else if (this.editTime) {
+      this.userGoals.forEach((item, index) => {
+        if (item === goal) {
+          // Set form values
+          this.newGoal.setValue({ Title: item.Title, Description: item.Description, goalID: item.goalID });
+
+        }
+      });
+
     }
     else {
 
@@ -196,6 +236,6 @@ export interface goal {
   Title: string;
   Description: string;
   goalID: number;
-  completed?: boolean;
+  Completed: boolean;
 }
 

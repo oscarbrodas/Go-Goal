@@ -214,8 +214,7 @@
     color: white;
 }
 
-.buttons>button:hover,
-.buttons>button:focus {
+.buttons>button:hover {
     background: rgba(102, 255, 26, 1);
     color: black;
     outline: 2px solid white;

@@ -14,10 +14,11 @@
                 </button>
             </div>
             <div class="new-goal">
-                <form [formGroup]="newGoal" class="form" (ngSubmit)="addGoal()">
+                <form [formGroup]="newGoal" class="form" (ngSubmit)="!editTime ? addGoal() : editGoal()">
                     <input type="text" class="titl-box" formControlName="Title" placeholder="Title">
                     <textarea class="desc-box" formControlName="Description" placeholder="Description"></textarea>
-                    <button class="submit">Add</button>
+                    <button *ngIf="!editTime" class="submit">Add</button>
+                    <button *ngIf="editTime" class="submit">Edit</button>
                 </form>
             </div>
 
