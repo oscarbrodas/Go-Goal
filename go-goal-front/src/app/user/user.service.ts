@@ -8,12 +8,15 @@ export class UserService {
   private storageName: string = 'user';
 
   public loggedIn: boolean = false;
+  logIn: Promise<boolean> = new Promise((resolve, reject) => { });
+
 
   constructor() { }
 
   setUserData(data: userInfo) {
     localStorage.setItem(this.storageName, JSON.stringify(data));
     this.loggedIn = true;
+    this.logIn = Promise.resolve(true);
   }
 
   getUserData(): userInfo {

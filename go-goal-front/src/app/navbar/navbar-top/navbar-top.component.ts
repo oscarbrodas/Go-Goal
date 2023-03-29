@@ -5,6 +5,7 @@ import { LoginService } from 'src/app/login-page/login.service';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
+import { BackendConnectService } from 'src/app/backend-connect.service';
 
 @Component({
   selector: 'app-navbar-top',
@@ -46,7 +47,7 @@ export class NavbarTopComponent {
   username: string = ''
 
   constructor(
-    private breakpointObserver: BreakpointObserver, private userService: UserService, private loginService: LoginService, public dialog: MatDialog, private router: Router) {
+    private breakpointObserver: BreakpointObserver, private userService: UserService, private loginService: LoginService, public dialog: MatDialog, private router: Router, private backend: BackendConnectService) {
 
     // Gets rid of Title if screen is too thin
     this.breakpointObserver.observe([
@@ -61,10 +62,19 @@ export class NavbarTopComponent {
   }
 
   ngOnInit() {
-    this.verified = this.userService.isLoggedIn();
-    if (this.verified) {
+
+    if (this.userService.getUserData() == null) {
+      this.verified = false;
+    }
+    else if (this.userService.getUserData().loggedIn) {
+      this.verified = true;
       this.username = this.userService.getUserData().Username;
     }
+    else {
+      this.verified = false;
+    }
+
+
   }
 
   toggleMenu(): void {
@@ -85,8 +95,7 @@ export class NavbarTopComponent {
   }
   logout() {
     this.openDialog('500ms', '50ms');
-
-
+    this.verified = false;
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -118,6 +127,7 @@ export class logoutDialog {
   }
 
   onNoClick(): void {
+
     this.dialogRef.close();
 
   }

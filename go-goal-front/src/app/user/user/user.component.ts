@@ -25,25 +25,8 @@ export class UserComponent implements OnInit {
 
   }
 
-  // Checks if user is logs in and saves data for refresh or redirect
   ngOnInit() {
-    // Debugging Purposes
-    // console.log('User page loaded.');
 
-    if (this.userService.isLoggedIn() && !this.user.loggedIn) {
-      this.user = this.userService.getUserData();
-      //console.log('Returing user data from user service.');
-    }
-    else {
-      this.user = this.loginService.user;
-      this.userService.setUserData(this.user);
-      // console.log('saving user data to user service.');
-    }
-
-    // Debugging Purposes
-    if (this.user.loggedIn) {
-      console.log('' + this.user.FirstName + ' ' + this.user.LastName + ' is logged in.');
-    }
   }
 
 

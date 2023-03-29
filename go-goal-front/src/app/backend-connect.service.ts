@@ -21,6 +21,10 @@ export class BackendConnectService {
     return this.http.get<JSON>(`${this.backendURL}login/${loginInfo.Email}/${loginInfo.Password}`);
   };
 
+  public verifyLogin(loginInfo: loginInfo): Observable<any> {
+    return this.http.get<JSON>(`${this.backendURL}login/${loginInfo.Email}/${loginInfo.Password}`);
+  };
+
   public signThemUp(userData: userInfo): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}users`, userData, this.httpOptions);
   }

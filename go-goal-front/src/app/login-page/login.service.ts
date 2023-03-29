@@ -111,7 +111,7 @@ export class LoginService {
 
     if (user.loggedIn) {
       console.log('Redirecting to user page...');
-      this.router.navigate(['/user/' + this.user.ID + '/home']).then(() => {
+      this.router.navigate(['/user/' + this.user.ID + '/profile']).then(() => {
         window.location.reload();
       });
 

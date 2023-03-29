@@ -7,12 +7,11 @@ import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
-  { path: 'home', component: UserComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'goals', component: GoalsComponent },
   { path: 'discover', component: NotFoundComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: 'profile', component: ProfileComponent},
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'profile', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 
 ];
