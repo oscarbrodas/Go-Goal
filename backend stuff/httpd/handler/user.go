@@ -18,26 +18,24 @@ type User struct {
 	LastName  string
 	Email     string
 	Password  string
+	XP        int
 }
 
 // checks if the username is good. add more rules later
-func isValidUsername(globalDB *gorm.DB, username string) (exists bool, validName bool) {
+func IsValidUsername(globalDB *gorm.DB, username string) (exists bool, validName bool) {
 	// Empty Username is not valid and does not exist
 	if username == "" {
 		return false, false
 	}
 	//Checks if the username is registered with another user
-	err := globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists).Error
-	if err == nil {
-		exists = true
-		validName = !exists
-	}
+	globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists)
+	validName = !exists
 
 	return exists, validName
 }
 
 // checks if the username is good. add more rules later
-func isValidEmail(globalDB *gorm.DB, email string) (exists bool, validEmail bool) {
+func IsValidEmail(globalDB *gorm.DB, email string) (exists bool, validEmail bool) {
 	// Empty Email is not valid and does not exist
 	if email == "" {
 		return false, false
@@ -67,7 +65,7 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 		if err != nil {
 			returnInfo.ErrorExist = true
 		}
-		exists, _ := isValidUsername(globalDB, ThisUser.Username)
+		exists, _ := IsValidUsername(globalDB, ThisUser.Username)
 		returnInfo.UsernameExist = exists
 
 		if !returnInfo.EmailExist && !returnInfo.ErrorExist && !returnInfo.UsernameExist {
@@ -111,25 +109,31 @@ func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 			ErrorExist    bool
 			Successful    bool
 			UsernameExist bool
+			UsernameValid bool
 		}{}
 
 		params := mux.Vars(r)
 		ID := params["id"]
 
 		var newUsername string
-		exists, _ := isValidUsername(globalDB, newUsername)
-		if exists {
+		util.DecodeJSONRequest(&newUsername, r.Body, w)
+
+		returnInfo.UsernameExist, returnInfo.UsernameValid = IsValidUsername(globalDB, newUsername)
+
+		if returnInfo.UsernameExist {
 			returnInfo.ErrorExist = true
 			returnInfo.Successful = false
-			returnInfo.UsernameExist = true
 			fmt.Printf("Error: Username already exists.")
 			json.NewEncoder(w).Encode(returnInfo)
 			return
-		} else {
-			returnInfo.UsernameExist = false
 		}
-
-		util.DecodeJSONRequest(&newUsername, r.Body, w)
+		if returnInfo.UsernameValid {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			fmt.Printf("Error: Username not valid.")
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
 
 		var user User
 		err := globalDB.Model(&User{}).First(&user, ID).Error
@@ -264,6 +268,37 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 	}
 }
 
+func AddXP(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		var newXP int
+		util.DecodeJSONRequest(&newXP, r.Body, w)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		newXP += user.XP
+
+		globalDB.Model(&user).Update("password", newXP)
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
 // must pass in json with attributes "Email" and "Password"
 // returns a struct of whether email and password exists and a user object
 // if both  email and password exists, the user object will be the corresponding user
@@ -303,7 +338,7 @@ func CheckUsername(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		username := params["username"]
 
-		returnInfo.Exists, returnInfo.ValidName = isValidUsername(globalDB, username)
+		returnInfo.Exists, returnInfo.ValidName = IsValidUsername(globalDB, username)
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
