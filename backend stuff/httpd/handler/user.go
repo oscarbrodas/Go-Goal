@@ -22,14 +22,31 @@ type User struct {
 
 // checks if the username is good. add more rules later
 func isValidUsername(globalDB *gorm.DB, username string) (exists bool, validName bool) {
-	globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists)
-	validName = !exists
-
+	// Empty Username is not valid and does not exist
 	if username == "" {
-		validName = false
+		return false, false
+	}
+	//Checks if the username is registered with another user
+	err := globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists).Error
+	if err == nil {
+		exists = true
+		validName = !exists
 	}
 
 	return exists, validName
+}
+
+// checks if the username is good. add more rules later
+func isValidEmail(globalDB *gorm.DB, email string) (exists bool, validEmail bool) {
+	// Empty Email is not valid and does not exist
+	if email == "" {
+		return false, false
+	}
+	//Checks if the email is registered with another user
+	globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", email).Find(&exists)
+	validEmail = !exists
+
+	return exists, validEmail
 }
 
 // input json must contain all information of the user
@@ -89,15 +106,30 @@ func GetUser(globalDB *gorm.DB) http.HandlerFunc {
 func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist    bool
+			Successful    bool
+			UsernameExist bool
+		}{}
+
 		params := mux.Vars(r)
 		ID := params["id"]
 
 		var newUsername string
+		exists, _ := isValidUsername(globalDB, newUsername)
+		if exists {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			returnInfo.UsernameExist = true
+			fmt.Printf("Error: Username already exists.")
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		} else {
+			returnInfo.UsernameExist = false
+		}
+
 		util.DecodeJSONRequest(&newUsername, r.Body, w)
-		returnInfo := struct { // Don't need to pass new or old information, should already have it
-			ErrorExist bool
-			Successful bool
-		}{}
 
 		var user User
 		err := globalDB.Model(&User{}).First(&user, ID).Error
