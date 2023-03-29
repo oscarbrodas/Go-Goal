@@ -17,7 +17,7 @@
 
     <ng-template #elseBlock>
         <div class="profile" (click)="toggleMenu()">
-            <button class="account-button">
+            <button class="account-button" id="menuButton">
                 <mat-icon class="account-cc">account_circle</mat-icon>
             </button>
             <div class="sub-menu-wrap" [@menuTrigger]="subMenu ? true : false">
@@ -27,23 +27,23 @@
                     </div>
 
                     <a (click)="profilePage()" class="sub-menu-link">
-                        <p>Profile</p>
+                        <p name="profile">Profile</p>
                         <span>></span>
                     </a>
                     <a (click)="goalsPage()" class="sub-menu-link">
-                        <p>My Goals</p>
+                        <p name="myGoals">My Goals</p>
                         <span>></span>
                     </a>
                     <a (click)="discoverPage()" class="sub-menu-link">
-                        <p>Discover</p>
+                        <p name="discover">Discover</p>
                         <span>></span>
                     </a>
                     <a (click)="settingsPage()" class="sub-menu-link">
-                        <p>Settings</p>
+                        <p name="settings">Settings</p>
                         <span>></span>
                     </a>
                     <a (click)="logout()" class="sub-menu-link">
-                        <p>Logout</p>
+                        <p name="logout">Logout</p>
                         <span><mat-icon style="color: white" class="logout-logo">exit_to_app</mat-icon></span>
                     </a>
 

@@ -10,10 +10,10 @@
             <i class ="row">{{this.user.Username}}</i>
         </div>
         <div class ="row">
-            <button *ngIf="!this.theUser && !this.added && !this.requested" (click)="FriendRequest()">Add Friend</button>
+            <button *ngIf="!this.theUser && !this.added && !this.requested" (click)="FriendRequest()" id="friendButton">Add Friend</button>
             <p *ngIf="this.requested" class="pending">Request Pending</p>
             <p *ngIf="this.added" class="accepted">Friend</p>
-            <button *ngIf="this.theUser" routerLink="../settings">Go To Account Settings</button>
+            <button *ngIf="this.theUser" routerLink="../settings" id="setButton">Go To Account Settings</button>
         </div>
     </div>
     <div class="goal-outline">
@@ -24,8 +24,8 @@
                 <p>{{u.Description}}</p>
             </div>
         </div>
-        <div routerLink="../goals" *ngIf="this.theUser" class="allGoals"><i>Go to all your goals</i></div>
-        <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i>More</i></div>
+        <div routerLink="../goals" *ngIf="this.theUser" class="allGoals"><i id="allGoals">Go to all your goals</i></div>
+        <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i id="moreButton">More</i></div>
     </div>
     <div class="friend-outline">
         <h1 *ngIf="!this.theUser">Mutual Friends</h1>

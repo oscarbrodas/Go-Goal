@@ -71,7 +71,7 @@ export class NavbarTopComponent {
     this.subMenu = !this.subMenu;
   }
   profilePage(): void {
-    this.router.navigate([`user/${this.userService.getUserData().ID}/home`]);
+    this.router.navigate([`user/${this.userService.getUserData().ID}/profile`]);
   }
   goalsPage(): void {
     this.router.navigate([`user/${this.userService.getUserData().ID}/goals`]);

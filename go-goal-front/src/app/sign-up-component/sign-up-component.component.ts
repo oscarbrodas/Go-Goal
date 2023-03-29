@@ -74,14 +74,14 @@ export class SignUpComponentComponent {
 
       this.backend.signThemUp(this.userData).subscribe((data) => {
         console.log('User Sign up request sent');
-
+      }); 
         // Login Procedure after successful sign up
         this.loginForm.controls['Email'].setValue(this.userData.Email);
         this.loginForm.controls['Password'].setValue(this.userData.Password);
         this.loginService.login(this.loginForm);
         // DO: Reroute to User Page
         this.signUpMessage = 'Account Created! Redirecting...'
-      });
+
     }
   }
 }

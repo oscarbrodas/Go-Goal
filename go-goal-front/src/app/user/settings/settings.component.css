@@ -63,9 +63,6 @@ button{
     background: black;
     color: white; 
 }
-.button{
-    justify-content: center;
-}
 .pic{
     height: 200px;
     width: 200px;
