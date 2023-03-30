@@ -7,7 +7,7 @@
             {{this.user.FirstName}} {{this.user.LastName}}
         </div>
         <div class="row">
-            <i class="row">Welcome {{this.user.Username}}</i>
+            <i class="row">{{this.user.Username}}</i>
         </div>
         <div class="row" style="align-self: flex-end;">
             <button *ngIf="!this.theUser && !this.added && !this.requested" (click)="FriendRequest()"
