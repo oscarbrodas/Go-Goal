@@ -10,7 +10,51 @@ import { goal } from '../goals/goals.component';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  animations: [
+    trigger('details', [
+
+      transition('void => *', [
+        animate(600, keyframes([
+          style({ opacity: 0, transform: 'translateX(-200px)', offset: 0 }),
+          style({ opacity: 0.5, transform: 'translateX(-100px)', offset: 0.5 }),
+          style({ opacity: 1, transform: 'translateX(0)', offset: 1 }),
+        ]))
+      ]),
+      transition('* => void', [
+        animate(600, keyframes([
+          style({ background: 'black', opacity: 1, transform: 'translateX(1000px)', offset: 0 }),
+          style({ opacity: 1, transform: 'translateX(1000px)', offset: 0.5 }),
+          style({ opacity: 0, transform: 'translateX(1000px)', offset: 1 }),
+
+        ]))
+      ])
+    ]),
+
+    trigger('goals', [
+      transition('void => *', [
+        style({ opacity: 0, transform: 'translateY(300px)' }),
+        animate(500)
+      ]),
+      transition('* => void', [
+        animate(500, keyframes([
+          style({ opacity: 1, transform: 'translateY(1000px)', offset: 0 }),
+
+        ]))
+      ])
+    ]),
+
+    trigger('friends', [
+      transition('void => *', [
+        style({ opacity: 0, transform: 'translateX(200px)' }),
+        animate(500)
+      ]),
+      transition(':leave', [
+        style({ opacity: 1, transform: 'translateX(800px)' }),
+        animate(500)
+      ])
+    ]),
+  ]
 })
 export class ProfileComponent {
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) {

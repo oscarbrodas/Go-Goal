@@ -7,7 +7,7 @@
     display: flex;
     flex-direction: row;
     align-items: space-between;
-    overflow: auto;
+    overflow: hidden;
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7d7e7d+0,0e0e0e+100;Black+3D */
     background: rgba(125, 126, 125, 0.4);
     /* Old browsers */
@@ -20,15 +20,19 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7d7e7d', endColorstr='#0e0e0e', GradientType=1);
     /* IE6-9 fallback on horizontal gradient */
 }
-.details{
-    display: block;
-    justify-content: center;
-    height: 92.5%;
+
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 90%;
     overflow: hidden;
     width: 25%;
+    min-width: 300px;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 25px;
     margin: 1%;
     margin-top: 4.25%;
     /*border: solid red 4px;
@@ -36,46 +40,58 @@
     border-radius: 20px;
 
     outline: rgba(102, 255, 26, 1) 2px solid;
-    background: rgba(0,0,0,.6);
+    background: rgba(0, 0, 0, .6);
     color: white;
+
+    overflow: hidden;
 }
-.goal-outline{
+
+.goal-outline {
     display: inline-block;
-    justify-content: center;
-    height: 92.5%;
+    height: 90%;
     overflow-y: auto;
     width: 46%;
     position: absolute;
     margin: 1%;
     margin-top: 4.25%;
     left: 26%;
-    top: 0;
+    top: 25px;
     margin-bottom: 2%;
     border-radius: 20px;
 
     outline: rgba(102, 255, 26, 1) 2px solid;
-    background: rgba(0,0,0,.6);
+    background: rgba(0, 0, 0, .6);
     color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+
 }
-.friend-outline{
+
+.friend-outline {
     display: block;
     justify-content: center;
-    height: 92.5%;
+    height: 90%;
     overflow-y: auto;
     width: 25%;
     position: absolute;
     margin: 1%;
     margin-top: 4.25%;
     right: 0;
-    top: 0;
+    top: 25px;
     margin-bottom: 2%;
     border-radius: 20px;
 
     outline: rgba(102, 255, 26, 1) 2px solid;
-    background: rgba(0,0,0,.6);
+    background: rgba(0, 0, 0, .6);
     color: white;
+
+    overflow: hidden;
 }
-.discover-outline{
+
+.discover-outline {
     display: block;
     justify-content: center;
     height: 35%;
@@ -85,20 +101,29 @@
     top: 92.5%;
     margin-bottom: 200px;
     border: solid red 4px;
-    background:rgba(186, 192, 34, 0.8)
+    background: rgba(186, 192, 34, 0.8);
+    overflow: hidden;
 }
-.row, .more{
+
+.row,
+.more {
     padding: 10px;
     justify-content: center;
     font-size: large;
     font-weight: bolder;
+    width: 100%;
 }
-.pic{
+
+.pic {
     height: 200px;
     width: 200px;
     object-fit: cover;
+    margin-top: 10px;
     outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    border-radius: 50%;
 }
+
 .goal {
     width: 90%;
     height: 100px;
@@ -117,21 +142,25 @@
 
 
 }
-.allGoals, .more{
+
+.allGoals,
+.more {
     text-align: center;
     width: 30%;
-    margin-left: 35%;
     border-radius: 10px;
     width: 30%;
     outline: rgba(102, 255, 26, 1) 2px solid;
     background: black;
-    color: white; 
+    color: white;
+    cursor: pointer;
 }
-h1{
-    text-align:center;
+
+h1 {
+    text-align: center;
     padding: 15px;
 }
-button{
+
+button {
     width: 50%;
     height: 30%;
     min-height: fit-content;
@@ -144,9 +173,16 @@ button{
 
     outline: rgba(102, 255, 26, 1) 2px solid;
     background: black;
-    color: white; 
+    color: white;
 }
-.pending, .accepted{
+
+.setButton {
+    align-self: flex-end;
+    height: 80px;
+}
+
+.pending,
+.accepted {
     width: 50%;
     height: 30%;
     min-height: fit-content;
@@ -161,6 +197,7 @@ button{
     background: rgba(128, 128, 128, 0.6);
     color: black;
 }
-.friends{
+
+.friends {
     height: 50%;
 }
