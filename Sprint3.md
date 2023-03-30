@@ -283,3 +283,14 @@
   
   - Output: "Successful", "ErrorExist" are returned.
 
+## Backend Sprint 3 Work
+
+- Added benchmarks for goals.
+
+- Added update goals function.
+
+- Changed the format of the input of the friends functions.
+
+- Added functions to check for valid usernames and emails.
+
+- Added new tests for the update goals function, check valid email and username functions, new friend functions, and benchmarks.
