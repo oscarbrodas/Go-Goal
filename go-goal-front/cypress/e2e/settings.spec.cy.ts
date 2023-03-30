@@ -1,5 +1,51 @@
-describe('template spec', () => {
-  it('passes', () => {
-    cy.visit('https://example.cypress.io')
+describe('Settings Page Tests', () => {
+  beforeEach(() => {
+    cy.visit('/login')
+    cy.get('[name="Email"]').type("sglickman611@gmail.com")
+    cy.get('[name="Password"]').type("ThisIsAPassword")
+    cy.get('[type="submit"]').click()
+    cy.visit('user/1/settings')
+  })
+  it('Change First Name', ()=>{
+    cy.get('[name="name"]').click()
+    cy.get('[name="data"]').type("{backspace}{backspace}{backspace}Sam")
+    cy.get('[id="saveButton"]').click()
+    cy.contains("Sam")
+  })
+  it('Change Last Name', ()=>{
+    cy.get('[name="name"]').click()
+    cy.get('[name="data2"]').type("{backspace}{backspace}{backspace}Glickman")
+    cy.get('[id="saveButton"]').click()
+    cy.contains("Glickman")
+  })
+  it('Change Email', ()=>{
+    cy.get('[name="email"]').click()
+    cy.get('[name="data"]').type("{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}hotmail.com")
+    cy.get('[id="saveButton"]').click()
+    cy.contains("hotmail.com")
+  })
+  it('Change Username', ()=>{
+    cy.get('[name="username"]').click()
+    cy.get('[name="data"]').type("234")
+    cy.get('[id="saveButton"]').click()
+    cy.contains("234")
+  })
+  it('No changes', ()=>{
+    cy.get('[name="name"]').click()
+    cy.get('[name="data"]').type("{backspace}{backspace}{backspace}John")
+    cy.get('[id="cancelButton"]').click()
+    cy.contains('Sam')
+  })
+  it('Invalid Email', ()=>{
+    cy.get('[name="email"]').click()
+    cy.get('[name="data"]').type("{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}gmail.com")
+    cy.get('[id="saveButton"]').click()
+    cy.contains("Not a valid email address")
+  })
+  it('Bad Password', ()=>{
+    cy.get('[name="password"]').click()
+    cy.get('[name="data"]').type("{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}pass")
+    cy.get('[id="saveButton"]').click()
+    cy.contains("Your password is few too digits or the same password as before")
   })
 })
