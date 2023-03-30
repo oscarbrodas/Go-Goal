@@ -294,3 +294,75 @@
 - Added functions to check for valid usernames and emails.
 
 - Added new tests for the update goals function, check valid email and username functions, new friend functions, and benchmarks.
+
+## Frontend Sprint 3 Work
+- Created User component utilized once a user is logged in with proper routing.
+
+- Created Menu toggled in nav bar when logged in to go between pages only accessible for given user (Profile, My goals, settings, and more to come)
+
+- Set up functions for frontend communication with backend to get user info and goal info easily, as well as locally store the logged in user.
+
+- Created goals page that allows adding, deleting and editing goals. Directly stores this info into goal database as well.
+
+- Created profile pages that change depending on which user's profile you pull up. Profile page changes depending on if its your profile or another users.
+
+- Displayed top goals of a given user on profile page as well as user info and made a panel to display mutual friends and friend requests when applicable.
+
+- Created settings page for user to change their user info. Currently saves changes locally and ensures changes meet earlier guidelines (e.g., an email must have an '@' and '.') 
+
+- Formatted CSS to design page better as well as added animations into certain pages.
+
+- Still to come in Sprint 4: Proper friend requests and mutual friends tab, persistent changes in settings, and disover tab on menu to find more goals. 
+
+## Frontend Unit Tests
+
+### Navigation Suite
+ - For each individual page in the website, the following tests were done
+ - Visit Home from Bottom Bar - Tests if home button properly routes to main page
+ - Visit Help from Bottom Bar - Tests if help button properly routes to its page
+ - Visit About Us from Bottom Bar - Tests if about button properly routes to its page
+ - Visit Login from Bottom Bar - Tests if bottom login button properly routes to login page
+ - Visit Sign-Up from Bottom Bar - Tests if bottom sign-up button properly routes to sign-up page
+
+ - Tests of the top bar depended on if a page was part of the user component. Pages that were had these tests:
+ - Visit Profile Page from Top Bar - Tests if menu icon properly routes to profile page
+ - Visit Goal Page from Top Bar - Tests if menu icon properly routes to goal page
+ - Visit Settings Page from Top Bar - Tests if menu icon properly routes to settings page
+ - Visit Discover Page from Top Bar - Tests if menu icon properly routes to discover page (currently 404)
+
+ - Other pages had these tests:
+ - Visit Login Page from Top Bar - Tests if login button properly routes to login page
+ - Visit Sign-Up Page from Top Bar - Tests if sign-up button properly routes to sign-up page
+### Sign Up Tests
+ - Create an Account Successfully - Put in proper input for every paramter and see if account is correctly created
+ - Submitting with no info - Simply hit submit without any user info and ensure it does not allow sign-up
+ - Not a valid email - Attempt a sign-up with an email that doesn't have an '@'
+ - Username already taken - Check if inputting a username that has already been assigned to another account will allow a sign-up to go through
+ - Insecure Password - Check if trying to create a password less than 8 characters will cause an error
+ - Insecure Password and not a valid email - Try inputting a submission with both conditions that should pose an error
+ - Email Already taken - Try signing up with an email already in the system, which should not work it
+### Login Tests
+ - Successful Login - Input a correct email and password and see if page redirects
+ - Unrecognized Username - Input a username that is not in the system and check if log in fails
+ - Real Username, Wrong Password - Use the wrong password and check if log in fails
+ - Wrong password several times in a row - Use the wrong password for multiple attempts to test for a lockout policy
+### Profile Tests
+ - Check Right Page - Ensure navigation leads to correct page
+ - Check All Goals - Use "go to all goals" link to go to goals page
+ - Go to settings - Use "go to account settings" link to go to settings page
+ - Other's Goals - Go to another's profile and test if more button brings up more goals
+ - Friend Request - Go to another's profile and test if friend request button will give request pending message
+### Settings Tests
+ - Change First Name - Test if input field will allow you to edit first name
+ - Change Last Name - Test if input field will allow you to edit last name
+ - Change Email - Test if input field will allow you to edit email
+ - Change Username - Test if input field will allow you to edit username
+ - No Changes - Test if cancel button will not allow changes to go through
+ - Invalid Email - Test if editing email to invalid format will not allow the edit to go through
+ - Bad Password - Test if editing password to insecure password will not allow the edit to go through
+### Goals Tests
+ - Add Goal - Type in values and add goal to a system
+ - Persistent Goal - check if a new goal stays on the page after refreshing and moving to and from that tab
+ - No Goal - check if an exception is raised when a goal is entered with no data
+ - Complete Goal - Click complete and see if that info is saved when reloaded
+ - Delete Goal - Click delete options and see if goal is gone when reloaded
