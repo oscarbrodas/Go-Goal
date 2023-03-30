@@ -235,9 +235,49 @@
   
   - Output: "Successful", "ErrorExist", and a list of goals is returned.
 
-- __DeleteUser()__ - __DELETE__
+- __DeleteGoal()__ - __DELETE__
 
-  - Route: __/api/gaols/{id}__
+  - Route: __/api/goals/{id}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
+
+- __AddBenchmark()__ - __POST__
+
+  - Route: __/goals/{id}/{goalID}__
+  
+  - Input: Goal ID is passed through the route. The body of request contains the input benchmark object with only the description required.
+  
+  - Output: "Successful", "ErrorExist" are returned.
+
+- __GetBenchmarks()__ - __GET__
+
+  - Route: __/goals/benchmarks/{goalID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned. "Benchmarks" is an array of benchmark objects
+
+- __UpdateBenchmarkDescription()__ - __PUT__
+
+  - Route: __/goals/benchmarks/description/{benchmarkID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
+
+- __UpdateBenchmarkCompletion()__ - __PUT__
+
+  - Route: __/goals/benchmarks/completion/{benchmarkID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
+
+- __DeleteBenchmark()__ - __DELETE__
+
+  - Route: __/goals/benchmarks/{benchmarkID}__
   
   - Input: Goal ID is passed through the route.
   
