@@ -93,6 +93,8 @@ export class LoginService {
 
         this.friends = [] // ADD: Get friends list from backend
 
+        this.userService.setUserData(this.user);
+
         this.verifyLogin(this.user);
 
       }

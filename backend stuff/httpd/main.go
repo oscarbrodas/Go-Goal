@@ -28,6 +28,7 @@ func main() {
 	globalDB.AutoMigrate(&handler.User{})
 	globalDB.AutoMigrate(&handler.Goal{})
 	globalDB.AutoMigrate(&handler.Friend{})
+	globalDB.AutoMigrate(&handler.Benchmark{})
 
 	host := "127.0.0.1:9000" // :9000 is the port
 	if err := http.ListenAndServe(host, httpHandler()); err != nil {

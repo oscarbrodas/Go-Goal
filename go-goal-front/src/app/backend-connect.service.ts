@@ -26,9 +26,9 @@ export class BackendConnectService {
   };
 
   public signThemUp(userData: userInfo): Observable<any> {
-    return this.http.post<JSON>(`${this.backendURL}users`, userData, this.httpOptions);
+    return this.http.post<JSON>(`${this.backendURL}users`, { ID: userData.ID, Username: userData.Username, FirstName: userData.FirstName, LastName: userData.LastName, Email: userData.Email, Password: userData.Password }, this.httpOptions);
   }
-  public getInfo(userID: number): Observable<any> {
+  public getInfo(userID: Number): Observable<any> {
     return this.http.get<JSON>(`${this.backendURL}users?id=${userID}`);
   }
   public updateFirstName(userID: number, newName: string): Observable<any> {
@@ -60,7 +60,7 @@ export class BackendConnectService {
     return this.http.delete<JSON>(`${this.backendURL}goals/${gID}`, this.httpOptions);
   }
 
-  public getGoals(ID: number): Observable<any> {
+  public getGoals(ID: Number): Observable<any> {
     return this.http.get<JSON>(`${this.backendURL}goals/${ID}`, this.httpOptions);
   }
 
@@ -74,6 +74,7 @@ export interface userInfo { // ADD: User data as necessary
   LastName: string;
   Email: string;
   Password: string;
+  XP?: number;
 }
 
 export interface loginInfo {

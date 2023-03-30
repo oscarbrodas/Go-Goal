@@ -26,6 +26,7 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/users/{id}/lastname", handler.UpdateLastname(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/email", handler.UpdateEmail(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/password", handler.UpdatePassword(globalDB)).Methods("PUT")
+	s.HandleFunc("/users/{id}/xp", handler.AddXP(globalDB)).Methods("PUT")
 	s.HandleFunc("/login/{email}/{password}", handler.CheckLogin(globalDB)).Methods("GET")
 	s.HandleFunc("/users/checkUsername/{username}", handler.CheckUsername(globalDB)).Methods("GET")
 
@@ -33,6 +34,12 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/goals/{id}", handler.CreateGoal(globalDB)).Methods("POST")
 	s.HandleFunc("/goals/{id}", handler.GetGoals(globalDB)).Methods("GET")
 	s.HandleFunc("/goals/{goalID}", handler.DeleteGoal(globalDB)).Methods("DELETE")
+	s.HandleFunc("/goals/{goalID}", handler.UpdateGoal(globalDB)).Methods("PUT")
+	s.HandleFunc("/goals/{id}/{goalID}", handler.AddBenchmark(globalDB)).Methods("POST")
+	s.HandleFunc("/goals/benchmarks/{goalID}", handler.GetBenchmarks(globalDB)).Methods("GET")
+	s.HandleFunc("/goals/benchmarks/description/{benchmarkID}", handler.UpdateBenchmarkDescription(globalDB)).Methods("PUT")
+	s.HandleFunc("/goals/benchmarks/completion/{benchmarkID}", handler.UpdateBenchmarkCompletion(globalDB)).Methods("PUT")
+	s.HandleFunc("/goals/benchmarks/{benchmarkID}", handler.DeleteBenchmark(globalDB)).Methods("DELETE")
 
 	// Retrieve/Remove Friends, Handle Friend Requests
 	s.HandleFunc("/friends/{id}", handler.GetAllFriends(globalDB)).Methods("GET")

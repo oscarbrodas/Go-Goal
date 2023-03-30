@@ -37,3 +37,10 @@ http://localhost:9000/api/goals/{userID}
         "Description":"Some description1"
     }
 }
+
+POST request
+http://localhost:9000/api/goals/{id}/{goalID}
+{
+    "Description":"my first benchmark",
+    "Completed":false
+}

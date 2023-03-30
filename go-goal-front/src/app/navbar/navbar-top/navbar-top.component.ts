@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Input, SimpleChanges } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { UserService } from 'src/app/user/user.service';
 import { LoginService } from 'src/app/login-page/login.service';
@@ -42,7 +42,7 @@ import { BackendConnectService } from 'src/app/backend-connect.service';
 export class NavbarTopComponent {
 
   screenThin: boolean = false;
-  verified: boolean = false;
+  @Input() verified: boolean = this.userService.isLoggedIn();
   subMenu: boolean = false;
   username: string = ''
 
@@ -64,9 +64,10 @@ export class NavbarTopComponent {
   ngOnInit() {
 
     if (this.userService.getUserData() == null) {
+      console.log('No user data');
       this.verified = false;
     }
-    else if (this.userService.getUserData().loggedIn) {
+    else if (this.userService.isLoggedIn()) {
       this.verified = true;
       this.username = this.userService.getUserData().Username;
     }
@@ -76,6 +77,17 @@ export class NavbarTopComponent {
 
 
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+
+
+  }
+
+  ngOnDestroy() {
+    console.log('destroyed');
+  }
+
 
   toggleMenu(): void {
     this.subMenu = !this.subMenu;
@@ -99,6 +111,7 @@ export class NavbarTopComponent {
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.verified = true;
     const dialogRef = this.dialog.open(logoutDialog, {
       width: '250px',
       enterAnimationDuration,
@@ -117,7 +130,7 @@ export class NavbarTopComponent {
 export class logoutDialog {
   constructor(
     public dialogRef: MatDialogRef<logoutDialog>, private loginService: LoginService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData, private router: Router
   ) { }
 
   logout(): void {
@@ -127,9 +140,10 @@ export class logoutDialog {
   }
 
   onNoClick(): void {
-
     this.dialogRef.close();
-
+    this.router.navigate([`${this.router.url}`]).then(() => {
+      window.location.reload();
+    });
   }
 }
 
