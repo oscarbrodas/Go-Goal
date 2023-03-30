@@ -44,11 +44,15 @@ export class LoginService {
     Password: ''
 
   }
+
   friends: userInfo[] = [];
+
   loginInfo: loginInfo = {
     Email: '',
     Password: ''
   }
+  users: userInfo[] = [];
+
 
 
   getUser(): userInfo { return this.user }

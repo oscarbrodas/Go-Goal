@@ -1,33 +1,3 @@
-# Go-Goal Sprint 2
-
-## Backend Unit Tests
-
-- TestGetAllFriends(): to properly get a list of all of your friends
-
-- TestSendFriendRequest1(): if you can send a friend request to a user
-
-- TestSendFriendRequest2(): to see if error is properly returned after sending an invalid friend request
-
-- TestGetOutgoingFriendRequests(): to get a list of all users that you sent a friend rquest to
-
-- TestGetIngoingFriendRequests(): to get a list of all users that sent you a friend request
-
-- TestAcceptFriendRequest(): to accept a friend request
-
-- TestDeclineFriendRequest(): to decline a friend request
-
-- TestRemoveFriend(): to delete a friend from your friend's list
-
-- TestGetUser(): to get the corresponding user object from the database
-
-- TestCreateUser1(): to create a user where the email is not in use
-
-- TestCreateUser2(): to create a user and return an error when the email is in use
-
-- TestCheckLogin1(): log in when the email and password are correct
-
-- TestCheckLogin2(): log in when the email is correct but password is not
-
 ## Backend API
 ### User
 - User: the structure of the User object. The variable names are case sensitive
@@ -49,6 +19,8 @@
   - Email: the email is unique to each user
   
   - Password: password
+
+  - XP: experience points (int)
   
 - __CreateUser()__ - __POST__
 
@@ -107,6 +79,14 @@
   
   - Output: "User" back with the updated change 
   
+  - __AddXP__ - __PUT__
+
+  - Route: __/api/users/{id}/xp__
+  
+  - Input: The User ID (In the Route) to be updated and "xp" of type int(32bit)
+  
+  - Output: "User" back with the updated change 
+  
   
 - __CheckLogin()__ - __GET__
 
@@ -125,7 +105,8 @@
   - Input: "Username" of type string passed in the route.
 
   - Output: "Exists" and "ValidName", boolean values to validate the "Username" with.
-  - 
+
+
 ### Friend
 - Friend: the structure of the Friend object. The variable names are case sensitive
 
@@ -221,6 +202,22 @@
   - Description: description of the goal (String)
   
   - UserID: id of user who has the goal
+ 
+- Benchmark: the structure of the Benchmark object. The variable names are case sensitive
+
+  - ID: *do not worry about this* Unique id of the relationship
+  
+  - CreatedAt: *do not worry about this* Time and date the user was created at
+  
+  - UpdatedAt: *do not worry about this* Time and date the user was updated at
+  
+  - DeletedAt: *do not worry about this* Time and date the user was deleted at
+  
+  - Description: description of the benchmark (String)
+  
+  - Completed: Is the benchmark completed? (Bool)
+
+  - GoalID: ID of the goal the benchmark belongs to.
 
 - __CreateGoal()__ - __POST__
 
@@ -238,43 +235,62 @@
   
   - Output: "Successful", "ErrorExist", and a list of goals is returned.
 
-- __DeleteUser()__ - __DELETE__
+- __DeleteGoal()__ - __DELETE__
 
-  - Route: __/api/gaols/{id}__
+  - Route: __/api/goals/{id}__
   
   - Input: Goal ID is passed through the route.
   
   - Output: "Successful", "ErrorExist" are returned.
+
+- __AddBenchmark()__ - __POST__
+
+  - Route: __/goals/{id}/{goalID}__
   
-### FRONTEND TESTS:
- - Sign Up Form Tests
+  - Input: Goal ID is passed through the route. The body of request contains the input benchmark object with only the description required.
+  
+  - Output: "Successful", "ErrorExist" are returned.
 
-   - Correctly Sign Up: Given valid info for all parameters, ensuring the page adds them to the databse and routes the user to their page
+- __GetBenchmarks()__ - __GET__
 
-   - Invalid Email: Given an invalid email, ensuring the website does not take those values as an account
+  - Route: __/goals/benchmarks/{goalID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned. "Benchmarks" is an array of benchmark objects
 
-   - Insecure Password: Given a password less than 8 characters, not allowing a user to sign up until it is further secured
+- __UpdateBenchmarkDescription()__ - __PUT__
 
-   - Already Taken Email: Does not allow an account to be signed up if the email is already in the database (THIS TEST EXISTS BUT FUNCTIONALITY IS NOT IMPLEMENTED YET)
+  - Route: __/goals/benchmarks/description/{benchmarkID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
 
-   - Already Taken Username: Does not allow an account to be signed up if the username is already in the database (THIS TEST EXISTS BUT FUNCTIONALITY IS NOT IMPLEMENTED YET)
+- __UpdateBenchmarkCompletion()__ - __PUT__
 
+  - Route: __/goals/benchmarks/completion/{benchmarkID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
 
-- Login Form Tests:
+- __DeleteBenchmark()__ - __DELETE__
 
-   - Correctly Login: Login with a currently used email and password and route to the profile page on success
+  - Route: __/goals/benchmarks/{benchmarkID}__
+  
+  - Input: Goal ID is passed through the route.
+  
+  - Output: "Successful", "ErrorExist" are returned.
 
-   - Wrong Password: Login with an email that's in the database but a password that is not, get a login failed message
+## Backend Sprint 3 Work
 
-   - Wrong email: Login with an email not in the database and receive a failed login message
+- Added benchmarks for goals.
 
-   - Multiple Wrong Attempts: Try multiple login attempts on the same email, currently just check it always fails but may potentially add an account lock-out policy and check for that
+- Added update goals function.
 
+- Changed the format of the input of the friends functions.
 
-- Navigation Tests:
+- Added functions to check for valid usernames and emails.
 
-   - Main Page Suite: Try every link on the top nav bar and link bar from the main page to other pages (including itself)
-
-   - Login Page Suite: Try every link on the top nav bar and link bar from the login page to other pages (including itself)
-
-   - Sign Up Page Suite: Try every link on the top nav bar and link bar from the sign up page to other pages (including itself)
+- Added new tests for the update goals function, check valid email and username functions, new friend functions, and benchmarks.
