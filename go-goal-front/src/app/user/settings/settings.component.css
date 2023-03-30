@@ -1,0 +1,129 @@
+.page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background: grey;
+    color: white;
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7d7e7d+0,0e0e0e+100;Black+3D */
+    background: rgba(125, 126, 125, 0.7);
+    /* Old browsers */
+    background: -moz-linear-gradient(-45deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7d7e7d', endColorstr='#0e0e0e', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+}
+.panel{
+    display: inline-block;
+    justify-content: center;
+    height: 92.5%;
+    overflow-y: auto;
+    width: 46%;
+    position: absolute;
+    margin: 1%;
+    margin-top: 4.25%;
+    left: 26%;
+    top: 0;
+    margin-bottom: 2%;
+    border-radius: 20px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: rgba(0,0,0,.6);
+    color: white;
+}
+.row{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding: 15px;
+}
+.textcell{
+    justify-content: left;
+}
+button{
+    width: 50%;
+    height: 30%;
+    min-height: fit-content;
+    display: inline-block;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white; 
+}
+.pic{
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+/*From stack overflow*/
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+  visibility: visible;
+    opacity: 1;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    width: 30%;
+    position: relative;
+    transition: all 5s ease-in-out;
+  }
+  
+  .popup h2 {
+    margin-top: 0;
+    color: #333;
+    font-family: Tahoma, Arial, sans-serif;
+  }
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  .popup .close:hover {
+    color: #06D85F;
+    cursor: pointer;
+  }
+  .popup .content {
+    max-height: 30%;
+    overflow: auto;
+  }
+  
+  @media screen and (max-width: 700px){
+  
+    .popup{
+      width: 70%;
+    }
+  }

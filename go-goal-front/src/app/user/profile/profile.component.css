@@ -1,0 +1,203 @@
+.page {
+    width: 100%;
+    height: 100%;
+    background: grey;
+    color: black;
+
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+    overflow: hidden;
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7d7e7d+0,0e0e0e+100;Black+3D */
+    background: rgba(125, 126, 125, 0.4);
+    /* Old browsers */
+    background: -moz-linear-gradient(-45deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7d7e7d', endColorstr='#0e0e0e', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 90%;
+    overflow: hidden;
+    width: 25%;
+    min-width: 300px;
+    position: absolute;
+    left: 0;
+    top: 25px;
+    margin: 1%;
+    margin-top: 4.25%;
+    /*border: solid red 4px;
+    background:rgba(155, 32, 234, 0.8)*/
+    border-radius: 20px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: rgba(0, 0, 0, .6);
+    color: white;
+
+    overflow: hidden;
+}
+
+.goal-outline {
+    display: inline-block;
+    height: 90%;
+    overflow-y: auto;
+    width: 46%;
+    position: absolute;
+    margin: 1%;
+    margin-top: 4.25%;
+    left: 26%;
+    top: 25px;
+    margin-bottom: 2%;
+    border-radius: 20px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: rgba(0, 0, 0, .6);
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+
+}
+
+.friend-outline {
+    display: block;
+    justify-content: center;
+    height: 90%;
+    overflow-y: auto;
+    width: 25%;
+    position: absolute;
+    margin: 1%;
+    margin-top: 4.25%;
+    right: 0;
+    top: 25px;
+    margin-bottom: 2%;
+    border-radius: 20px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: rgba(0, 0, 0, .6);
+    color: white;
+
+    overflow: hidden;
+}
+
+.discover-outline {
+    display: block;
+    justify-content: center;
+    height: 35%;
+    width: 100%;
+    position: relative;
+    left: 0;
+    top: 92.5%;
+    margin-bottom: 200px;
+    border: solid red 4px;
+    background: rgba(186, 192, 34, 0.8);
+    overflow: hidden;
+}
+
+.row,
+.more {
+    padding: 10px;
+    justify-content: center;
+    font-size: large;
+    font-weight: bolder;
+    width: 100%;
+}
+
+.pic {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    margin-top: 10px;
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    border-radius: 50%;
+}
+
+.goal {
+    width: 90%;
+    height: 100px;
+    min-height: fit-content;
+
+    display: block;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+
+
+}
+
+.allGoals,
+.more {
+    text-align: center;
+    width: 30%;
+    border-radius: 10px;
+    width: 30%;
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+    cursor: pointer;
+}
+
+h1 {
+    text-align: center;
+    padding: 15px;
+}
+
+button {
+    width: 50%;
+    height: 30%;
+    min-height: fit-content;
+    display: block;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+}
+
+.setButton {
+    align-self: flex-end;
+    height: 80px;
+}
+
+.pending,
+.accepted {
+    width: 50%;
+    height: 30%;
+    min-height: fit-content;
+    display: block;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    outline: black 2px solid;
+    background: rgba(128, 128, 128, 0.6);
+    color: black;
+}
+
+.friends {
+    height: 50%;
+}

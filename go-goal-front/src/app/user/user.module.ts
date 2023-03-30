@@ -1,12 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// CREATE ALL USER LOGGED IN COMPONENTS HERE
+import { UserRoutingModule } from './user-routing.module';
+import { UserComponent } from './user/user.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GoalsComponent } from './goals/goals.component';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SettingsComponent } from './settings/settings.component';
+import { ProfileComponent } from './profile/profile.component';
+
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    UserComponent,
+    GoalsComponent,
+    SettingsComponent,
+    ProfileComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    UserRoutingModule,
+    MatIconModule,
+    ReactiveFormsModule
   ]
 })
 export class UserModule { }

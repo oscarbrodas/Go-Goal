@@ -1,0 +1,48 @@
+<div class="page">
+    <div class="left-side">
+        <div @sidebar class="sidebar">
+            <h1>Your Goals</h1>
+            <div class="buttons">
+                <button (click)="editMode()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button (click)="deleteMode()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button (click)="completeMode()">
+                    <mat-icon>done_all</mat-icon>
+                </button>
+            </div>
+            <div class="new-goal">
+                <form [formGroup]="newGoal" class="form" (ngSubmit)="!editTime ? addGoal() : editGoal()">
+                    <input type="text" class="titl-box" formControlName="Title" placeholder="Title">
+                    <textarea class="desc-box" formControlName="Description" placeholder="Description"></textarea>
+                    <button *ngIf="!editTime" class="submit">Add</button>
+                    <button *ngIf="editTime" class="submit">Edit</button>
+                </form>
+            </div>
+
+            <div class="experience">XP POINTS IN-PROGRESS</div>
+        </div>
+
+    </div>
+    <div *ngIf="listLoaded" class="content">
+        <div [@goals]="userGoals.length" class="list">
+            <div class="goal" *ngFor="let u of userGoals">
+                <div class="desc">
+                    <p>{{u.Title}}</p>
+                    <p>{{u.Description}}</p>
+                </div>
+                <button class="complete-b" (click)="goalButton(u)">
+                    <mat-icon *ngIf="norm">done</mat-icon>
+                    <mat-icon *ngIf="deleteTime">delete</mat-icon>
+                    <mat-icon *ngIf="editTime">edit</mat-icon>
+                </button>
+                <!-- <div class="complete-banner">
+                    <p>Complete?</p>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>

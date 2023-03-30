@@ -10,10 +10,47 @@
         <img src="assets\gogoal.png" alt="" height="75" width="200">
     </span>
 
-    <span>
-        <button class="button" routerLink="../login" id = "navBarLogin">Login</button>
-        <button class="button" routerLink="../sign-up" id = "navBarSignUp">Sign Up</button>
+    <span *ngIf="!verified; else elseBlock">
+        <button class="button" routerLink="../login" id="navBarLogin">Login</button>
+        <button class="button" routerLink="../sign-up" id="navBarSignUp">Sign Up</button>
     </span>
 
+    <ng-template #elseBlock>
+        <div class="profile" (click)="toggleMenu()">
+            <button class="account-button" id="menuButton">
+                <mat-icon class="account-cc">account_circle</mat-icon>
+            </button>
+            <div class="sub-menu-wrap" [@menuTrigger]="subMenu ? true : false">
+                <div class="sub-menu">
+                    <div class="uer-info">
+                        <h2>{{username}}</h2>
+                    </div>
+
+                    <a (click)="profilePage()" class="sub-menu-link">
+                        <p name="profile">Profile</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="goalsPage()" class="sub-menu-link">
+                        <p name="myGoals">My Goals</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="discoverPage()" class="sub-menu-link">
+                        <p name="discover">Discover</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="settingsPage()" class="sub-menu-link">
+                        <p name="settings">Settings</p>
+                        <span>></span>
+                    </a>
+                    <a (click)="logout()" class="sub-menu-link">
+                        <p name="logout">Logout</p>
+                        <span><mat-icon style="color: white" class="logout-logo">exit_to_app</mat-icon></span>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
 
 </mat-toolbar>
