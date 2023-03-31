@@ -1,36 +1,51 @@
-<div class = "page">
-        <div class="container">
-            <div class = "panel">
-            <div class = "row">
-                <img class = "pic" src="../assets/dashboard_images/p.png">
-            </div>
-            <div class="row">
-                Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}  
-                <button (click)="edit('Name:')">Edit</button>
-            </div>
-            <div class="row">
-                Email: {{this.profileData.Email}}
-                <button (click)="edit('Email:')">Edit</button>
-            </div>
-            <div class="row">
-                Username: {{this.profileData.Username}}  
-                <button (click)="edit('Username:')">Edit</button>
-            </div>
-            <div class="row">
-                <button (click)="edit('New Password:')">Change Password</button>
-            </div>
-            </div>
+<div class="page">
+
+    <img @picSlide class="pic" src="../assets/dashboard_images/p.png">
+
+    <div>
+        <div class="panel" style="position: absolute; top: 55%; left: 5%;">
+            <p>Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}</p>
+            <button (click)="edit('Name:')">
+                <mat-icon>edit</mat-icon>
+            </button>
         </div>
-        <div class="overlay" *ngIf="this.editing">
-            <div class="pop-up">
-                <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)">
-                    <label>{{this.title}} </label>
-                    <input type="text" class="form" name="data" formControlName="data">
-                    <input *ngIf="this.double" type="text" class="form" name="data2" formControlName="data2">
-                    <button type="submit">Save</button>
-                    <button (click)="close()">Cancel</button>
-                    <p *ngIf="this.invalid">{{this.invalidMessage}}</p>
-                </form>
-            </div>
+
+        <div class="panel" style="position: absolute; top: 70%; left: 27%;">
+            <p>Username: {{this.profileData.Username}}</p>
+            <button (click)="edit('Username:')">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+
+        <div class="panel" style="position: absolute; top: 70%; left: 50%;">
+            <p>Email: {{this.profileData.Email}}</p>
+            <button (click)="edit('Email:')">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+
+        <div class="panel" style="position: absolute; top: 55%; left: 77%;">
+            <p>Password</p>
+            <button style="width: fit-content;" (click)="edit('New Password:')">Change Password</button>
         </div>
     </div>
+
+
+
+
+
+    <div class="overlay" *ngIf="this.editing">
+        <div class="pop-up">
+            <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)">
+                <label>{{this.title}} </label>
+                <input type="text" class="form" name="data" formControlName="data">
+                <input *ngIf="this.double" type="text" class="form" name="data2" formControlName="data2">
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                    <button type="submit">Save</button>
+                    <button (click)="close()">Cancel</button>
+                </div>
+                <p *ngIf="this.invalid">{{this.invalidMessage}}</p>
+            </form>
+        </div>
+    </div>
+</div>

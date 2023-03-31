@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { parse } from '@fortawesome/fontawesome-svg-core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
 import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -14,17 +13,17 @@ import { goal } from '../goals/goals.component';
   animations: [
     trigger('details', [
 
-      transition('void => *', [
+      transition(':enter', [
         animate(600, keyframes([
           style({ opacity: 0, transform: 'translateX(-200px)', offset: 0 }),
           style({ opacity: 0.5, transform: 'translateX(-100px)', offset: 0.5 }),
           style({ opacity: 1, transform: 'translateX(0)', offset: 1 }),
         ]))
       ]),
-      transition('* => void', [
+      transition(':leave', [
         animate(600, keyframes([
-          style({ background: 'black', opacity: 1, transform: 'translateX(1000px)', offset: 0 }),
-          style({ opacity: 1, transform: 'translateX(1000px)', offset: 0.5 }),
+          style({ opacity: 1, transform: 'translateX(0px)', offset: 0 }),
+          style({ transform: 'translateX(500px)', offset: 0.5 }),
           style({ opacity: 0, transform: 'translateX(1000px)', offset: 1 }),
 
         ]))
@@ -45,7 +44,7 @@ import { goal } from '../goals/goals.component';
     ]),
 
     trigger('friends', [
-      transition('void => *', [
+      transition(':enter', [
         style({ opacity: 0, transform: 'translateX(200px)' }),
         animate(500)
       ]),
@@ -56,9 +55,8 @@ import { goal } from '../goals/goals.component';
     ]),
   ]
 })
-export class ProfileComponent {
-  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) {
-  }
+export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
+
   user: userInfo = { ID: 0, FirstName: "error", LastName: "error", Username: "error", Password: "Not to View", Email: "error", loggedIn: false };
   theUser: boolean = false;
   id: Number = 0;
@@ -67,6 +65,18 @@ export class ProfileComponent {
   theCount: number = 0;
   requested: boolean = false;
   added: boolean = false; //These booleans will be implemented when friends added into system
+
+  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) { }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+  }
+  ngOnDestroy(): void {
+
+
+  }
+
   ngOnInit() {
     this.activatedRoute.params.subscribe((url) => {
       //console.log(url["id"]);
@@ -102,6 +112,9 @@ export class ProfileComponent {
     })
 
   }
+
+
+
   FriendRequest(): void {
     //to add, command to send friend request when button clicked
     this.requested = true;

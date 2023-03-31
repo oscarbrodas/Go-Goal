@@ -1,22 +1,53 @@
 import { Component } from '@angular/core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
-import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
+import { trigger, state, style, transition, animate, keyframes, stagger, query, group } from '@angular/animations';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
+  animations: [
+    trigger('picSlide', [
+
+      transition(':enter', [
+        group([
+          animate('0.5s ease-in', keyframes([
+            style({ transform: 'translate(100px, 300px)', offset: 0 }),
+            style({ transform: 'translate(0px, 0px)', offset: 1 }),
+          ])),
+          animate('0.5s ease-out', keyframes([
+            style({ height: '5px', width: '5px', offset: 0 }),
+            style({ height: '250px', width: '250px', offset: 1 }),
+          ]))
+        ])
+      ]),
+
+      transition(':leave', [
+        group([
+          animate('0.5s ease-in', keyframes([
+            style({ transform: 'translate(0px, 0px)', offset: 0 }),
+            style({ transform: 'translate(100px, 300px)', offset: 1 }),
+          ])),
+          animate('0.5s ease-out', keyframes([
+            style({ height: '250px', width: '250px', offset: 0 }),
+            style({ height: '5px', width: '5px', offset: 1 }),
+          ]))
+        ])
+      ])
+
+    ]),
+  ]
 })
 export class SettingsComponent {
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService) {
   }
-  profileData: userInfo = {FirstName: "error", LastName: "error", ID: 0, Email: "error", Username: "error", Password: "error", loggedIn: false};
-  ngOnInit(): void{
+  profileData: userInfo = { FirstName: "error", LastName: "error", ID: 0, Email: "error", Username: "error", Password: "error", loggedIn: false };
+  ngOnInit(): void {
     this.profileData = this.getProfile();
   }
-  getProfile(): userInfo{
+  getProfile(): userInfo {
     return this.userService.getUserData();
   }
   editing: boolean = false;
@@ -27,23 +58,26 @@ export class SettingsComponent {
   toChange2: string = "";
   double: boolean = false;
   changeForm = this.formBuilder.group(
-    {data: new FormControl(''),
-    data2: new FormControl('')
-  }
+    {
+      data: new FormControl(''),
+      data2: new FormControl('')
+    }
   )
-  edit(value: string): void{
+  edit(value: string): void {
     //Use string to determine parameter
     this.title = value;
-    if (value == 'Name:'){
-      this.changeForm.patchValue({data: this.profileData.FirstName,
-        data2: this.profileData.LastName})
+    if (value == 'Name:') {
+      this.changeForm.patchValue({
+        data: this.profileData.FirstName,
+        data2: this.profileData.LastName
+      })
       this.double = true;
-    }else if (value == 'Email:'){
-      this.changeForm.patchValue({data: this.profileData.Email})
-    }else if (value == 'Username:'){
-      this.changeForm.patchValue({data: this.profileData.Username})
-    }else if (value == 'New Password:'){
-      this.changeForm.patchValue({data: ""})
+    } else if (value == 'Email:') {
+      this.changeForm.patchValue({ data: this.profileData.Email })
+    } else if (value == 'Username:') {
+      this.changeForm.patchValue({ data: this.profileData.Username })
+    } else if (value == 'New Password:') {
+      this.changeForm.patchValue({ data: "" })
     }
     //Pull up pop-in window
     this.editing = true;
@@ -56,15 +90,15 @@ export class SettingsComponent {
   }
   saveEdits(value: string, changeForm: FormGroup): void {
     //COmmented lines throughout are http request functions that are not yet fully operational
-    if (value == "Name:"){
+    if (value == "Name:") {
       this.profileData.FirstName = changeForm.value.data;
       this.profileData.LastName = changeForm.value.data2;
       //this.backend.updateFirstName(this.profileData.ID, this.profileData.FirstName).subscribe((data) =>
       //console.log("Updated First Name"))
       //this.backend.updateLastName(this.profileData.ID, this.profileData.LastName).subscribe((data)=>
       //console.log("Updated Last Name"))
-    }else if (value == "Email:"){
-      if(!changeForm.value.data.includes('@') && !changeForm.value.data.includes('.')){
+    } else if (value == "Email:") {
+      if (!changeForm.value.data.includes('@') && !changeForm.value.data.includes('.')) {
         this.invalidMessage = "Not a valid email address";
         this.invalid = true;
         return;
@@ -72,12 +106,12 @@ export class SettingsComponent {
       this.profileData.Email = changeForm.value.data;
       //this.backend.updateEmail(this.profileData.ID, this.profileData.Email).subscribe(()=>
       //console.log("Updated Email"))
-    }else if (value == 'Username:'){
+    } else if (value == 'Username:') {
       this.profileData.Username = changeForm.value.data;
       //this.backend.updateUsername(this.profileData.ID, this.profileData.Username).subscribe(()=>
       //console.log("Updated Username"))
-    }else if (value == 'New Password:'){
-      if(changeForm.value.data.length <= 8 || changeForm.value.data == this.profileData.Password){
+    } else if (value == 'New Password:') {
+      if (changeForm.value.data.length <= 8 || changeForm.value.data == this.profileData.Password) {
         this.invalidMessage = "Your password is few too digits or the same password as before";
         this.invalid = true;
         return;

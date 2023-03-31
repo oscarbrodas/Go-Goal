@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { parse } from '@fortawesome/fontawesome-svg-core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
 import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
@@ -27,9 +27,9 @@ import { UserService } from '../user.service';
             ]))
           ])
         ], { optional: true }),
-        query(':leave', [
-          animate('0.5s', style({ opacity: 0 }))
-        ], { optional: true }),
+        // query(':leave', [
+        //   animate('0.5s', style({ opacity: 0 }))
+        // ], { optional: true }),
       ]),
     ],
     ),
@@ -42,24 +42,24 @@ import { UserService } from '../user.service';
           style({ left: '*', offset: 1 }),
         ]))
       ]),
-      transition(':leave', [
-        animate('1200ms ease-out', keyframes([
-          style({ offset: 0, left: '*' }),
-          style({ left: '-400px', offset: 0.45 }),
-          style({ left: '-500px', offset: 1 }),
-        ]))
-      ])
+      // transition(':leave', [
+      //   animate('1200ms ease-out', keyframes([
+      //     style({ offset: 0, left: '*' }),
+      //     style({ left: '-400px', offset: 0.45 }),
+      //     style({ left: '-500px', offset: 1 }),
+      //   ]))
+      // ])
 
     ])
   ]
 })
-export class GoalsComponent {
+export class GoalsComponent implements OnInit, OnChanges {
 
   initList: boolean = true;
   addToList: boolean = false;
   listLoaded: boolean = false;
 
-  userGoals: goal[] = [];
+  @Input() userGoals: goal[] = [];
   norm: boolean = true; deleteTime: boolean = false; editTime: boolean = false; completeGoalTime: boolean = false;
   newGoal = this.formBuilder.group({
     Title: new FormControl(""),
@@ -74,8 +74,17 @@ export class GoalsComponent {
   ngOnInit(): void {
     // Backend call to get goals
     this.getGoals();
+    console.log('Goals loaded');
+
 
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+  }
+
+
+
 
   getGoals() {
     this.backend.getGoals(this.userService.getUserData().ID).subscribe((data) => {

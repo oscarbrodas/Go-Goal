@@ -22,7 +22,8 @@ import { ProfileComponent } from './profile/profile.component';
     CommonModule,
     UserRoutingModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
   ]
 })
 export class UserModule { }
