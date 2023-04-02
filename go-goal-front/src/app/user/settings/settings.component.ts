@@ -13,31 +13,81 @@ import { UserService } from '../user.service';
 
       transition(':enter', [
         group([
-          animate('0.5s ease-in', keyframes([
+          animate('0.3s ease-in', keyframes([
             style({ transform: 'translate(100px, 300px)', offset: 0 }),
             style({ transform: 'translate(0px, 0px)', offset: 1 }),
           ])),
-          animate('0.5s ease-out', keyframes([
+          animate('0.3s ease-out', keyframes([
             style({ height: '5px', width: '5px', offset: 0 }),
-            style({ height: '250px', width: '250px', offset: 1 }),
+            style({ height: '300px', width: '300px', offset: 1 }),
           ]))
         ])
       ]),
 
-      transition(':leave', [
-        group([
-          animate('0.5s ease-in', keyframes([
-            style({ transform: 'translate(0px, 0px)', offset: 0 }),
-            style({ transform: 'translate(100px, 300px)', offset: 1 }),
-          ])),
-          animate('0.5s ease-out', keyframes([
-            style({ height: '250px', width: '250px', offset: 0 }),
-            style({ height: '5px', width: '5px', offset: 1 }),
-          ]))
-        ])
-      ])
-
     ]),
+
+    trigger('p1Slide', [
+
+      transition(':enter', [
+        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        animate('0.5s 0.4s ease-out', keyframes([
+          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ top: '30%', left: '35%', opacity: 1, offset: 0.1 }),
+          style({ position: 'absolute', top: '55%', left: '5%', opacity: 1, offset: 1 }),
+        ])),
+      ]),
+    ]),
+
+    trigger('p2Slide', [
+      transition(':enter', [
+        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        animate('0.5s 0.5s ease-out', keyframes([
+          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ top: '29%', left: '40%', opacity: 1, offset: 0.1 }),
+          style({ position: 'absolute', top: '70%', left: '27%', opacity: 1, offset: 1 }),
+        ])),
+      ])
+    ]),
+
+    trigger('p3Slide', [
+      transition(':enter', [
+        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        animate('0.5s 0.6s ease-out', keyframes([
+          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ top: '28%', left: '45%', opacity: 1, offset: 0.1 }),
+          style({ position: 'absolute', top: '70%', left: '50%', opacity: 1, offset: 1 }),
+        ]))
+      ])
+    ]),
+
+    trigger('p4Slide', [
+      transition(':enter', [
+        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        animate('0.5s 0.7s ease-out', keyframes([
+          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ top: '27%', left: '50%', opacity: 1, offset: 0.1 }),
+          style({ position: 'absolute', top: '55%', left: '77%', opacity: 1, offset: 1 }),
+        ]))
+      ])
+    ]),
+
+    trigger('panelSlide', [
+
+      transition(':enter', [
+        style({ position: 'absolute', top: '25%', left: '40%' }),
+        query('.panel', [
+          stagger(100, [
+            animate('0.5s 1s ease-in', keyframes([
+              style({ position: 'absolute', top: '25%', left: '40%', offset: 0 }),
+              style({ position: '* ', top: '*', left: '*', offset: 1 }),
+
+            ]))
+          ]),
+        ]),
+
+      ]),
+    ]),
+
   ]
 })
 export class SettingsComponent {

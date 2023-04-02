@@ -1,34 +1,33 @@
 <div class="page">
 
-    <img @picSlide class="pic" src="../assets/dashboard_images/p.png">
-
-    <div>
-        <div class="panel" style="position: absolute; top: 55%; left: 5%;">
-            <p>Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}</p>
-            <button (click)="edit('Name:')">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </div>
-
-        <div class="panel" style="position: absolute; top: 70%; left: 27%;">
-            <p>Username: {{this.profileData.Username}}</p>
-            <button (click)="edit('Username:')">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </div>
-
-        <div class="panel" style="position: absolute; top: 70%; left: 50%;">
-            <p>Email: {{this.profileData.Email}}</p>
-            <button (click)="edit('Email:')">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </div>
-
-        <div class="panel" style="position: absolute; top: 55%; left: 77%;">
-            <p>Password</p>
-            <button style="width: fit-content;" (click)="edit('New Password:')">Change Password</button>
-        </div>
+    <div @p1Slide class="panel" style="position: absolute; top: 55%; left: 5%;">
+        <p>Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}</p>
+        <button (click)="edit('Name:')">
+            <mat-icon>edit</mat-icon>
+        </button>
     </div>
+
+
+    <div @p2Slide class="panel" style="position: absolute; top: 70%; left: 27%;">
+        <p>Username: {{this.profileData.Username}}</p>
+        <button (click)="edit('Username:')">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+
+    <div @p3Slide class="panel" style="position: absolute; top: 70%; left: 50%;">
+        <p>Email: {{this.profileData.Email}}</p>
+        <button (click)="edit('Email:')">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+
+    <div @p4Slide class="panel" style="position: absolute; top: 55%; left: 77%;">
+        <p>Password</p>
+        <button style="width: fit-content;" (click)="edit('New Password:')">Change Password</button>
+    </div>
+
+    <img @picSlide class="pic" src="../assets/dashboard_images/p.png">
 
 
 

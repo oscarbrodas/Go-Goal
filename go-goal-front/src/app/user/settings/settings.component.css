@@ -33,6 +33,7 @@
   padding: 15px;
 }
 
+
 .panel>p {
   width: fit-content;
   padding-top: 12px;
@@ -74,8 +75,8 @@ button {
 }
 
 .pic {
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 300px;
 
   object-fit: cover;
 
