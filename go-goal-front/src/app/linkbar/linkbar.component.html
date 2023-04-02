@@ -14,7 +14,7 @@
         </c-card>
     </div>
 
-    <div class="login">
+    <div *ngIf="!loggedIn; else elseBlock" class="login">
         <h1>Account</h1>
 
         <c-card class="item" routerLink="login" name="linkBarLogin">
@@ -25,6 +25,20 @@
             Register
         </c-card>
     </div>
+
+    <ng-template #elseBlock>
+        <div class="login">
+            <h1>Account</h1>
+
+            <c-card class="item" routerLink="user/${}profile" name="linkBarProfile">
+                Profile
+            </c-card>
+
+            <c-card class="item" routerLink="discover" name="linkBarLogout">
+                Friends
+            </c-card>
+        </div>
+    </ng-template>
 
 
 
