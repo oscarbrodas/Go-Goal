@@ -74,6 +74,10 @@ button {
   color: white;
 }
 
+.pb {
+  width: 80px;
+}
+
 .pic {
   width: 300px;
   height: 300px;

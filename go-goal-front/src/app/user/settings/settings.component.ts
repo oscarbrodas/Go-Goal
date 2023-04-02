@@ -12,23 +12,11 @@ import { UserService } from '../user.service';
     trigger('picSlide', [
 
       transition(':enter', [
-
         style({ transform: 'translateY(-370px)' }),
         animate('0.35s ease-out', keyframes([
           style({ transform: 'translateY(-370px)', offset: 0 }),
           style({ transform: 'translateY(0px)', offset: 1 }),
         ]))
-
-        // group([
-        //   animate('0.3s ease-in', keyframes([
-        //     style({ transform: 'translate(100px, 300px)', offset: 0 }),
-        //     style({ transform: 'translate(0px, 0px)', offset: 1 }),
-        //   ])),
-        //   animate('0.3s ease-out', keyframes([
-        //     style({ height: '5px', width: '5px', offset: 0 }),
-        //     style({ height: '300px', width: '300px', offset: 1 }),
-        //   ]))
-        // ])
       ]),
 
     ]),
@@ -76,23 +64,6 @@ import { UserService } from '../user.service';
           style({ position: 'absolute', top: '55%', left: '77%', opacity: 1, offset: 1 }),
         ]))
       ])
-    ]),
-
-    trigger('panelSlide', [
-
-      transition(':enter', [
-        style({ position: 'absolute', top: '25%', left: '40%' }),
-        query('.panel', [
-          stagger(100, [
-            animate('0.5s 1s ease-in', keyframes([
-              style({ position: 'absolute', top: '25%', left: '40%', offset: 0 }),
-              style({ position: '* ', top: '*', left: '*', offset: 1 }),
-
-            ]))
-          ]),
-        ]),
-
-      ]),
     ]),
 
   ]
