@@ -12,16 +12,23 @@ import { UserService } from '../user.service';
     trigger('picSlide', [
 
       transition(':enter', [
-        group([
-          animate('0.3s ease-in', keyframes([
-            style({ transform: 'translate(100px, 300px)', offset: 0 }),
-            style({ transform: 'translate(0px, 0px)', offset: 1 }),
-          ])),
-          animate('0.3s ease-out', keyframes([
-            style({ height: '5px', width: '5px', offset: 0 }),
-            style({ height: '300px', width: '300px', offset: 1 }),
-          ]))
-        ])
+
+        style({ transform: 'translateY(-370px)' }),
+        animate('0.35s ease-out', keyframes([
+          style({ transform: 'translateY(-370px)', offset: 0 }),
+          style({ transform: 'translateY(0px)', offset: 1 }),
+        ]))
+
+        // group([
+        //   animate('0.3s ease-in', keyframes([
+        //     style({ transform: 'translate(100px, 300px)', offset: 0 }),
+        //     style({ transform: 'translate(0px, 0px)', offset: 1 }),
+        //   ])),
+        //   animate('0.3s ease-out', keyframes([
+        //     style({ height: '5px', width: '5px', offset: 0 }),
+        //     style({ height: '300px', width: '300px', offset: 1 }),
+        //   ]))
+        // ])
       ]),
 
     ]),
