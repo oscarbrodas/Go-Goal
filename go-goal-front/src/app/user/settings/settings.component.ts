@@ -28,7 +28,7 @@ import { UserService } from '../user.service';
         animate('0.5s 0.4s ease-out', keyframes([
           style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
           style({ top: '30%', left: '35%', opacity: 1, offset: 0.1 }),
-          style({ position: 'absolute', top: '55%', left: '5%', opacity: 1, offset: 1 }),
+          style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ])),
       ]),
     ]),
@@ -39,7 +39,7 @@ import { UserService } from '../user.service';
         animate('0.5s 0.5s ease-out', keyframes([
           style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
           style({ top: '29%', left: '40%', opacity: 1, offset: 0.1 }),
-          style({ position: 'absolute', top: '70%', left: '27%', opacity: 1, offset: 1 }),
+          style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ])),
       ])
     ]),
@@ -50,7 +50,7 @@ import { UserService } from '../user.service';
         animate('0.5s 0.6s ease-out', keyframes([
           style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
           style({ top: '28%', left: '45%', opacity: 1, offset: 0.1 }),
-          style({ position: 'absolute', top: '70%', left: '50%', opacity: 1, offset: 1 }),
+          style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ]))
       ])
     ]),
@@ -61,7 +61,7 @@ import { UserService } from '../user.service';
         animate('0.5s 0.7s ease-out', keyframes([
           style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
           style({ top: '27%', left: '50%', opacity: 1, offset: 0.1 }),
-          style({ position: 'absolute', top: '55%', left: '77%', opacity: 1, offset: 1 }),
+          style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ]))
       ])
     ]),
