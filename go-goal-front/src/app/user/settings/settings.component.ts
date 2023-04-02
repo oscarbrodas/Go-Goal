@@ -24,9 +24,9 @@ import { UserService } from '../user.service';
     trigger('p1Slide', [
 
       transition(':enter', [
-        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        style({ position: 'absolute', top: '25%', left: '36%', opacity: 0 }),
         animate('0.5s 0.4s ease-out', keyframes([
-          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ position: 'absolute', top: '25%', left: '36%', opacity: 0, offset: 0 }),
           style({ top: '30%', left: '35%', opacity: 1, offset: 0.1 }),
           style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ])),
@@ -35,9 +35,9 @@ import { UserService } from '../user.service';
 
     trigger('p2Slide', [
       transition(':enter', [
-        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        style({ position: 'absolute', top: '25%', left: '36%', opacity: 0 }),
         animate('0.5s 0.5s ease-out', keyframes([
-          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ position: 'absolute', top: '25%', left: '36%', opacity: 0, offset: 0 }),
           style({ top: '29%', left: '40%', opacity: 1, offset: 0.1 }),
           style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ])),
@@ -46,9 +46,9 @@ import { UserService } from '../user.service';
 
     trigger('p3Slide', [
       transition(':enter', [
-        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        style({ position: 'absolute', top: '25%', left: '36%', opacity: 0 }),
         animate('0.5s 0.6s ease-out', keyframes([
-          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ position: 'absolute', top: '25%', left: '36%', opacity: 0, offset: 0 }),
           style({ top: '28%', left: '45%', opacity: 1, offset: 0.1 }),
           style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ]))
@@ -57,9 +57,9 @@ import { UserService } from '../user.service';
 
     trigger('p4Slide', [
       transition(':enter', [
-        style({ position: 'absolute', top: '25%', left: '42%', opacity: 0 }),
+        style({ position: 'absolute', top: '25%', left: '36%', opacity: 0 }),
         animate('0.5s 0.7s ease-out', keyframes([
-          style({ position: 'absolute', top: '25%', left: '40%', opacity: 0, offset: 0 }),
+          style({ position: 'absolute', top: '25%', left: '36%', opacity: 0, offset: 0 }),
           style({ top: '27%', left: '50%', opacity: 1, offset: 0.1 }),
           style({ position: 'absolute', top: '*', left: '*', opacity: 1, offset: 1 }),
         ]))
@@ -106,6 +106,9 @@ export class SettingsComponent {
       this.changeForm.patchValue({ data: this.profileData.Username })
     } else if (value == 'New Password:') {
       this.changeForm.patchValue({ data: "" })
+    } else {
+      // ADD IMAGE UPDATE SECTION
+
     }
     //Pull up pop-in window
     this.editing = true;
