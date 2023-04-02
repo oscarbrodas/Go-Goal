@@ -72,10 +72,38 @@ button {
   outline: rgba(102, 255, 26, 1) 2px solid;
   background: black;
   color: white;
+
+  transition: all 200ms;
+}
+
+button:hover {
+  background: rgba(102, 255, 26, 1);
+  color: black;
+  outline: #fff 2px solid;
+  width: 55px;
 }
 
 .pb {
   width: 80px;
+}
+
+.pb:hover {
+  width: 85px;
+}
+
+.pic-cont {
+  width: 305px;
+  height: 305px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 1;
+
+  position: absolute;
+  left: 38.5%;
+  top: 17%;
 }
 
 .pic {
@@ -85,13 +113,40 @@ button {
   object-fit: cover;
 
   border-radius: 50%;
-  border: 2px solid rgba(102, 255, 26, 1);
-
-  position: absolute;
-  top: 15%;
-  left: 40%;
+  border: 5px solid rgba(102, 255, 26, 1);
 
 }
+
+.pic-update {
+  width: 295px;
+  height: 295px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: black;
+  border-radius: 50%;
+  opacity: 0;
+
+  position: absolute;
+  cursor: pointer;
+
+  font-size: 30px;
+  -webkit-text-stroke: 1.5px black;
+
+  transition: all 0.5s ease;
+
+}
+
+.pic-update:hover {
+  opacity: 1;
+
+  background-color: rgba(255, 255, 255, 0.2);
+
+}
+
+
 
 /*From stack overflow*/
 

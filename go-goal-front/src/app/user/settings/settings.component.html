@@ -27,10 +27,13 @@
         <button class="pb" (click)="edit('New Password:')">Change Password</button>
     </div>
 
-    <img @picSlide class="pic" src="../assets/dashboard_images/p.png">
+    <div class="pic-cont">
+        <img class="pic" @picSlide src="../assets/dashboard_images/p.png">
+        <div (click)="edit('New Image')" class="pic-update">
+            <p>Update?</p>
+        </div>
 
-
-
+    </div>
 
 
     <div class="overlay" *ngIf="this.editing">
