@@ -1,6 +1,6 @@
 <div class="page">
 
-    <div @p1Slide class="panel" style="position: absolute; top: 55%; left: 5%;">
+    <div @p1Slide class="panel p1-pos">
         <p>Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}</p>
         <button (click)="edit('Name:')">
             <mat-icon>edit</mat-icon>
@@ -8,21 +8,21 @@
     </div>
 
 
-    <div @p2Slide class="panel" style="position: absolute; top: 70%; left: 27%;">
+    <div @p2Slide class="panel p2-pos">
         <p>Username: {{this.profileData.Username}}</p>
         <button (click)="edit('Username:')">
             <mat-icon>edit</mat-icon>
         </button>
     </div>
 
-    <div @p3Slide class="panel" style="position: absolute; top: 70%; left: 50%;">
+    <div @p3Slide class="panel p3-pos">
         <p>Email: {{this.profileData.Email}}</p>
         <button (click)="edit('Email:')">
             <mat-icon>edit</mat-icon>
         </button>
     </div>
 
-    <div @p4Slide class="panel" style="position: absolute; top: 55%; left: 77%;">
+    <div @p4Slide class="panel p4-pos">
         <p>Password</p>
         <button class="pb" (click)="edit('New Password:')">Change Password</button>
     </div>

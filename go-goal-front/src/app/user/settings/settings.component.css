@@ -31,8 +31,9 @@
 
   color: white;
   padding: 15px;
-}
 
+  transition: all 500ms;
+}
 
 .panel>p {
   width: fit-content;
@@ -48,14 +49,30 @@
 
 }
 
-
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  padding: 15px;
+.p1-pos {
+  position: absolute;
+  top: 55%;
+  left: 5%;
 }
+
+.p2-pos {
+  position: absolute;
+  top: 70%;
+  left: 27%;
+}
+
+.p3-pos {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+}
+
+.p4-pos {
+  position: absolute;
+  top: 55%;
+  left: 77%;
+}
+
 
 .textcell {
   justify-content: left;
@@ -104,6 +121,8 @@ button:hover {
   position: absolute;
   left: 38.5%;
   top: 17%;
+
+  transition: all 0.5s ease;
 }
 
 .pic {
@@ -216,9 +235,83 @@ form>div>button {
   overflow: auto;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (width <=640px) {
 
   .popup {
     width: 70%;
   }
+
+  .pic-cont {
+    left: 25%;
+  }
+
+  .p1-pos {
+    position: absolute;
+    top: 55%;
+    left: 25%;
+  }
+
+  .p2-pos {
+    position: absolute;
+    top: 66%;
+    left: 25%;
+  }
+
+  .p3-pos {
+    position: absolute;
+    top: 77%;
+    left: 25%;
+  }
+
+  .p4-pos {
+    position: absolute;
+    top: 88%;
+    left: 25%;
+  }
+
+}
+
+@media screen and (640px < width <=700px) {
+
+  .pic-cont {
+    left: 25%;
+  }
+
+  .p2-pos {
+    position: absolute;
+    top: 70%;
+    left: 5%;
+  }
+
+  .p4-pos {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+  }
+
+}
+
+@media screen and (700px < width <=1210px) {
+
+  .pic-cont {
+    left: 35%;
+  }
+
+  .p2-pos {
+    position: absolute;
+    top: 70%;
+    left: 5%;
+  }
+
+  .p3-pos {
+    position: absolute;
+    top: 70%;
+    left: 65%;
+  }
+
+  .p4-pos {
+    position: relative;
+    left: 65%;
+  }
+
 }
