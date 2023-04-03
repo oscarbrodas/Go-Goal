@@ -1,17 +1,18 @@
 <div class="bar">
 
     <div class="content">
-        <c-card class="item" routerLink="main" name="linkBarMain">
-            Home
-        </c-card>
 
-        <c-card class="item" routerLink="help" name="linkBarHelp">
-            Help/FAQ
-        </c-card>
+        <div class="item" routerLink="main" name="linkBarHome">
+            <p>Home</p>
+        </div>
 
-        <c-card class="item" routerLink="aboutus" name="linkBarAboutUs">
-            About Us
-        </c-card>
+        <div class="item" routerLink="help" name="linkBarHelp">
+            <p>Help/FAQ</p>
+        </div>
+
+        <div class="item" routerLink="aboutus" name="linkBarAboutUs">
+            <p>About Us</p>
+        </div>
     </div>
 
     <div *ngIf="!loggedIn; else elseBlock" class="login">
@@ -30,13 +31,15 @@
         <div class="login">
             <h1>Account</h1>
 
-            <c-card class="item" routerLink="user/${}profile" name="linkBarProfile">
-                Profile
-            </c-card>
+            <div class="sect">
+                <div class="button" routerLink="`user/profile" name="linkBarProfile">
+                    Profile
+                </div>
 
-            <c-card class="item" routerLink="discover" name="linkBarLogout">
-                Friends
-            </c-card>
+                <div class="button" routerLink="discover" name="linkBarLogout">
+                    Friends
+                </div>
+            </div>
         </div>
     </ng-template>
 
