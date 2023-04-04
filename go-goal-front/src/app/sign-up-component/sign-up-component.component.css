@@ -1,16 +1,7 @@
-body {
+h1 {
+    font-size: 4rem;
+    font-weight: 1000;
     text-align: center;
-    padding: 20px;
-    position: relative;
-    width: 600px;
-
-    height: 100%;
-    border-radius: 25px;
-    background-color: black;
-}
-
-.title {
-    font-size: 75px;
 
 }
 
@@ -79,6 +70,18 @@ button:hover {
 
 .signblock {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: fit-content;
+    max-height: none;
+
+    text-align: center;
+    padding: 50px;
+    position: relative;
+    width: 600px;
+
+    border-radius: 25px;
+    background-color: black;
+    color: white;
 }

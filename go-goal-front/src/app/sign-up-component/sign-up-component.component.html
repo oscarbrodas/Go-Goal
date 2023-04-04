@@ -3,41 +3,36 @@
         style="height: 100vh; width: 100vw; display: flex; justify-content: center; align-content: center; align-items: center;">
 
         <div class="signblock">
-
-            <body>
-                <b class="title">Create Account</b>
-                <br>
-                <div class="signup">
-                    <form [formGroup]="userForm" (submit)="Submit(userForm)">
-                        <label for="FirstName">First Name: </label>
-                        <input type="text" class="form" name="FirstName" placeholder="First Name"
-                            formControlName="FirstName">
-                        <br>
-                        <label for="LastName">Last Name: </label>
-                        <input type="text" class="form" name="LastName" placeholder="Last Name"
-                            formControlName="LastName">
-                        <br>
-                        <label for="Email">Email: </label>
-                        <input type="text" class="form" name="Email" placeholder="Email" formControlName="Email">
-                        <br>
-                        <label for="Username">Username: </label>
-                        <input type="text" class="form" name="Username" placeholder="Username"
-                            formControlName="Username">
-                        <br>
-                        <label for="Password">Password: </label>
-                        <input type="password" class="form" name="Password" placeholder="********"
-                            formControlName="Password">
-                        <br>
-                        <div class="button">
-                            <button type="submit">Sign Up</button>
-                        </div>
-                    </form>
-                </div>
-                <br>
-                <div id="test" *ngIf="this.submitted">
-                    <p>{{this.signUpMessage}}</p>
-                </div>
-            </body>
+            <h1>Create Account</h1>
+            <br>
+            <div class="signup">
+                <form [formGroup]="userForm" (submit)="Submit(userForm)">
+                    <label for="FirstName">First Name: </label>
+                    <input type="text" class="form" name="FirstName" placeholder="First Name"
+                        formControlName="FirstName">
+                    <br>
+                    <label for="LastName">Last Name: </label>
+                    <input type="text" class="form" name="LastName" placeholder="Last Name" formControlName="LastName">
+                    <br>
+                    <label for="Email">Email: </label>
+                    <input type="text" class="form" name="Email" placeholder="Email" formControlName="Email">
+                    <br>
+                    <label for="Username">Username: </label>
+                    <input type="text" class="form" name="Username" placeholder="Username" formControlName="Username">
+                    <br>
+                    <label for="Password">Password: </label>
+                    <input type="password" class="form" name="Password" placeholder="********"
+                        formControlName="Password">
+                    <br>
+                    <div class="button">
+                        <button type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <div id="test" *ngIf="this.submitted">
+                <p>{{this.signUpMessage}}</p>
+            </div>
         </div>
 
     </div>

@@ -6,7 +6,7 @@
 
 .info-cont {
 
-    height: clamp(30%, 30%, fit-content);
+    height: fit-content;
     width: 100%;
 
     display: flex;
@@ -63,7 +63,7 @@
 }
 
 .card-cont {
-    height: clamp(fit-content, fit-content, 2000px);
+    height: 100%;
     width: 100%;
 
     display: flex;
@@ -83,7 +83,7 @@
 }
 
 .infocard {
-    height: 500px;
+    height: 600px;
     width: 300px;
 
     display: flex;
