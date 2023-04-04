@@ -1,6 +1,7 @@
 .p {
     display: flex;
     flex-direction: column;
+
 }
 
 .info-cont {
@@ -14,8 +15,7 @@
     align-items: center;
     align-content: center;
 
-    position: relative;
-    top: 60px;
+    margin-top: 50px;
 
     transition: all 0.5s ease-in-out;
 }
@@ -25,7 +25,7 @@
 
     border-bottom: 2px solid greenyellow;
     color: white;
-    height: 110%;
+    height: clamp(300px, 300px, 300px);
     width: 100%;
     padding: 40px;
 
@@ -51,6 +51,9 @@
 .tag h1 {
     font-size: 2.5em;
     font-weight: 500;
+
+    position: relative;
+    top: 0px;
 }
 
 .tag p {
@@ -60,7 +63,7 @@
 }
 
 .card-cont {
-    height: clamp(2000px, 2000px, 2000px);
+    height: clamp(fit-content, fit-content, 2000px);
     width: 100%;
 
     display: flex;
@@ -71,8 +74,30 @@
 
     position: relative;
     top: 0px;
+    padding: 20px;
 
     outline: 1px solid black;
+    color: white;
+
+    transition: all 0.5s ease-in-out;
+}
+
+.infocard {
+    height: 500px;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
+    position: relative;
+    top: 0px;
+
+
+    outline: 1px solid black;
+    background: white;
 
     transition: all 0.5s ease-in-out;
 }

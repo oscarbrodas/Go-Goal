@@ -22,7 +22,7 @@ body {
 
 .page {
     width: 100vw;
-    height: clamp(fit-content, 100vh, 100%);
+    height: clamp(100vh, 100vh, 100%);
     background: grey;
     color: black;
 
