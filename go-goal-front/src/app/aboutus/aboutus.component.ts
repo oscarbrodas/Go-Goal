@@ -9,10 +9,13 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query }
     trigger('tags', [
 
       transition(':enter', [
-        query('div', [
-          style({ position: 'relative', top: '-200%' }),
+        query('.tag', [
+          style({ position: 'relative', transform: 'translateY(-500px)', }),
           stagger(100, [
-            animate('0.5s ease-in-out', style({ position: 'relative', top: '0%' }))
+            animate('0.5s 0.2s ease-in-out', keyframes([
+              style({ transform: 'translateY(-500px)', offset: 0 }),
+              style({ transform: 'translateY(0)', offset: 1 }),
+            ]))
           ])
 
         ]),
@@ -20,6 +23,38 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query }
       ]),
 
     ]),
+
+    trigger('cards1', [
+
+      transition(':enter', [
+        query('.infocard', [
+          style({ position: 'relative', transform: 'translateX(-1000px)', }),
+          stagger(400, [
+            animate('0.5s 0.8s ease-in-out', keyframes([
+              style({ transform: 'translateX(-1000px)', offset: 0 }),
+              style({ transform: 'translateX(0)', offset: 1 }),
+            ]))
+          ])
+        ]),
+      ]),
+    ]),
+
+    trigger('cards2', [
+
+      transition(':enter', [
+        query('.infocard', [
+          style({ position: 'relative', transform: 'translateX(1000px)', }),
+          stagger(400, [
+            animate('0.5s 0.8s ease-in-out', keyframes([
+              style({ transform: 'translateX(1000px)', offset: 0 }),
+              style({ transform: 'translateX(0)', offset: 1 }),
+            ]))
+
+          ])
+        ])
+      ]),
+    ]),
+
   ]
 })
 export class AboutusComponent {

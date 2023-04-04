@@ -24,7 +24,7 @@ export class LinkbarComponent implements OnInit, OnChanges {
   }
 
   top() {
-    window.scrollTo(0, 0);
+    window.scroll(0, 0);
   }
   logout() { this.loginService.logout() }
   profile() {

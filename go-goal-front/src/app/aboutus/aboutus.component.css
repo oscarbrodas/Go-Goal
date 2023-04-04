@@ -62,29 +62,24 @@
     text-align: center;
 }
 
-.card-cont {
-    height: 100%;
+.profiles {
+    height: fit-content;
     width: 100%;
 
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
     align-content: center;
 
-    position: relative;
-    top: 0px;
-    padding: 20px;
-
-    outline: 1px solid black;
-    color: white;
 
     transition: all 0.5s ease-in-out;
 }
 
-.infocard {
-    height: 600px;
-    width: 300px;
+.card-cont {
+    height: 1400px;
+    width: 50%;
 
     display: flex;
     flex-direction: column;
@@ -94,10 +89,63 @@
 
     position: relative;
     top: 0px;
+    padding: 50px;
+    gap: 80px;
 
-
-    outline: 1px solid black;
-    background: white;
+    color: white;
 
     transition: all 0.5s ease-in-out;
+}
+
+.infocard {
+    height: clamp(400px, 600px, 1000px);
+    width: clamp(200px, 600px, 1000px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    overflow: visible;
+
+    outline: 3px solid greenyellow;
+    border-radius: 25px;
+    background: black;
+    transition: all 0.5s ease-in-out;
+    object-fit: contain;
+
+    box-shadow:
+        0 0 15px 7.5px #fff,
+        0 0 20px 10px yellow,
+        0 0 35px 22.5px rgba(0, 255, 0, 1);
+}
+
+.card-top,
+.card-bot {
+    height: 50%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+
+    transition: all 0.5s ease-in-out;
+}
+
+.card-top>h1 {
+    padding-right: 20%;
+}
+
+.card-top>img {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    border: 3px solid white;
+    transition: all 0.5s ease-in-out;
+
+    position: relative;
+    top: 5%;
+    left: 10%;
 }
