@@ -312,7 +312,7 @@ form>div>button {
   }
 
   .p4-pos {
-    position: relative;
+    position: absolute;
     left: 65%;
   }
 

@@ -29,6 +29,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    justify-self: center;
+    align-self: center;
 
     background-color: black;
     border-radius: 10px;

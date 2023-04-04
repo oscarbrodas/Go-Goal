@@ -1,8 +1,9 @@
-<div class="background">
+<div class="page">
+    <div
+        style="height: 100vh; width: 100vw; display: flex; justify-content: center; align-content: center; align-items: center;">
 
-    <div class="signblock">
+        <div class="signblock">
 
-        <body>
             <b class="title">LOGIN</b>
             <div class="login">
 
@@ -22,6 +23,8 @@
                 <p *ngIf="checkFailedLogin()">Login Failed. Please try again</p>
                 <p *ngIf="checkSuccessLogin()">Login successful! Redirecting...</p>
             </div>
-        </body>
+
+        </div>
+
     </div>
 </div>

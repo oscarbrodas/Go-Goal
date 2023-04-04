@@ -1,12 +1,20 @@
-body {
+.signblock {
     text-align: center;
     padding: 20px;
-    position: relative;
     width: 500px;
 
-    height: 100%;
+    height: clamp(200px, 400px, 1000px);
     border-radius: 25px;
     background-color: black;
+    background: black;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
 }
 
 .title {
@@ -72,16 +80,4 @@ button:hover {
     transition: all 0.3s;
     border-radius: 10rem;
     z-index: -1;
-}
-
-
-.signblock {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    top: 20%;
-
-
-
 }

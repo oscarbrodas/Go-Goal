@@ -58,3 +58,21 @@
     font-weight: 300;
     text-align: center;
 }
+
+.card-cont {
+    height: clamp(2000px, 2000px, 2000px);
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
+    position: relative;
+    top: 0px;
+
+    outline: 1px solid black;
+
+    transition: all 0.5s ease-in-out;
+}
