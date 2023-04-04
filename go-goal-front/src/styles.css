@@ -14,8 +14,31 @@ body {
     background-image: url("assets/gg.png");
     background-position: left center;
     background-repeat: repeat;
-    background-size: auto 7%;
+    background-size: auto 70px;
 
     height: 100%;
     width: 100vw;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    background: grey;
+    color: black;
+
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+    overflow: hidden;
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7d7e7d+0,0e0e0e+100;Black+3D */
+    background: rgba(125, 126, 125, 0.4);
+    /* Old browsers */
+    background: -moz-linear-gradient(-45deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(125, 126, 125, 0.4) 0%, rgba(14, 14, 14, 0.4) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7d7e7d', endColorstr='#0e0e0e', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
 }

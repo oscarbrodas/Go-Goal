@@ -1,0 +1,60 @@
+.p {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-cont {
+
+    height: clamp(30%, 30%, fit-content);
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
+    position: relative;
+    top: 60px;
+
+    transition: all 0.5s ease-in-out;
+}
+
+.tag {
+    background: black;
+
+    border-bottom: 2px solid greenyellow;
+    color: white;
+    height: 110%;
+    width: 100%;
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    position: relative;
+    top: 0px;
+    gap: 10px;
+    align-content: center;
+    align-items: center;
+
+    transition: 0.5s ease-in-out;
+}
+
+.tag:hover {
+    position: relative;
+    top: 10px;
+    transition: 0.5s ease-in-out;
+    border-radius: 15px;
+}
+
+.tag h1 {
+    font-size: 2.5em;
+    font-weight: 500;
+}
+
+.tag p {
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: center;
+}

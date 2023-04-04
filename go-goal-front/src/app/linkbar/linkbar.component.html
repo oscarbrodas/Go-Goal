@@ -2,15 +2,15 @@
 
     <div class="content">
 
-        <div class="item" routerLink="main" name="linkBarHome">
+        <div class="item" routerLink="main" (click)="top()" name="linkBarHome">
             <p>Home</p>
         </div>
 
-        <div class="item" routerLink="help" name="linkBarHelp">
+        <div class="item" routerLink="help" (click)="top()" name="linkBarHelp">
             <p>Help/FAQ</p>
         </div>
 
-        <div class="item" routerLink="aboutus" name="linkBarAboutUs">
+        <div class="item" routerLink="aboutus" (click)="top()" name="linkBarAboutUs">
             <p>About Us</p>
         </div>
     </div>
@@ -18,12 +18,14 @@
     <div *ngIf="!loggedIn; else elseBlock" class="login">
         <h1>Account</h1>
 
-        <div class="item" routerLink="login" name="linkBarLogin">
-            Login
-        </div>
+        <div class="sect">
+            <div class="button" routerLink="login" name="linkBarLogin">
+                Login
+            </div>
 
-        <div class="item" routerLink="sign-up" name="linkBarSignUp">
-            Register
+            <div class="button" routerLink="sign-up" name="linkBarSignUp">
+                Register
+            </div>
         </div>
     </div>
 
@@ -32,11 +34,11 @@
             <h1>Account</h1>
 
             <div class="sect">
-                <div class="button" name="linkBarProfile">
+                <div class="button" (click)="profile()" name="linkBarProfile">
                     Profile
                 </div>
 
-                <div class="button" name="linkBarLogout">
+                <div class="button" (click)="logout()" name="linkBarLogout">
                     Logout
                 </div>
             </div>

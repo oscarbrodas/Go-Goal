@@ -243,6 +243,7 @@ form>div>button {
 
   .pic-cont {
     left: 25%;
+    top: 12%;
   }
 
   .p1-pos {
@@ -274,7 +275,8 @@ form>div>button {
 @media screen and (640px < width <=700px) {
 
   .pic-cont {
-    left: 25%;
+    top: 12%;
+    left: 24%;
   }
 
   .p2-pos {

@@ -21,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BackendConnectService } from './backend-connect.service'
 import { LoginService } from './login-page/login.service';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AboutusComponent } from './aboutus/aboutus.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     SignUpComponentComponent,
     MainComponent,
     LinkbarComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AboutusComponent
   ],
   imports: [
     BrowserModule,

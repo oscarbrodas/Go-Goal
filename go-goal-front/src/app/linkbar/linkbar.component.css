@@ -115,6 +115,7 @@
     font-size: 2em;
     font-weight: 400;
     padding-top: 1rem;
+    transition: all 0.5s ease-in-out;
 
 }
 
@@ -162,6 +163,12 @@
         flex-direction: column;
         transition: all 0.5s ease-in-out;
         padding-bottom: 60px;
+    }
+
+    .login h1 {
+        font-size: 1.7em;
+        transition: all 0.5s ease-in-out;
+        padding-top: 0.5rem;
     }
 
 }
