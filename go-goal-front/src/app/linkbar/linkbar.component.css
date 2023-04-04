@@ -58,7 +58,8 @@
 
 }
 
-.item:hover {
+.item:hover,
+.item:focus {
     background-position: left;
     border-left: 2px solid #17191c;
 }
