@@ -98,15 +98,16 @@
 }
 
 .infocard {
-    height: clamp(400px, 600px, 1000px);
-    width: clamp(200px, 600px, 1000px);
+    height: clamp(400px, 40%, fit-content);
+    width: clamp(200px, 40vw, 1000px);
 
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     align-content: center;
-    overflow: visible;
+    overflow: hidden;
+    content: "";
 
     outline: 3px solid greenyellow;
     border-radius: 25px;
@@ -114,38 +115,205 @@
     transition: all 0.5s ease-in-out;
     object-fit: contain;
 
-    box-shadow:
-        0 0 15px 7.5px #fff,
+    box-shadow: 0 0 15px 7.5px #fff,
         0 0 20px 10px yellow,
         0 0 35px 22.5px rgba(0, 255, 0, 1);
 }
 
-.card-top,
-.card-bot {
+.card-top {
     height: 50%;
     width: 100%;
 
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     align-content: center;
 
     transition: all 0.5s ease-in-out;
 }
 
-.card-top>h1 {
-    padding-right: 20%;
+.card-bot {
+    height: 50%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s ease-in-out;
+    padding-top: 15%;
 }
 
-.card-top>img {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-    border: 3px solid white;
+.names {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+
+    padding-top: 5%;
+
     transition: all 0.5s ease-in-out;
 
+}
+
+.animate {
+    text-transform: uppercase;
+    background-image: linear-gradient(-225deg,
+            #771ace 0%,
+            #ff13ff 29%,
+            #f5a700 67%,
+            #7700ff 100%);
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    color: #fff;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 2s linear infinite;
+    display: inline-block;
+    font-size: 2.2em;
+    font-weight: 800;
+}
+
+.border-a,
+.border-b {
+    --border-size: 3px;
+    --border-angle: 0turn;
+    height: 350px;
+    width: 350px;
+    background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, rgb(255, 145, 0), rgb(132, 0, 255));
+    background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-animation: bg-spin 3s linear infinite;
+    animation: bg-spin 3s linear infinite;
+    transition: all 0.5s ease-in-out;
+}
+
+.l-pos {
     position: relative;
-    top: 5%;
-    left: 10%;
+    top: 15%;
+    left: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.r-pos {
+
+    position: relative;
+    top: 15%;
+    right: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.border-a>img {
+    height: 98%;
+    width: 97%;
+    object-fit: cover;
+    transition: all 0.5s ease-in-out;
+}
+
+.border-a:hover {
+    height: 360px;
+    width: 375px;
+}
+
+.names>p {
+
+    width: 60%;
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: center;
+    transition: all 0.5s ease-in-out;
+}
+
+.card-bot>p {
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: left;
+    transition: all 0.5s ease-in-out;
+
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.blockquote {
+    border-left: 3px solid gold;
+    color: aliceblue;
+    font-family: Georgia, Times, "Times New Roman", serif;
+    font-size: 1.25em;
+    font-style: italic;
+    line-height: 1.8em;
+    margin-left: 25px;
+    padding: 0.5em 1.5em 0.5em 1em;
+    position: relative;
+    transition: 0.2s border ease-in-out;
+    z-index: 0;
+
+    align-self: flex-start;
+}
+
+.blockquote2 {
+    border-right: 3px solid gold;
+    color: aliceblue;
+    font-family: Georgia, Times, "Times New Roman", serif;
+    font-size: 1.25em;
+    font-style: italic;
+    line-height: 1.8em;
+    margin-right: 25px;
+    padding: 0.5em 1.5em 0.5em 1em;
+    position: relative;
+    transition: 0.2s border ease-in-out;
+    z-index: 0;
+
+    align-self: flex-end;
+}
+
+
+
+@keyframes textclip {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@-webkit-keyframes bg-spin {
+    to {
+        --border-angle: 1turn;
+    }
+}
+
+@keyframes bg-spin {
+    to {
+        --border-angle: 1turn;
+    }
+}
+
+.box:hover {
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0turn;
+}
+
+@media (width < 1000px) {
+    .border-a {
+        display: none;
+    }
+
+    .card-bot {
+        padding-top: 10%;
+    }
 }
