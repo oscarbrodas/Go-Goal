@@ -27,22 +27,36 @@
 
     </div>
     <div *ngIf="listLoaded" class="content">
-        <div [@goals]="userGoals.length" class="list">
-            <div class="goal" *ngFor="let u of userGoals">
-                <div class="desc">
-                    <p>{{u.Title}}</p>
-                    <p>{{u.Description}}</p>
-                </div>
-                <button class="complete-b" (click)="goalButton(u)">
-                    <mat-icon *ngIf="norm">done</mat-icon>
-                    <mat-icon *ngIf="deleteTime">delete</mat-icon>
-                    <mat-icon *ngIf="editTime">edit</mat-icon>
-                </button>
-                <!-- <div class="complete-banner">
-                    <p>Complete?</p>
-                </div> -->
+        <div [@goals]="goalsUncompleted.length" class="list">
 
+            <div *ngIf="!completeGoalTime; else elseBlock;" class="goal-spacing">
+                <div class="goal" *ngFor="let u of goalsUncompleted;">
+                    <div class="desc">
+                        <p>{{u.Title}}</p>
+                        <p>{{u.Description}}</p>
+                    </div>
+                    <button class="complete-b" (click)="goalButton(u)">
+                        <mat-icon *ngIf="norm">done</mat-icon>
+                        <mat-icon *ngIf="deleteTime">delete</mat-icon>
+                        <mat-icon *ngIf="editTime">edit</mat-icon>
+                    </button>
+                </div>
             </div>
+
+            <ng-template #elseBlock>
+                <div class="goal-spacing">
+                    <div class="goal" *ngFor="let u of goalsCompleted;">
+                        <div class="desc">
+                            <p>{{u.Title}}</p>
+                            <p>{{u.Description}}</p>
+                        </div>
+                        <button class="complete-b" (click)="goalButton(u)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
+
         </div>
     </div>
 </div>

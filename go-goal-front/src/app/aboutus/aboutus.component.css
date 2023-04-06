@@ -297,11 +297,6 @@
     }
 }
 
-.box:hover {
-    -webkit-animation-play-state: paused;
-    animation-play-state: paused;
-}
-
 @property --border-angle {
     syntax: "<angle>";
     inherits: true;

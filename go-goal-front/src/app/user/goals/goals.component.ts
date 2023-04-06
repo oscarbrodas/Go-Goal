@@ -59,12 +59,13 @@ export class GoalsComponent implements OnInit, OnChanges {
   addToList: boolean = false;
   listLoaded: boolean = false;
 
-  @Input() userGoals: goal[] = [];
+  @Input() goalsUncompleted: goal[] = [];
+  @Input() goalsCompleted: goal[] = [];
   norm: boolean = true; deleteTime: boolean = false; editTime: boolean = false; completeGoalTime: boolean = false;
   newGoal = this.formBuilder.group({
     Title: new FormControl(""),
     Description: new FormControl(""),
-    goalID: new FormControl(0)
+    goalID: new FormControl(-1)
   });
 
 
@@ -92,14 +93,23 @@ export class GoalsComponent implements OnInit, OnChanges {
         console.log("Error getting goals (getGoals)");
       }
       else if (data.Goals.length > 0) {
-        this.userGoals = [];
+
+        // Fill lists
+        this.goalsUncompleted = [];
         data.Goals.forEach((item: any) => {
-          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: false });
-          this.listLoaded = true;
+          if (item.Completed == false) {
+            this.goalsUncompleted.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: item.Completed });
+          }
+          else {
+            this.goalsCompleted.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: item.Completed });
+          }
+
         });
+
+
       }
       else {
-        this.userGoals = [];
+        this.goalsUncompleted = [];
       }
 
     });
@@ -124,7 +134,7 @@ export class GoalsComponent implements OnInit, OnChanges {
       });
 
       // Push to list, delay to allow backend to update
-      this.userGoals.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, Completed: false });
+      this.goalsUncompleted.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, Completed: false });
 
       // Clear form
       this.newGoal.reset();
@@ -132,7 +142,7 @@ export class GoalsComponent implements OnInit, OnChanges {
 
       // Update goalID
       this.backend.getGoals(this.userService.getUserData().ID).subscribe((data) => {
-        this.userGoals[this.userGoals.length - 1].goalID = data.Goals[data.Goals.length - 1].ID;
+        this.goalsUncompleted[this.goalsUncompleted.length - 1].goalID = data.Goals[data.Goals.length - 1].ID;
       });
 
       // Log
@@ -149,8 +159,14 @@ export class GoalsComponent implements OnInit, OnChanges {
       alert("Please enter a valid title and description");
       return;
     }
+    else if (this.newGoal.value.goalID === -1) {
+      alert("Please select a goal to edit");
+      return;
+    }
+    console.log(this.newGoal.value.goalID);
 
-    this.userGoals.forEach((item) => {
+
+    this.goalsUncompleted.forEach((item) => {
       if (item.goalID == this.newGoal.value.goalID) {
         // Edit List
         item.Description = this.newGoal.value.Description!;
@@ -206,26 +222,38 @@ export class GoalsComponent implements OnInit, OnChanges {
   goalButton(goal: goal) {
 
     if (this.norm) {
-      this.userGoals.forEach((item) => {
+      this.goalsUncompleted.forEach((item) => {
         if (item === goal) {
-          item.Completed = true;
+          console.log("Completed goal: " + item.Title);
+
+          // Update goal in backend
+          this.backend.updateGoal({ Title: item.Title, Description: item.Description, Completed: true }, item.goalID).subscribe((data) => { });
+
+          // Remove from uncompleted list
+          this.goalsUncompleted.splice(this.goalsUncompleted.indexOf(item), 1);
+
+          // Add to completed list
+          this.goalsCompleted.push(item);
+
         }
       });
 
       // ADD: Complete goal in backend
     }
     else if (this.deleteTime) {
-      this.userGoals.forEach((item, index) => {
+      this.goalsUncompleted.forEach((item, index) => {
         if (item === goal) {
+
+          // Delete goal in backend
           this.backend.deleteGoals(item.goalID).subscribe((data) => { });
-          this.userGoals.splice(index, 1);
+          this.goalsUncompleted.splice(index, 1);
           console.log("Deleted goal: " + item.Title);
 
         }
       });
     }
     else if (this.editTime) {
-      this.userGoals.forEach((item, index) => {
+      this.goalsUncompleted.forEach((item, index) => {
         if (item === goal) {
           // Set form values
           this.newGoal.setValue({ Title: item.Title, Description: item.Description, goalID: item.goalID });
@@ -234,7 +262,20 @@ export class GoalsComponent implements OnInit, OnChanges {
       });
 
     }
-    else {
+    else { // Completed goals
+      this.goalsCompleted.forEach((item) => {
+        if (item === goal) {
+          console.log("Deleted goal: " + item.Title);
+
+          // Delete goal in backend
+          this.backend.deleteGoals(item.goalID).subscribe((data) => { });
+
+          // Remove from completed list
+          this.goalsCompleted.splice(this.goalsCompleted.indexOf(item), 1);
+
+        }
+
+      });
 
     }
 
