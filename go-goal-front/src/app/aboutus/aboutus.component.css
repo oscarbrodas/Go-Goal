@@ -410,6 +410,18 @@
         display: none;
     }
 
+    .border-b {
+        display: none;
+    }
+
+    .border-c {
+        display: none;
+    }
+
+    .border-d {
+        display: none;
+    }
+
     .card-bot {
         padding-top: 10%;
     }
