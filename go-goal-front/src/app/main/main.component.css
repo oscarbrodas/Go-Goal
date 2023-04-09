@@ -1,31 +1,91 @@
-.slider1 .imgs1 {
-    width: 1000px;
-    height: 500px;
-}
+.sect-1 {
+    width: 100%;
+    height: clamp(500px, 100vh, 100vh);
 
-.background {
-    background-image: url("../../assets/gg.png");
-    background-position: left center;
-    background-repeat: repeat;
-    background-size: auto 7%;
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.5));
+    padding: 50px 0;
+    margin-top: 60px;
 
-    height: 100%;
-}
-
-.firstsect {
-    width: 100vw;
-    height: 550px;
-    overflow: hidden;
-    position: relative;
-    top: 3px;
-
-    background-color: #2e2e2e;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.carousel1 {
-    width: 1000px;
-    height: 500px;
+.title-card {
+    height: 70vh;
+    width: 80vw;
 
+    font-size: 8rem;
+    font-weight: 1000;
+    color: black;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+
+    border-radius: 10px;
+    border: 3px solid rgba(102, 255, 26, 1);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+
+.sect-2 {
+    width: 100%;
+    height: clamp(500px, 100vh, 100vh);
+
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.5));
+    padding: 50px 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.join {
+    height: 50%;
+    width: 30%;
+
+    background: black;
+    border-radius: 10px;
+    border: 3px solid rgba(102, 255, 26, 1);
+
+    transform:
+        perspective(800px) rotateY(25deg) scale(0.9) rotateX(10deg);
+    filter: blur(2px);
+    opacity: 0.9;
+    transition: 0.6s ease all;
+}
+
+.join:hover {
+    transform:
+        perspective(800px) rotateY(-15deg) translateY(-50px) rotateX(10deg) scale(1);
+    filter: blur(0);
+    opacity: 1;
+}
+
+.rotate {
+    animation: rotation 10s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotateY(0deg);
+    }
+
+    to {
+        transform: rotateY(360deg);
+
+    }
 }
