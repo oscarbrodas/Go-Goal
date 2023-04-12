@@ -9,6 +9,7 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DiscoverComponent } from './discover/discover.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ProfileComponent } from './profile/profile.component';
     UserComponent,
     GoalsComponent,
     SettingsComponent,
-    ProfileComponent
+    ProfileComponent,
+    DiscoverComponent
   ],
   imports: [
     CommonModule,
