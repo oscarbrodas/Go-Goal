@@ -1,59 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
+import { fromEvent, Subscription } from 'rxjs';
+import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css'],
+  animations: [
+
+
+
+  ]
 })
 export class MainComponent implements OnInit {
 
-  slides1: any[] = new Array(6).fill({ id: -1, src: '', title: '', subtitle: '' });
+  screenHeight?: number;
+  orginalScreenHeight?: number;
+  screenWidth?: number;
 
-  constructor() { }
+  section2active = false;
+  section3active = false;
 
-  ngOnInit(): void {
-    this.slides1[0] = {
-      id: 1,
-      src: '../assets/dashboard_images/p.png',
-      title: '',
-      subtitle: ''
-    }
+  @HostListener('window:resize', ['$event']) onResize(event?: any) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    console.log('screenHeight', this.screenHeight);
 
-    this.slides1[1] = {
-      id: 2,
-      src: '../assets/dashboard_images/p.png',
-      title: '',
-      subtitle: ''
-    }
-
-    this.slides1[2] = {
-      id: 3,
-      src: '../assets/dashboard_images/p.png',
-      title: '',
-      subtitle: ''
-    }
-
-    this.slides1[3] = {
-      id: 4,
-      src: '../assets/dashboard_images/p.png',
-      title: '',
-      subtitle: ''
-    }
-
-    this.slides1[4] = {
-      id: 5,
-      src: '../assets/dashboard_images/p.png'
-    }
-
-    this.slides1[5] = {
-      id: 6,
-      src: '../assets/dashboard_images/nate_in_utah.jpg',
-      title: 'Goal Setters',
-      subtitle: 'We always shoot for the moon and aim no lower. That\'s why at GoGoal, we are committed to    helping you reach your goals.'
-    };
 
   }
+
+  @HostListener('window:scroll', ['$event']) onWindowScroll(e: any) {
+    if (window.pageYOffset > window.innerHeight) {
+
+      console.log('here');
+
+    }
+
+  }
+
+  constructor(private renderer: Renderer2, private router: Router) {
+    this.onResize();
+  }
+
+
+  ngOnInit(): void {
+    this.orginalScreenHeight = window.innerHeight;
+  }
+
+
+
+
+
+
+  join() {
+    this.router.navigate(['/sign-up']);
+  }
+
+
 
 }
 

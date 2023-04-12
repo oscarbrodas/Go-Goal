@@ -23,7 +23,7 @@
     font-weight: 1000;
     color: black;
     text-align: center;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 1);
 
     border-radius: 20px;
     border: 5px solid rgba(102, 255, 26, 1);
@@ -50,12 +50,38 @@
     width: 300px;
 }
 
+.join-b {
+    height: 100px;
+    width: 175px;
+    background: rgba(0, 0, 0, 1);
+    color: white;
+    border: 5px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    top: -5%;
+
+    font-size: 2.5rem;
+    font-weight: 1000;
+    transition: all 0.5s ease-in-out;
+
+}
+
+.join-b:hover {
+    background: rgba(102, 255, 26, 1);
+    border: 5px solid rgba(0, 0, 0, 1);
+    color: black;
+}
 
 
 .sect-2 {
     width: 100%;
-    height: clamp(500px, 100vh, 100vh);
+    height: clamp(500px, 1000px, 1000px);
 
     background-image: linear-gradient(90deg,
             rgba(0, 0, 0, 0.5),
@@ -64,12 +90,12 @@
     padding: 50px 0;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.join {
+.panel1 {
     height: 50%;
     width: 30%;
 
@@ -82,13 +108,125 @@
     filter: blur(2px);
     opacity: 0.9;
     transition: 0.6s ease all;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    position: relative;
+    right: 5%;
+
 }
 
-.join:hover {
+.panel1:hover {
     transform:
-        perspective(800px) rotateY(-15deg) translateY(-50px) rotateX(10deg) scale(1);
+        perspective(800px) rotateY(0deg) translateY(-50px) rotateX(0deg) scale(1);
     filter: blur(0);
     opacity: 1;
+}
+
+.panel1>h1 {
+    font-size: 3rem;
+    font-weight: 500;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 50px;
+}
+
+.goalbox {
+    height: 60%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.goal {
+    width: 100%;
+    height: 25%;
+    min-height: fit-content;
+
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+}
+
+.goal>p {
+    font-size: 18px;
+    font-weight: 200;
+    color: whitesmoke;
+    letter-spacing: .1rem;
+    line-height: 25px;
+    padding-top: 6px;
+}
+
+.complete-b {
+    aspect-ratio: 1/1;
+    width: 40px;
+    height: 40px;
+    color: white;
+    background-color: transparent;
+    border-radius: 20%;
+    border: 2px solid rgba(102, 255, 26, 1);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    position: relative;
+    transition: 0.5s;
+}
+
+.info {
+    height: 600px;
+    width: 400px;
+    background: rgba(0, 0, 0, 1);
+    border: 3px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+
+    position: relative;
+    left: 10%;
+}
+
+.info-title>h1 {
+    font-size: 3rem;
+    font-weight: 500;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 50px;
+}
+
+.info-text {
+    flex-grow: 2;
+}
+
+.info-text>p {
+    font-size: 1.5rem;
+    font-weight: 200;
+    color: whitesmoke;
+    letter-spacing: .1rem;
+    line-height: 25px;
 }
 
 
@@ -142,7 +280,7 @@
     background: black;
     color: white;
 
-
+    outline: 0px solid rgba(255, 255, 255, 0.9);
     border: 3px solid rgba(102, 255, 26, 1);
 
     display: flex;
