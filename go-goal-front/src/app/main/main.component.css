@@ -35,6 +35,7 @@
 
     position: relative;
     top: -5%;
+    z-index: 2;
 
 }
 
@@ -65,6 +66,7 @@
 
     position: relative;
     top: -5%;
+    z-index: 1;
 
     font-size: 2.5rem;
     font-weight: 1000;
@@ -91,11 +93,80 @@
 
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
-.panel1 {
+.sect-2>img {
+    height: 50%;
+    width: 39%;
+    object-fit: fill;
+    position: relative;
+    left: 6%;
+    border: 4px solid rgba(102, 255, 26, 1);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 5%;
+    animation: spin 10s linear infinite;
+}
+
+.info {
+    height: 550px;
+    width: 410px;
+    background: rgba(0, 0, 0, 1);
+    border: 3px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+
+    position: relative;
+    right: 10%;
+}
+
+.info-title>h1 {
+    font-size: 2.95rem;
+    font-weight: 500;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 50px;
+    margin-bottom: 40px;
+}
+
+.info-text {
+    flex-grow: 2;
+}
+
+.info-text>p {
+    font-size: 1.5rem;
+    font-weight: 200;
+    color: whitesmoke;
+    letter-spacing: .1rem;
+    line-height: 25px;
+}
+
+.sect-3 {
+    width: 100%;
+    height: clamp(500px, 1000px, 1000px);
+
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.5));
+    padding: 50px 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel2 {
     height: 50%;
     width: 30%;
 
@@ -104,7 +175,7 @@
     border: 3px solid rgba(102, 255, 26, 1);
 
     transform:
-        perspective(800px) rotateY(25deg) scale(0.9) rotateX(10deg);
+        perspective(800px) rotateY(-25deg) scale(0.9) rotateX(10deg);
     filter: blur(2px);
     opacity: 0.9;
     transition: 0.6s ease all;
@@ -115,18 +186,18 @@
     align-items: center;
 
     position: relative;
-    right: 5%;
+    right: 10%;
 
 }
 
-.panel1:hover {
+.panel2:hover {
     transform:
         perspective(800px) rotateY(0deg) translateY(-50px) rotateX(0deg) scale(1);
     filter: blur(0);
     opacity: 1;
 }
 
-.panel1>h1 {
+.panel2>h1 {
     font-size: clamp(1.5vw, 3rem, 5rem);
     font-weight: 500;
     color: whitesmoke;
@@ -191,46 +262,30 @@
     transition: 0.5s;
 }
 
-.info {
-    height: 600px;
-    width: 400px;
-    background: rgba(0, 0, 0, 1);
-    border: 3px solid rgba(102, 255, 26, 1);
-    border-radius: 10px;
+/* Animated Title */
+.text-line text {
+    height: 100%;
+    width: 100%;
+
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    stroke-linecap: round;
+    animation: dash 5s linear forwards, filling 3s ease-in forwards;
+    font-size: 8rem;
+    font-weight: 1000;
+    overflow-wrap: normal;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 
-    padding: 20px;
-
-
     position: relative;
-    left: 10%;
+
+
 }
 
-.info-title>h1 {
-    font-size: 3rem;
-    font-weight: 500;
-    color: whitesmoke;
-    text-align: center;
-    line-height: 50px;
-}
-
-.info-text {
-    flex-grow: 2;
-}
-
-.info-text>p {
-    font-size: 1.5rem;
-    font-weight: 200;
-    color: whitesmoke;
-    letter-spacing: .1rem;
-    line-height: 25px;
-}
-
-.sect-3 {
+.sect-4 {
     width: 100%;
     height: clamp(500px, 1000px, 1000px);
 
@@ -244,30 +299,11 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+
 }
 
-/* Animated Title */
-.text-line text {
-    height: 100%;
-    width: 100%;
 
-    stroke-dasharray: 1200;
-    stroke-dashoffset: 1200;
-    stroke-linecap: round;
-    animation: dash 4s linear forwards, filling 2s ease-in forwards;
-    font-size: 8rem;
-    font-weight: 1000;
-    overflow-wrap: normal;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
-    position: relative;
-
-    border: 2px solid rgba(102, 255, 26, 1);
-}
 
 @keyframes dash {
     to {
@@ -306,6 +342,7 @@
 
     transition: all 0.5s ease-in-out;
 
+
 }
 
 .icon-a>mat-icon {
@@ -328,29 +365,33 @@
     top: 10%;
     left: 5%;
     animation: icon1 30s infinite linear, rotate 3s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos2 {
     position: absolute;
     border-radius: 0px;
     top: 10%;
-    left: 5%;
+    left: 90%;
     animation: icon2 30s infinite linear, rotate 7s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos3 {
     position: absolute;
-    top: 10%;
+    top: 90%;
     left: 5%;
     animation: icon3 30s infinite linear, rotate 12s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos4 {
     position: absolute;
     border-radius: 50%;
-    top: 10%;
-    left: 5%;
+    top: 90%;
+    left: 90%;
     animation: icon4 30s infinite linear, rotate 20s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos5 {
@@ -359,6 +400,7 @@
     top: 10%;
     left: 48%;
     animation: icon5 30s infinite linear, rotate 5s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos6 {
@@ -367,6 +409,7 @@
     top: 48%;
     left: 90%;
     animation: icon6 30s infinite linear, rotate 10s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos7 {
@@ -375,6 +418,7 @@
     top: 90%;
     left: 48%;
     animation: icon7 30s infinite linear, rotate 15s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 .pos8 {
@@ -383,6 +427,7 @@
     top: 48%;
     left: 5%;
     animation: icon8 30s infinite linear, rotate 22s infinite linear;
+    animation-delay: 2s, 2.2s;
 }
 
 
@@ -717,7 +762,7 @@
 }
 
 
-@keyframes rotatelogo {
+@keyframes spin {
 
     0% {
         /* transform: rotate(0deg); */
@@ -730,12 +775,21 @@
     }
 }
 
-@media screen and (width < 760px) {
-    .panel1 {
+@media screen and (width < 820px) {
+    .panel2 {
         display: none;
     }
 
+    .sect-2,
+    .sect-3 {
+        justify-content: center;
+    }
+
     .info {
-        left: 0;
+        right: 0%;
+    }
+
+    .sect-2>img {
+        display: none;
     }
 }

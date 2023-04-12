@@ -2,53 +2,92 @@
 
     <div class="sect-1">
 
-        <div class="title-card">
-            <svg height="100%" width="100%" stroke="black" stroke-width="1" class="text-line">
+        <div @icons class="icon-a pos1">
+            <mat-icon>account_circle</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos2">
+            <mat-icon>done</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos3">
+            <mat-icon>list</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos4">
+            <mat-icon>edit</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos5">
+            <mat-icon>email</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos6">
+            <mat-icon>how_to_reg</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos7">
+            <mat-icon>dvr</mat-icon>
+        </div>
+
+        <div @icons class="icon-a pos8">
+            <mat-icon>phone_android</mat-icon>
+        </div>
+
+        <div @titlePanel class="title-card">
+            <svg height="100%" width="100%" stroke="rgba(102, 255, 26, 1)" stroke-width="1" class="text-line">
                 <text x="7%" y="42%">Welcome to</text>
                 <text x="22%" y="72%">Go Goal</text>
             </svg>
         </div>
 
-        <div class="icon-a pos1">
-            <mat-icon>account_circle</mat-icon>
-        </div>
-
-        <div class="icon-a pos2">
-            <mat-icon>done</mat-icon>
-        </div>
-
-        <div class="icon-a pos3">
-            <mat-icon>list</mat-icon>
-        </div>
-
-        <div class="icon-a pos4">
-            <mat-icon>edit</mat-icon>
-        </div>
-
-        <div class="icon-a pos5">
-            <mat-icon>email</mat-icon>
-        </div>
-
-        <div class="icon-a pos6">
-            <mat-icon>how_to_reg</mat-icon>
-        </div>
-
-        <div class="icon-a pos7">
-            <mat-icon>dvr</mat-icon>
-        </div>
-
-        <div class="icon-a pos8">
-            <mat-icon>phone_android</mat-icon>
-        </div>
-
-        <button class="join-b" (click)="join()">Join</button>
-
+        <button @joinButton class="join-b" (click)="join()">Join</button>
 
     </div>
 
+
     <div class="sect-2">
 
-        <div class="panel1">
+        <img src="../../assets/gg.png" alt="gg-logo">
+
+
+        <div class="info">
+            <div class="info-title">
+                <h1>What is Go Goal?</h1>
+            </div>
+            <div class="info-text">
+                <p>Go Goal is a web application that allows you to set goals and track your progress. It is a simple and
+                    easy to use tool that will help you achieve your goals any of your finest aspirations.</p>
+
+                <br>
+
+                <p>But that's not all, we connect you with the ones you love and cherish while you chase your dreams, so
+                    that you can be sure that whatever you accomplish... means something.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="sect-3">
+
+        <div class="info" style="left: 10%; height: 540px;">
+            <div class="info-title">
+                <h1>How does it work?</h1>
+            </div>
+            <div class="info-text">
+                <p>It's simple. All you have to do is create an account. From there, it's easy. Set any goal you wish to
+                    accomplish and we'll do all of the tracking for you.</p>
+
+                <br>
+
+                <p>Complete. Edit. Set. Delete. You have full control over all of your goals. View all of them at any
+                    time and anyone else's that's signed up with us. Friends, family members, the works!</p>
+            </div>
+        </div>
+
+        <div class="panel2">
             <h1>John Smith</h1>
             <div class="goalbox">
                 <div class="goal">
@@ -73,26 +112,27 @@
         </div>
 
 
-        <div class="info">
-            <div class="info-title">
-                <h1>What is Go Goal?</h1>
-            </div>
-            <div class="info-text">
-                <p>Go Goal is a web application that allows you to set goals and track your progress. It is a simple and
-                    easy to use tool that will help you achieve your goals any of your finest aspirations.</p>
 
-                <br>
-
-                <p>But that's not all, we connect you with the ones you love and cherish while you chase your dreams, so
-                    that you can be sure that whatever you accomplish... means something.</p>
-            </div>
-
-        </div>
 
     </div>
 
-    <div class="sect-3">
 
+    <div class="sect-4">
+
+        <div class="info" style="height: 350px; left: 0%; top: -5%;">
+            <div class="info-title">
+                <h1>How do I sign up?</h1>
+            </div>
+            <div class="info-text">
+                <p style="text-align: center;">That's the easy part. Just click sign up at the top or the register
+                    button
+                    at the bottom of the
+                    page and you'll be
+                    on your
+                    way to achieving your goals.
+                </p>
+            </div>
+        </div>
 
     </div>
 
