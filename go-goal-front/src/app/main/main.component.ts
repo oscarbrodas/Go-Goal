@@ -64,7 +64,6 @@ export class MainComponent implements OnInit {
   @HostListener('window:resize', ['$event']) onResize(event?: any) {
     this.screenHeight = window.innerHeight;
     this.screenWidth = window.innerWidth;
-    console.log('screenHeight', this.screenHeight);
 
 
   }
@@ -72,7 +71,7 @@ export class MainComponent implements OnInit {
   @HostListener('window:scroll', ['$event']) onWindowScroll(e: any) {
     if (window.pageYOffset > window.innerHeight) {
 
-      console.log('here');
+
 
     }
 
