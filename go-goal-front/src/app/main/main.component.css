@@ -1,31 +1,741 @@
-.slider1 .imgs1 {
-    width: 1000px;
-    height: 500px;
-}
+.sect-1 {
+    width: 100%;
+    height: clamp(500px, 100vh, 100vh);
 
-.background {
-    background-image: url("../../assets/gg.png");
-    background-position: left center;
-    background-repeat: repeat;
-    background-size: auto 7%;
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.5));
+    padding: 50px 0;
+    margin-top: 60px;
 
-    height: 100%;
-}
-
-.firstsect {
-    width: 100vw;
-    height: 550px;
-    overflow: hidden;
-    position: relative;
-    top: 3px;
-
-    background-color: #2e2e2e;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
-.carousel1 {
-    width: 1000px;
+.title-card {
     height: 500px;
+    width: 800px;
 
+    font-size: 8rem;
+    font-weight: 1000;
+    color: black;
+    text-align: center;
+    background: rgba(0, 0, 0, 1);
+
+    border-radius: 20px;
+    border: 5px solid rgba(102, 255, 26, 1);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    top: -5%;
+
+}
+
+
+.gg-logo-pos {
+    position: absolute;
+    top: 40%;
+    animation: rotatelogo 5s linear infinite;
+}
+
+.gg-logo {
+    height: 300px;
+    width: 300px;
+}
+
+.join-b {
+    height: 100px;
+    width: 175px;
+    background: rgba(0, 0, 0, 1);
+    color: white;
+    border: 5px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    top: -5%;
+
+    font-size: 2.5rem;
+    font-weight: 1000;
+    transition: all 0.5s ease-in-out;
+
+}
+
+.join-b:hover {
+    background: rgba(102, 255, 26, 1);
+    border: 5px solid rgba(0, 0, 0, 1);
+    color: black;
+}
+
+
+.sect-2 {
+    width: 100%;
+    height: clamp(500px, 1000px, 1000px);
+
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.5));
+    padding: 50px 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel1 {
+    height: 50%;
+    width: 30%;
+
+    background: black;
+    border-radius: 10px;
+    border: 3px solid rgba(102, 255, 26, 1);
+
+    transform:
+        perspective(800px) rotateY(25deg) scale(0.9) rotateX(10deg);
+    filter: blur(2px);
+    opacity: 0.9;
+    transition: 0.6s ease all;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    position: relative;
+    right: 5%;
+
+}
+
+.panel1:hover {
+    transform:
+        perspective(800px) rotateY(0deg) translateY(-50px) rotateX(0deg) scale(1);
+    filter: blur(0);
+    opacity: 1;
+}
+
+.panel1>h1 {
+    font-size: clamp(1.5vw, 3rem, 5rem);
+    font-weight: 500;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 50px;
+}
+
+.goalbox {
+    height: 60%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.goal {
+    width: clamp(100%, 100%, 100%);
+    height: 25%;
+    min-height: fit-content;
+
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+}
+
+.goal>p {
+    font-size: clamp(0.8vw, 1.2vw, 2rem);
+    font-weight: 200;
+    white-space: nowrap;
+    color: whitesmoke;
+    letter-spacing: .1rem;
+    line-height: 25px;
+    padding-top: 6px;
+}
+
+.complete-b {
+    aspect-ratio: 1/1;
+    width: 40px;
+    height: 40px;
+    color: white;
+    background-color: transparent;
+    border-radius: 20%;
+    border: 2px solid rgba(102, 255, 26, 1);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    position: relative;
+    transition: 0.5s;
+}
+
+.info {
+    height: 600px;
+    width: 400px;
+    background: rgba(0, 0, 0, 1);
+    border: 3px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+
+    position: relative;
+    left: 10%;
+}
+
+.info-title>h1 {
+    font-size: 3rem;
+    font-weight: 500;
+    color: whitesmoke;
+    text-align: center;
+    line-height: 50px;
+}
+
+.info-text {
+    flex-grow: 2;
+}
+
+.info-text>p {
+    font-size: 1.5rem;
+    font-weight: 200;
+    color: whitesmoke;
+    letter-spacing: .1rem;
+    line-height: 25px;
+}
+
+.sect-3 {
+    width: 100%;
+    height: clamp(500px, 1000px, 1000px);
+
+    background-image: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 0.5));
+    padding: 50px 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Animated Title */
+.text-line text {
+    height: 100%;
+    width: 100%;
+
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    stroke-linecap: round;
+    animation: dash 4s linear forwards, filling 2s ease-in forwards;
+    font-size: 8rem;
+    font-weight: 1000;
+    overflow-wrap: normal;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+
+    border: 2px solid rgba(102, 255, 26, 1);
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes filling {
+    from {
+        fill: rgba(102, 255, 26, 1);
+        fill-opacity: 0;
+    }
+
+    to {
+        fill: rgba(102, 255, 26, 1);
+        fill-opacity: 1;
+    }
+}
+
+/* Animated Icons */
+
+.icon-a {
+    height: 75px;
+    width: 75px;
+    background-color: black;
+    background: black;
+    color: white;
+
+    outline: 0px solid rgba(255, 255, 255, 0.9);
+    border: 3px solid rgba(102, 255, 26, 1);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    transition: all 0.5s ease-in-out;
+
+}
+
+.icon-a>mat-icon {
+    zoom: 1.5;
+}
+
+.icon-a:hover {
+    height: 100px;
+    width: 100px;
+    border: 2px solid rgba(102, 255, 26, 1);
+    outline: 10px solid rgba(255, 255, 255, 0.9);
+
+}
+
+
+
+.pos1 {
+    position: absolute;
+    border-radius: 50%;
+    top: 10%;
+    left: 5%;
+    animation: icon1 30s infinite linear, rotate 3s infinite linear;
+}
+
+.pos2 {
+    position: absolute;
+    border-radius: 0px;
+    top: 10%;
+    left: 5%;
+    animation: icon2 30s infinite linear, rotate 7s infinite linear;
+}
+
+.pos3 {
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    animation: icon3 30s infinite linear, rotate 12s infinite linear;
+}
+
+.pos4 {
+    position: absolute;
+    border-radius: 50%;
+    top: 10%;
+    left: 5%;
+    animation: icon4 30s infinite linear, rotate 20s infinite linear;
+}
+
+.pos5 {
+    position: absolute;
+    border-radius: 20px;
+    top: 10%;
+    left: 48%;
+    animation: icon5 30s infinite linear, rotate 5s infinite linear;
+}
+
+.pos6 {
+    position: absolute;
+    border-radius: 15px;
+    top: 48%;
+    left: 90%;
+    animation: icon6 30s infinite linear, rotate 10s infinite linear;
+}
+
+.pos7 {
+    position: absolute;
+    border-radius: 20px;
+    top: 90%;
+    left: 48%;
+    animation: icon7 30s infinite linear, rotate 15s infinite linear;
+}
+
+.pos8 {
+    position: absolute;
+    border-radius: 20px;
+    top: 48%;
+    left: 5%;
+    animation: icon8 30s infinite linear, rotate 22s infinite linear;
+}
+
+
+
+@keyframes icon1 {
+
+    0% {
+        left: 5%;
+        top: 10%;
+    }
+
+    25% {
+        left: 90%;
+        top: 10%;
+    }
+
+    50% {
+        left: 90%;
+        top: 90%;
+    }
+
+    75% {
+        left: 5%;
+        top: 90%;
+    }
+
+    100% {
+        left: 5%;
+        top: 10%;
+    }
+
+}
+
+
+@keyframes icon2 {
+
+    0% {
+        left: 90%;
+        top: 10%;
+    }
+
+    25% {
+        left: 90%;
+        top: 90%;
+    }
+
+    50% {
+        left: 5%;
+        top: 90%;
+    }
+
+    75% {
+        left: 5%;
+        top: 10%;
+    }
+
+    100% {
+        left: 90%;
+        top: 10%;
+    }
+
+}
+
+@keyframes icon3 {
+
+    0% {
+        left: 5%;
+        top: 90%;
+    }
+
+    25% {
+        left: 5%;
+        top: 10%;
+    }
+
+    50% {
+        left: 90%;
+        top: 10%;
+    }
+
+    75% {
+        left: 90%;
+        top: 90%;
+    }
+
+    100% {
+        left: 5%;
+        top: 90%;
+    }
+
+}
+
+@keyframes icon4 {
+
+    0% {
+        left: 90%;
+        top: 90%;
+    }
+
+    25% {
+        left: 5%;
+        top: 90%;
+    }
+
+    50% {
+        left: 5%;
+        top: 10%;
+    }
+
+    75% {
+        left: 90%;
+        top: 10%;
+    }
+
+    100% {
+        left: 90%;
+        top: 90%;
+    }
+
+}
+
+@keyframes icon5 {
+
+    0% {
+        left: 48%;
+        top: 10%;
+    }
+
+    12.5% {
+        left: 90%;
+        top: 10%;
+    }
+
+    25% {
+        left: 90%;
+        top: 48%;
+    }
+
+    37.5% {
+        left: 90%;
+        top: 90%;
+    }
+
+    50% {
+        left: 48%;
+        top: 90%;
+    }
+
+    62.5% {
+        left: 5%;
+        top: 90%;
+    }
+
+    75% {
+        left: 5%;
+        top: 48%;
+    }
+
+    87.5% {
+        left: 5%;
+        top: 10%;
+    }
+
+    100% {
+        left: 48%;
+        top: 10%;
+    }
+
+}
+
+@keyframes icon6 {
+
+    0% {
+        left: 90%;
+        top: 48%;
+    }
+
+    12.5% {
+        left: 90%;
+        top: 90%;
+    }
+
+    25% {
+        left: 48%;
+        top: 90%;
+    }
+
+    37.5% {
+        left: 5%;
+        top: 90%;
+    }
+
+    50% {
+        left: 5%;
+        top: 48%;
+    }
+
+    62.5% {
+        left: 5%;
+        top: 10%;
+    }
+
+    75% {
+        left: 48%;
+        top: 10%;
+    }
+
+    87.5% {
+        left: 90%;
+        top: 10%;
+    }
+
+    100% {
+        left: 90%;
+        top: 48%;
+    }
+
+}
+
+@keyframes icon7 {
+
+    0% {
+        left: 48%;
+        top: 90%;
+    }
+
+    12.5% {
+        left: 5%;
+        top: 90%;
+    }
+
+    25% {
+        left: 5%;
+        top: 48%;
+    }
+
+    37.5% {
+        left: 5%;
+        top: 10%;
+    }
+
+    50% {
+        left: 48%;
+        top: 10%;
+    }
+
+    62.5% {
+        left: 90%;
+        top: 10%;
+    }
+
+    75% {
+        left: 90%;
+        top: 48%;
+    }
+
+    87.5% {
+        left: 90%;
+        top: 90%;
+    }
+
+    100% {
+        left: 48%;
+        top: 90%;
+    }
+
+}
+
+@keyframes icon8 {
+
+    0% {
+        left: 5%;
+        top: 48%;
+    }
+
+    12.5% {
+        left: 5%;
+        top: 10%;
+    }
+
+    25% {
+        left: 48%;
+        top: 10%;
+    }
+
+    37.5% {
+        left: 90%;
+        top: 10%;
+    }
+
+    50% {
+        left: 90%;
+        top: 48%;
+    }
+
+    62.5% {
+        left: 90%;
+        top: 90%;
+    }
+
+    75% {
+        left: 48%;
+        top: 90%;
+    }
+
+    87.5% {
+        left: 5%;
+        top: 90%;
+    }
+
+    100% {
+        left: 5%;
+        top: 48%;
+    }
+
+}
+
+
+@keyframes rotate {
+
+    0% {
+        /* transform: rotate(0deg); */
+        transform: rotate3d(0, 0, 0, 0deg);
+    }
+
+    100% {
+        /* transform: rotate(360deg); */
+        transform: rotate3d(4, 2, 3, 360deg);
+    }
+
+
+}
+
+
+@keyframes rotatelogo {
+
+    0% {
+        /* transform: rotate(0deg); */
+        transform: rotate3d(0, 0, 0, 0deg);
+    }
+
+    100% {
+        /* transform: rotate(360deg); */
+        transform: rotate3d(0, 2, 0, 360deg);
+    }
+}
+
+@media screen and (width < 760px) {
+    .panel1 {
+        display: none;
+    }
+
+    .info {
+        left: 0;
+    }
 }
