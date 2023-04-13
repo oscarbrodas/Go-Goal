@@ -64,6 +64,11 @@ export class BackendConnectService {
     return this.http.get<JSON>(`${this.backendURL}goals/${ID}`, this.httpOptions);
   }
 
+  public getFriends(ID: Number): Observable<any> {
+    return this.http.get<JSON>(`${this.backendURL}friends/${ID}`, this.httpOptions);
+  }
+
+
 }
 
 export interface userInfo { // ADD: User data as necessary 

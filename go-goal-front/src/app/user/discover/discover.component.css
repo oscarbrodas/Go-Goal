@@ -1,0 +1,79 @@
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin-top: 70px;
+}
+
+.tool-panel {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+    height: clamp(300px, 80vh - 108px, 800px);
+    max-height: 800px;
+
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+    padding: 10px;
+
+    background: black;
+    color: white;
+    border-radius: 10px;
+    border: rgba(102, 255, 26, 1) 2px solid;
+
+    transition: height 1.5s;
+    overflow: hidden
+}
+
+.friends-sect {
+    width: 60%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    left: -2px;
+    z-index: 1;
+}
+
+.f-banner {
+    width: 100%;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    background: rgba(0, 0, 0, 1);
+    color: aliceblue;
+    border-radius: 0 20px 0 0;
+    border: rgba(102, 255, 26, 1) 2px solid;
+
+    font-size: 2em;
+    font-weight: 400;
+
+    text-align: center;
+
+}
+
+
+.f-boxes {
+    width: 100%;
+    height: 500px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+
+}

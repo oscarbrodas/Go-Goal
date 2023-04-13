@@ -30,10 +30,6 @@ export class LoginService {
 
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
-
   user: userInfo = {
     loggedIn: false,
     ID: 0,
@@ -45,7 +41,7 @@ export class LoginService {
 
   }
 
-  friends: userInfo[] = [];
+  public friends: Number[] = [];
 
   loginInfo: loginInfo = {
     Email: '',
@@ -95,7 +91,13 @@ export class LoginService {
         this.loginSuccess = true;
         this.loggedIn = true;
 
-        this.friends = [] // ADD: Get friends list from backend
+        this.backend.getFriends(this.user.ID).subscribe((data) => {
+          if (!data.ErrorExist) {
+            this.friends = data.Friends;
+            console.log(this.friends);
+          }
+
+        });
 
         this.userService.setUserData(this.user);
 

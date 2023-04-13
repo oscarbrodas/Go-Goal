@@ -1,7 +1,7 @@
 <div class="page">
     <div class="details">
         <div class="row">
-            <img @details class="pic" src="../assets/dashboard_images/p.png">
+            <img class="pic" src="../assets/dashboard_images/p.png">
         </div>
         <div class="row">
             {{this.user.FirstName}} {{this.user.LastName}}
@@ -18,7 +18,7 @@
                 Settings</button>
         </div>
     </div>
-    <div @goals class="goal-outline">
+    <div class="goal-outline">
         <h1>Top Goals</h1>
         <div class="goal" *ngFor="let u of topUserGoals">
             <div class="desc">
@@ -31,7 +31,7 @@
         <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i
                 id="moreButton">More</i></div>
     </div>
-    <div @friends class="friend-outline">
+    <div class="friend-outline">
         <h1 *ngIf="!this.theUser">Mutual Friends</h1>
         <h1 *ngIf="this.theUser">Friends</h1>
         <div class="friends"></div>
