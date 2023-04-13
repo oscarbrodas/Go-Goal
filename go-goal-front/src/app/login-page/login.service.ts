@@ -41,7 +41,7 @@ export class LoginService {
 
   }
 
-  public friends: Number[] = [];
+  public friends: number[] = [];
 
   loginInfo: loginInfo = {
     Email: '',

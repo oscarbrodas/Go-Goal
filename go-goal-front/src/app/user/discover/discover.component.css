@@ -20,7 +20,7 @@
     flex-direction: column;
     align-items: center;
     z-index: 2;
-    padding: 10px;
+    padding: 10px 0 10px 0;
 
     background: black;
     color: white;
@@ -31,8 +31,159 @@
     overflow: hidden
 }
 
+.tool-panel>h1 {
+    font-size: 28px;
+    font-weight: 400;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.search-btns {
+    width: 100%;
+    height: fit-content;
+    min-height: fit-content;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    align-self: center;
+    position: relative;
+    z-index: 2;
+    font-weight: 300;
+    padding: 20px;
+    border-top: 2px solid rgba(102, 255, 26, 1);
+}
+
+.btn {
+    width: 100px;
+    height: 75px;
+    min-height: fit-content;
+
+    background: black;
+    color: white;
+    border: 2px solid rgba(102, 255, 26, 1);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: left;
+    position: relative;
+
+    transition: all 0.5s;
+    font-size: small;
+    white-space: nowrap;
+    padding: 0px;
+
+}
+
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn:visited,
+.btn:focus-within {
+    background: rgba(102, 255, 26, 1);
+    color: black;
+    border: 2px solid black;
+    outline: 2px solid white;
+}
+
+.btn>mat-icon {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    margin-top: 5px;
+}
+
+
+.form {
+    width: 80%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    padding: 0 0 20px 0;
+    color: white;
+
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+}
+
+.form>input {
+    width: 100%;
+    height: 30px;
+    min-height: fit-content;
+
+    background: black;
+    color: white;
+    border: 1px solid grey;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: left;
+    position: relative;
+
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.form>button {
+    width: 100px;
+    height: 35px;
+    min-height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: 300;
+    margin-bottom: 0px;
+    margin-top: 10px;
+    border-radius: 20px;
+    border: 2px solid rgba(102, 255, 26, 1);
+    outline: 0px;
+    background: black;
+    color: white;
+    transition: all 0.5s;
+}
+
+.form>button:hover {
+    background: rgba(102, 255, 26, 1);
+    color: black;
+    border: 2px solid black;
+    outline: 2px solid white;
+}
+
+.info-sect {
+    width: 80%;
+    height: 100%;
+    padding: 0px 0 0 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;
+
+
+}
+
+.info-sect>p {
+    font-size: 1.5em;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    color: aliceblue;
+    padding-top: 10px;
+}
+
+/* Friends Section*/
+
 .friends-sect {
-    width: 60%;
+    width: clamp(500px, 60%, 60%);
     height: 100%;
 
     display: flex;
@@ -57,11 +208,19 @@
     border-radius: 0 20px 0 0;
     border: rgba(102, 255, 26, 1) 2px solid;
 
+
+
+}
+
+.f-banner>p {
     font-size: 2em;
     font-weight: 400;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-
+    color: aliceblue;
+    padding-top: 10px;
 }
 
 
@@ -70,10 +229,84 @@
     height: 500px;
 
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 10px;
 
     background-color: rgba(0, 0, 0, 0.5);
     border-bottom: 2px solid rgba(102, 255, 26, 1);
 
+}
+
+.f-box {
+    width: 150px;
+    height: 100px;
+    min-height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: 300;
+    padding: 0px;
+    margin: 5px;
+    border-radius: 20px;
+    border: 2px solid rgba(102, 255, 26, 1);
+    outline: 0px;
+    background: black;
+    color: white;
+    transition: all 0.5s;
+}
+
+.bxs {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    transition: all 0.5s;
+}
+
+.bxs>button {
+    width: clamp(fit-content, fit-content, 200px);
+    height: 100%;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    background: black;
+    color: white;
+    border-radius: 10px;
+    border: 2px solid rgba(102, 255, 26, 1);
+
+    font-size: 18px;
+    margin-top: 5px;
+    transition: all 0.5s;
+
+
+}
+
+.bxs>button:hover {
+    background: rgba(102, 255, 26, 1);
+    color: black;
+    border: 2px solid black;
+    transition: all 0.5s;
+}
+
+.bxs>button:hover>p {
+    color: black;
+}
+
+.f-prof>p {
+    font-size: 1.5em;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: aliceblue;
+    padding-top: 10px;
 }

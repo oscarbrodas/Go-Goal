@@ -3,6 +3,8 @@ import { BackendConnectService, userInfo } from '../../backend-connect.service';
 import { LoginService } from 'src/app/login-page/login.service';
 import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
+import { FormControl, FormGroup } from '@angular/forms';
+import { KeyValue } from '@angular/common';
 
 @Component({
   selector: 'app-discover',
@@ -11,9 +13,20 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DiscoverComponent implements OnInit, OnChanges {
 
+  friends: boolean = true;
+  users: boolean = false;
+
   user?: userInfo;
-  userFriendsIDs: Number[] = [];
-  userFriendsUsernames: String[] = [];
+  userFriendsIDs: number[] = [7];
+  userFriends: Map<number, string> = new Map([[7, 'Friend 1']]);
+  userSearches: Map<number, string> = new Map([[8, 'Search 1']]);
+  searchForm = new FormGroup({
+    search: new FormControl(''),
+  });
+  friendForm = new FormGroup({
+    friendUsername: new FormControl(''),
+    friendID: new FormControl(-1),
+  });
 
   constructor(private loginService: LoginService, private userService: UserService, private http: HttpClient) {
 
@@ -38,7 +51,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
       if (res) {
         console.log('Friends Loaded.');
-        console.log(this.userFriendsUsernames);
+        console.log(this.userFriends);
 
 
       } else {
@@ -57,6 +70,19 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
   }
 
+  search(): void {
+    console.log(this.searchForm.value.search);
+
+
+  }
+
+  setFriendProfile(friend: KeyValue<number, string>) {
+    this.friendForm.setValue({
+      friendUsername: friend.value,
+      friendID: friend.key,
+    });
+  }
+
   getFriendsUsernames(): boolean {
 
     let res = true;
@@ -66,7 +92,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
         if (data.ErrorExist) res = false;
         console.log(data);
 
-        this.userFriendsUsernames.push(data.ThisUser.Username);
+        this.userFriends.set(friend, data.ThisUser.Username);
 
       });
 

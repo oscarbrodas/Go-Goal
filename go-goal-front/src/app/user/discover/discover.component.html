@@ -1,14 +1,86 @@
 <div class="page flex-container">
 
-    <div class="tool-panel"></div>
+    <div class="tool-panel">
+
+        <h1>{{user?.Username}}</h1>
+
+        <div class="search-btns">
+            <button class="btn" (click)="friends = true; users = false;">
+                <mat-icon>people</mat-icon>
+                <p>Search Friends</p>
+            </button>
+            <button class="btn" (click)="users = true; friends = false;">
+                <mat-icon>search</mat-icon>
+                <p>Search Users</p>
+            </button>
+
+        </div>
+
+        <form [formGroup]="searchForm" (ngSubmit)="search()" class="form">
+            <input type="text" placeholder="Search by ID" formControlName="search">
+            <button type="submit">Search</button>
+        </form>
+
+        <div class="info-sect">
+            <p>Name: {{user?.FirstName}} {{user?.LastName}}</p>
+            <p>Your ID: {{user?.ID}}</p>
+        </div>
+
+        <div class="info-sect" style="border-top: 2px solid rgba(102, 255, 26, 1);">
+
+            <p *ngIf="friendForm.value.friendID == -1; else elseBlock">
+                Click on a Profile to display their information
+            </p>
+            <ng-template #elseBlock>
+                <div class="f-prof">
+                    <p>Username: {{friendForm.value.friendUsername}}</p>
+                    <p>Friend ID: {{friendForm.value.friendID}}</p>
+
+                    <button>View Profile</button>
+                    <button>Send Friend Request</button>
+                </div>
+
+            </ng-template>
+
+        </div>
+
+    </div>
 
     <div class="friends-sect">
 
         <div class="f-banner">
-            Friends
+            <p *ngIf="friends; else elseBlock2 ">Friends</p>
+            <ng-template #elseBlock2>
+                <p>Users</p>
+            </ng-template>
         </div>
 
-        <div class="f-boxes"></div>
+        <div class="f-boxes">
+
+            <div class="bxs" *ngIf="friends; else elseBlock3">
+
+                <button class="f-prof" *ngFor="let friend of userFriends | keyvalue" (click)="setFriendProfile(friend)">
+                    <p>{{friend.value}}</p>
+                </button>
+
+            </div>
+
+            <ng-template #elseBlock3>
+                <!-- <div class="bxs" *ngFor="let user of users">
+
+                    <div class="f-prof">
+                        <p>Username: {{user.Username}}</p>
+                        <p>Friend ID: {{user.ID}}</p>
+
+                        <button (click)="friendForm.setValue({friendID: user.ID, friendUsername: user.Username})">View Profile</button>
+                        <button>Send Friend Request</button>
+                    </div>
+
+                </div> -->
+            </ng-template>
+
+
+        </div>
 
     </div>
 
