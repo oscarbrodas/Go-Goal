@@ -5,6 +5,7 @@ import { UserService } from '../user.service';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup } from '@angular/forms';
 import { KeyValue } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-discover',
@@ -17,18 +18,20 @@ export class DiscoverComponent implements OnInit, OnChanges {
   users: boolean = false;
 
   user?: userInfo;
-  userFriendsIDs: number[] = [7];
-  userFriends: Map<number, string> = new Map([[7, 'Friend 1']]);
-  userSearches: Map<number, string> = new Map([[8, 'Search 1']]);
+  userFriendsIDs: number[] = [3];
+  userFriends: Map<number, string> = new Map([[3, 'Friend 1']]);
+  userSearches: Map<number, string> = new Map([[3, 'Search 1']]);
   searchForm = new FormGroup({
     search: new FormControl(''),
   });
   friendForm = new FormGroup({
-    friendUsername: new FormControl(''),
-    friendID: new FormControl(-1),
+    friendUsername: new FormControl('[ USER ]'),
+    friend: new FormControl('-1'),
   });
 
-  constructor(private loginService: LoginService, private userService: UserService, private http: HttpClient) {
+  message: string = "";
+
+  constructor(private loginService: LoginService, private userService: UserService, private http: HttpClient, private router: Router) {
 
 
   }
@@ -71,16 +74,51 @@ export class DiscoverComponent implements OnInit, OnChanges {
   }
 
   search(): void {
-    console.log(this.searchForm.value.search);
+    let s: string = this.searchForm.value.search?.toString()!;
+    if (Number.isNaN(Number(s)) || Number(s) <= 0) {
+      alert('Please enter a valid ID to search for.')
+      return;
+    }
+
+
+    this.http.get<any>(`http://localhost:9000/api/users?id=${this.searchForm.value.search}`).subscribe((data) => {
+      if (data.ErrorExist) {
+        this.friendForm.setValue({
+          friendUsername: 'User Not Found',
+          friend: `User Not Found`
+        });
+        console.log('Error: Could not get user.');
+      } else {
+        this.friendForm.setValue({
+          friendUsername: `Username: ${data.ThisUser.Username}`,
+          friend: `Name: ${data.ThisUser.FirstName + ' ' + data.ThisUser.LastName}`
+        });
+        this.message = "Add Friend";
+      }
+
+    });
+
 
 
   }
 
+  viewProfile(): void {
+    this.router.navigate([`/user/${this.friendForm.value.friend}/profile`]);
+  }
+
   setFriendProfile(friend: KeyValue<number, string>) {
     this.friendForm.setValue({
-      friendUsername: friend.value,
-      friendID: friend.key,
+      friendUsername: `Username: ${friend.value}`,
+      friend: `Friend ID: ${friend.key.toString()}`,
     });
+
+    this.message = "Remove Friend";
+
+
+  }
+
+  addFriend(): void {
+
   }
 
   getFriendsUsernames(): boolean {

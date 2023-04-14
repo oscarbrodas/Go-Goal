@@ -2,47 +2,44 @@
 
     <div class="tool-panel">
 
-        <h1>{{user?.Username}}</h1>
-
-        <div class="search-btns">
-            <button class="btn" (click)="friends = true; users = false;">
-                <mat-icon>people</mat-icon>
-                <p>Search Friends</p>
-            </button>
-            <button class="btn" (click)="users = true; friends = false;">
-                <mat-icon>search</mat-icon>
-                <p>Search Users</p>
-            </button>
-
+        <div>
+            <h1>{{user?.Username}}</h1>
         </div>
 
         <form [formGroup]="searchForm" (ngSubmit)="search()" class="form">
-            <input type="text" placeholder="Search by ID" formControlName="search">
-            <button type="submit">Search</button>
+            <label for="s">Search: </label>
+            <input type="text" id="s" placeholder="Search by ID" formControlName="search">
+            <button type="submit">
+                <mat-icon>search</mat-icon>
+            </button>
         </form>
 
-        <div class="info-sect">
+        <div class="info-sect" style="border-top: 2px solid rgba(102, 255, 26, 1);">
+
+            <!-- <p *ngIf="friendForm.value.friendID == -1; else elseBlock">
+                Click on a Profile or search for an ID to display their information.
+            </p>
+            <ng-template #elseBlock> -->
+            <div class="f-sect">
+                <p>{{friendForm.value.friendUsername}}</p>
+                <p>{{friendForm.value.friend}}</p>
+
+                <div class="f-sect-b">
+                    <button (click)="viewProfile()">View Profile</button>
+                    <button>{{message}}</button>
+                </div>
+            </div>
+
+            <!-- </ng-template> -->
+
+        </div>
+
+        <div class="prof-sect">
+            <h1>Your Info</h1>
             <p>Name: {{user?.FirstName}} {{user?.LastName}}</p>
             <p>Your ID: {{user?.ID}}</p>
         </div>
 
-        <div class="info-sect" style="border-top: 2px solid rgba(102, 255, 26, 1);">
-
-            <p *ngIf="friendForm.value.friendID == -1; else elseBlock">
-                Click on a Profile to display their information
-            </p>
-            <ng-template #elseBlock>
-                <div class="f-prof">
-                    <p>Username: {{friendForm.value.friendUsername}}</p>
-                    <p>Friend ID: {{friendForm.value.friendID}}</p>
-
-                    <button>View Profile</button>
-                    <button>Send Friend Request</button>
-                </div>
-
-            </ng-template>
-
-        </div>
 
     </div>
 
@@ -66,17 +63,7 @@
             </div>
 
             <ng-template #elseBlock3>
-                <!-- <div class="bxs" *ngFor="let user of users">
 
-                    <div class="f-prof">
-                        <p>Username: {{user.Username}}</p>
-                        <p>Friend ID: {{user.ID}}</p>
-
-                        <button (click)="friendForm.setValue({friendID: user.ID, friendUsername: user.Username})">View Profile</button>
-                        <button>Send Friend Request</button>
-                    </div>
-
-                </div> -->
             </ng-template>
 
 
