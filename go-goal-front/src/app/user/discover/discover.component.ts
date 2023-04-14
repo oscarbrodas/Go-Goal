@@ -28,7 +28,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
     friendUsername: new FormControl('[ USER ]'),
     friend: new FormControl('-1'),
   });
-
+  IDSearch: number = -1;
   message: string = "";
 
   constructor(private loginService: LoginService, private userService: UserService, private http: HttpClient, private router: Router) {
@@ -43,7 +43,6 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
     // Grab friend's IDs
     this.userFriendsIDs = this.loginService.friends;
-    console.log(this.userFriendsIDs);
 
     // For each friend's ID, grab their username
     const fr = async (): Promise<boolean> => {
@@ -54,7 +53,6 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
       if (res) {
         console.log('Friends Loaded.');
-        console.log(this.userFriends);
 
 
       } else {
@@ -94,6 +92,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
           friend: `Name: ${data.ThisUser.FirstName + ' ' + data.ThisUser.LastName}`
         });
         this.message = "Add Friend";
+        this.IDSearch = data.ThisUser.ID;
       }
 
     });
@@ -103,7 +102,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
   }
 
   viewProfile(): void {
-    this.router.navigate([`/user/${this.friendForm.value.friend}/profile`]);
+    this.router.navigate([`/user/${this.IDSearch}/profile`]);
   }
 
   setFriendProfile(friend: KeyValue<number, string>) {
@@ -111,7 +110,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
       friendUsername: `Username: ${friend.value}`,
       friend: `Friend ID: ${friend.key.toString()}`,
     });
-
+    this.IDSearch = friend.key;
     this.message = "Remove Friend";
 
 

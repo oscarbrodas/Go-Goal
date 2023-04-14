@@ -16,21 +16,21 @@
 
         <div class="info-sect" style="border-top: 2px solid rgba(102, 255, 26, 1);">
 
-            <!-- <p *ngIf="friendForm.value.friendID == -1; else elseBlock">
+            <p *ngIf="friendForm.value.friend === '-1'; else elseBlock">
                 Click on a Profile or search for an ID to display their information.
             </p>
-            <ng-template #elseBlock> -->
-            <div class="f-sect">
-                <p>{{friendForm.value.friendUsername}}</p>
-                <p>{{friendForm.value.friend}}</p>
+            <ng-template #elseBlock>
+                <div class="f-sect">
+                    <p>{{friendForm.value.friendUsername}}</p>
+                    <p>{{friendForm.value.friend}}</p>
 
-                <div class="f-sect-b">
-                    <button (click)="viewProfile()">View Profile</button>
-                    <button>{{message}}</button>
+                    <div class="f-sect-b">
+                        <button (click)="viewProfile()">View Profile</button>
+                        <button>{{message}}</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- </ng-template> -->
+            </ng-template>
 
         </div>
 
