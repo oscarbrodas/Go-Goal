@@ -6,11 +6,77 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup } from '@angular/forms';
 import { KeyValue } from '@angular/common';
 import { Router } from '@angular/router';
+import { trigger, state, style, transition, animate, keyframes, stagger, query, group } from '@angular/animations';
+
 
 @Component({
   selector: 'app-discover',
   templateUrl: './discover.component.html',
-  styleUrls: ['./discover.component.css']
+  styleUrls: ['./discover.component.css'],
+  animations: [
+
+    trigger('tools', [
+      transition(':enter', [
+        style({ left: '-50%' }),
+        animate('0.6s ease', style({ left: '0%' }))
+      ]),
+    ]),
+
+
+    trigger('banner', [
+      transition(':enter', [
+        style({ width: '0%', content: '', border: 'none' }),
+        group([
+          style({ width: '0%', content: '', border: 'none' }),
+          animate('0.6s 0.55s ease', keyframes([
+            style({ width: '0%', border: '*' }),
+            style({ width: '100%', }),
+          ])),
+
+
+          query('p', [
+            style({ opacity: 0 }),
+            animate('0.6s 0.7s ease', style({ opacity: 1 }))
+          ]),
+
+        ])
+
+      ]),
+
+    ]),
+
+    trigger('friends', [
+      transition(':enter', [
+        style({ height: '0', content: '', background: 'none', border: 'none' }),
+        group([
+          animate('0.6s 1.1s ease', keyframes([
+            style({ height: '0', background: '*' }),
+            style({ height: '*', border: '*' }),
+
+          ])),
+
+          query('button', [
+            style({ opacity: 0 }),
+            animate('0.6s 1.3s ease', keyframes([
+              style({ opacity: 0 }),
+              style({ opacity: 1 }),
+            ])),
+
+          ]),
+
+
+        ])
+
+
+
+
+
+      ]),
+
+    ]),
+
+
+  ]
 })
 export class DiscoverComponent implements OnInit, OnChanges {
 
@@ -19,7 +85,8 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
   user?: userInfo;
   userFriendsIDs: number[] = [3];
-  userFriends: Map<number, string> = new Map([[3, 'Friend 1']]);
+  userFriends: Map<number, string> = new Map([
+    [3, 'Friend 1']]);
   userSearches: Map<number, string> = new Map([[3, 'Search 1']]);
   searchForm = new FormGroup({
     search: new FormControl(''),

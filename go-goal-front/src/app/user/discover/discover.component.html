@@ -1,6 +1,6 @@
 <div class="page flex-container">
 
-    <div class="tool-panel">
+    <div @tools class="tool-panel">
 
         <div>
             <h1>{{user?.Username}}</h1>
@@ -45,26 +45,19 @@
 
     <div class="friends-sect">
 
-        <div class="f-banner">
+        <div @banner class="f-banner">
             <p *ngIf="friends; else elseBlock2 ">Friends</p>
             <ng-template #elseBlock2>
                 <p>Users</p>
             </ng-template>
         </div>
 
-        <div class="f-boxes">
+        <div @friends class="f-boxes">
 
-            <div class="bxs" *ngIf="friends; else elseBlock3">
+            <button class="f-prof" *ngFor="let friend of userFriends | keyvalue" (click)="setFriendProfile(friend)">
+                <p>{{friend.value}}</p>
+            </button>
 
-                <button class="f-prof" *ngFor="let friend of userFriends | keyvalue" (click)="setFriendProfile(friend)">
-                    <p>{{friend.value}}</p>
-                </button>
-
-            </div>
-
-            <ng-template #elseBlock3>
-
-            </ng-template>
 
 
         </div>
