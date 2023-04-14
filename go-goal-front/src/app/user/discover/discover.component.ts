@@ -60,9 +60,11 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query, 
             animate('0.6s 1.3s ease', keyframes([
               style({ opacity: 0 }),
               style({ opacity: 1 }),
+
+
             ])),
 
-          ]),
+          ], { optional: true }),
 
 
         ])
@@ -83,9 +85,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
   user?: userInfo;
   userFriendsIDs: number[] = [];
-  userFriends: Map<number, string> = new Map([
-    [3, 'Friend 1']]);
-  userSearches: Map<number, string> = new Map([[3, 'Search 1']]);
+  userFriends: Map<number, string> = new Map([]);
   outgoingFriendRequests: number[] = [];
   incomingFriendRequests: number[] = [];
 
@@ -185,6 +185,8 @@ export class DiscoverComponent implements OnInit, OnChanges {
         if (this.outgoingFriendRequests.includes(this.IDSearch)) {
           this.message = "Friend Request Sent";
           this.friendRequested = true;
+        } else {
+          this.friendRequested = false;
         }
 
       }
@@ -222,12 +224,12 @@ export class DiscoverComponent implements OnInit, OnChanges {
       this.removeRequested = false;
       this.message = "Friend Request Sent";
 
-      // Backend call to add friend
+      // Backend call to send friend request
       this.http.post<any>(`http://localhost:9000/api/friends/sendFriendRequest/${this.user?.ID}/${this.IDSearch}`, {}).subscribe((data) => {
         if (data.ErrorExist || data.Successful === false) {
           console.log('Error: Could not add friend.');
         } else {
-          console.log('Friend added.');
+          console.log('Friend Request Sent.');
         }
 
       });
@@ -241,6 +243,15 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
       // Remove friend from map and backend
       this.userFriends.delete(this.IDSearch);
+      this.http.delete<any>(`http://localhost:9000/api/friends/removeFriend/${this.user?.ID}/${this.IDSearch}`, {}).subscribe((data) => {
+
+        if (data.ErrorExist || data.Successful === false) {
+          console.log('Error: Could not remove friend.');
+        } else {
+          console.log('Friend removed.');
+        }
+
+      });
 
     }
 
@@ -284,7 +295,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
     });
 
     // Get incoming friend requests
-    this.http.get<any>(`http://localhost:9000/api/friends/getIncomingFriendRequests/${this.user?.ID}`).subscribe((data) => {
+    this.http.get<any>(`http://localhost:9000/api/friends/getIngoingFriendRequests/${this.user?.ID}`).subscribe((data) => {
       if (data.ErrorExist) {
         console.log('Error: Could not get incoming friend requests.');
       } else if (data.IDs === null) {

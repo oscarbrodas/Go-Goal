@@ -89,7 +89,7 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     this.orginalScreenHeight = window.innerHeight;
     window.scrollTo(0, 0);
-    if (this.userService != null) {
+    if (this.userService != null && this.userService.getUserData() != null) {
       this.logginIn = true;
       this.userID = this.userService.getUserData().ID;
     }
