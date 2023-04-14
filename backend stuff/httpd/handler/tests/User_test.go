@@ -55,8 +55,8 @@ func TestIsValidEmail(t *testing.T) {
 func TestGetUser(t *testing.T) {
 	initializeTestDatabase()
 
-	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
-	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(username, first_name,last_name,email,password, xp, description) values(\"dc\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw1\",\"0\",\"Hi!\")")
+	globalDB.Exec("insert into users(username, first_name,last_name,email,password, xp, description) values(\"or\",\"Oscar\",\"Rodas\",\"2@gmail.com\",\"pw2\",\"100\",\"Hi?\")")
 
 	w := httptest.NewRecorder()
 	r, err := http.NewRequest("GET", "?id=2", nil)
@@ -77,7 +77,8 @@ func TestGetUser(t *testing.T) {
 		t.Errorf("There was an error")
 	}
 
-	if returnInfo.ThisUser.FirstName != "2" || returnInfo.ThisUser.Email != "2@gmail.com" || returnInfo.ThisUser.Password != "pw" {
+	if returnInfo.ThisUser.Username != "or" || returnInfo.ThisUser.FirstName != "Oscar" || returnInfo.ThisUser.LastName != "Rodas" || returnInfo.ThisUser.Email != "2@gmail.com" ||
+		returnInfo.ThisUser.Password != "pw2" || returnInfo.ThisUser.XP != 100 || returnInfo.ThisUser.Description != "Hi?" {
 		t.Errorf("Got the wrong user")
 	}
 }
@@ -105,17 +106,18 @@ func TestCreateUser1(t *testing.T) {
 	handler.CreateUser(globalDB)(w, r)
 
 	returnInfo := struct {
-		Successful bool
-		ErrorExist bool
-		EmailExist bool
+		Successful    bool
+		ErrorExist    bool
+		EmailExist    bool
+		UsernameExist bool
 	}{}
 	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
-	if !returnInfo.Successful || returnInfo.ErrorExist || returnInfo.EmailExist {
-		t.Errorf("Expected {Successful:true, ErrorExist:false, EmailExist:false}, but got %v", returnInfo)
+	if !returnInfo.Successful || returnInfo.ErrorExist || returnInfo.EmailExist || returnInfo.UsernameExist {
+		t.Errorf("Expected {Successful:true, ErrorExist:false, EmailExist:false, UsernameExist:false}, but got %v", returnInfo)
 	}
 
 	var inputtedUser handler.User
-	globalDB.Model(&handler.User{}).Raw("SELECT username, first_name, last_name, email, password FROM users WHERE id = ?", 1).Scan(&inputtedUser)
+	globalDB.Model(&handler.User{}).Raw("SELECT username, first_name, last_name, email, password, xp, description FROM users WHERE id = ?", 1).Scan(&inputtedUser)
 	if !reflect.DeepEqual(user, inputtedUser) { // reflect.DeepEqual() is needed to compare slices and structs
 		t.Errorf("Expected %v, but got %v", user, inputtedUser)
 	}
@@ -125,14 +127,14 @@ func TestCreateUser1(t *testing.T) {
 func TestCreateUser2(t *testing.T) {
 	initializeTestDatabase()
 
-	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp, description) values(\"dc\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw1\",\"0\",\"Hi!\")")
 
 	var user handler.User
-	user.Username = "dwan12345"
-	user.FirstName = "don"
-	user.LastName = "chen"
+	user.Username = "or"
+	user.FirstName = "Oscar"
+	user.LastName = "Rodas"
 	user.Email = "1@gmail.com"
-	user.Password = "pw"
+	user.Password = "pw2"
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(user)
 	if err != nil {
@@ -146,13 +148,50 @@ func TestCreateUser2(t *testing.T) {
 	handler.CreateUser(globalDB)(w, r)
 
 	returnInfo := struct {
-		Successful bool
-		ErrorExist bool
-		EmailExist bool
+		Successful    bool
+		ErrorExist    bool
+		EmailExist    bool
+		UsernameExist bool
 	}{}
 	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
-	if returnInfo.Successful || returnInfo.ErrorExist || !returnInfo.EmailExist {
-		t.Errorf("Expected {Successful:false, ErrorExist:false, EmailExist:true}, but got %v", returnInfo)
+	if returnInfo.Successful || returnInfo.ErrorExist || !returnInfo.EmailExist || returnInfo.UsernameExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:false, EmailExist:true, UsernameExist: false}, but got %v", returnInfo)
+	}
+}
+
+// creating a new user with the username existing
+func TestCreateUser3(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp, description) values(\"dc\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw1\",\"0\",\"Hi!\")")
+
+	var user handler.User
+	user.Username = "dc"
+	user.FirstName = "Oscar"
+	user.LastName = "Rodas"
+	user.Email = "2@gmail.com"
+	user.Password = "pw2"
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "", &buf)
+	if err != nil {
+		panic(err)
+	}
+	handler.CreateUser(globalDB)(w, r)
+
+	returnInfo := struct {
+		Successful    bool
+		ErrorExist    bool
+		EmailExist    bool
+		UsernameExist bool
+	}{}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if returnInfo.Successful || returnInfo.ErrorExist || returnInfo.EmailExist || !returnInfo.UsernameExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:false, EmailExist:false, UsernameExist: true}, but got %v", returnInfo)
 	}
 }
 
@@ -162,9 +201,14 @@ func TestUpdateUsername1(t *testing.T) {
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"old\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
 
-	updatedUsername := "new"
+	type NewUsername struct {
+		Username string
+	}
+	var update NewUsername
+	update.Username = "new"
+
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedUsername)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/1/username", &buf)
 	if err != nil {
@@ -192,8 +236,8 @@ func TestUpdateUsername1(t *testing.T) {
 
 	globalDB.Model(&user).First(&user, 1)
 
-	if user.Username != updatedUsername {
-		t.Errorf("Expected to update username to \"%s\", but it is \"%s\"", updatedUsername, user.Username)
+	if user.Username != update.Username {
+		t.Errorf("Expected to update username to \"%s\", but it is \"%s\"", update.Username, user.Username)
 	}
 
 }
@@ -205,9 +249,14 @@ func TestUpdateUsername2(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"preserved\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"old\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\")")
 
-	updatedUsername := "new"
+	type NewUsername struct {
+		Username string
+	}
+	var update NewUsername
+	update.Username = "new"
+
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedUsername)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/2/username", &buf)
 	if err != nil {
@@ -239,8 +288,8 @@ func TestUpdateUsername2(t *testing.T) {
 		t.Errorf("Expected to preserve username as \"%s\", but it is \"%s\"", "preserved", preservedUser.Username)
 	}
 
-	if updatedUser.Username != updatedUsername {
-		t.Errorf("Expected to update username to \"%s\", but it is \"%s\"", updatedUsername, updatedUser.Username)
+	if updatedUser.Username != update.Username {
+		t.Errorf("Expected to update username to \"%s\", but it is \"%s\"", update.Username, updatedUser.Username)
 	}
 
 }
@@ -252,9 +301,14 @@ func TestUpdateUsername3(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"preserved\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"preserved\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\")")
 
-	updatedUsername := "new"
+	type NewUsername struct {
+		Username string
+	}
+	var update NewUsername
+	update.Username = "new"
+
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedUsername)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/3/username", &buf)
 	if err != nil {
@@ -293,7 +347,7 @@ func TestUpdateUsername3(t *testing.T) {
 
 	err = globalDB.Model(&handler.User{}).First(&updatedUser, 3).Error
 	if err == nil { // There should not be a third user
-		t.Errorf("Expected error to exsist, user exsists: %v", updatedUser)
+		t.Errorf("Expected error to exist, user exists: %v", updatedUser)
 	}
 }
 
@@ -304,14 +358,20 @@ func TestUpdateUsername4(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC1\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC2\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\")")
 
-	updatedUsername1 := "DC1"
-	updatedUsername2 := "DC2"
+	type NewUsername struct {
+		Username string
+	}
+	var update1 NewUsername
+	var update2 NewUsername
+
+	update1.Username = "DC1"
+	update2.Username = "DC2"
 
 	var buf1 bytes.Buffer
 	var buf2 bytes.Buffer
 
-	err1 := json.NewEncoder(&buf1).Encode(updatedUsername1)
-	err2 := json.NewEncoder(&buf2).Encode(updatedUsername2)
+	err1 := json.NewEncoder(&buf1).Encode(update1)
+	err2 := json.NewEncoder(&buf2).Encode(update2)
 
 	req1, err1 := http.NewRequest("PUT", "/api/users/2/username", &buf1)
 	if err1 != nil {
@@ -375,9 +435,13 @@ func TestUpdateFirstname1(t *testing.T) {
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"old\",\"Chen\",\"1@gmail.com\",\"pw\")")
 
-	updatedFirstname := "new"
+	type NewFirstname struct {
+		Firstname string
+	}
+	var update NewFirstname
+	update.Firstname = "New"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedFirstname)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/1/firstname", &buf)
 	if err != nil {
@@ -403,8 +467,8 @@ func TestUpdateFirstname1(t *testing.T) {
 
 	globalDB.Model(&user).First(&user, 1)
 
-	if user.FirstName != updatedFirstname {
-		t.Errorf("Expected to update firstname to \"%s\", but it is \"%s\"", updatedFirstname, user.FirstName)
+	if user.FirstName != update.Firstname {
+		t.Errorf("Expected to update firstname to \"%s\", but it is \"%s\"", update.Firstname, user.FirstName)
 	}
 
 }
@@ -416,9 +480,13 @@ func TestUpdateFirstname2(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"preserved\",\"Chen\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"old\", \"Chen\",\"2@gmail.com\",\"pw\")")
 
-	updatedFirstname := "new"
+	type NewFirstname struct {
+		Firstname string
+	}
+	var update NewFirstname
+	update.Firstname = "New"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedFirstname)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/2/firstname", &buf)
 	if err != nil {
@@ -450,8 +518,8 @@ func TestUpdateFirstname2(t *testing.T) {
 		t.Errorf("Expected to preserve firstname as \"%s\", but it is \"%s\"", "preserved", preservedUser.FirstName)
 	}
 
-	if updatedUser.FirstName != updatedFirstname {
-		t.Errorf("Expected to update firstname to \"%s\", but it is \"%s\"", updatedFirstname, updatedUser.FirstName)
+	if updatedUser.FirstName != update.Firstname {
+		t.Errorf("Expected to update firstname to \"%s\", but it is \"%s\"", update.Firstname, updatedUser.FirstName)
 	}
 
 }
@@ -463,9 +531,13 @@ func TestUpdateFirstname3(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"preserved\",\"Chen\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"preserved\", \"Chen\",\"2@gmail.com\",\"pw\")")
 
-	updatedFirstname := "new"
+	type NewFirstname struct {
+		Firstname string
+	}
+	var update NewFirstname
+	update.Firstname = "New"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedFirstname)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/3/firstname", &buf)
 	if err != nil {
@@ -514,9 +586,13 @@ func TestUpdateLastname1(t *testing.T) {
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"old\",\"1@gmail.com\",\"pw\")")
 
-	updatedLastname := "new"
+	type NewLastname struct {
+		Lastname string
+	}
+	var update NewLastname
+	update.Lastname = "New"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedLastname)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/1/lastname", &buf)
 	if err != nil {
@@ -542,8 +618,8 @@ func TestUpdateLastname1(t *testing.T) {
 
 	globalDB.Model(&user).First(&user, 1)
 
-	if user.LastName != updatedLastname {
-		t.Errorf("Expected to update lastname to \"%s\", but it is \"%s\"", updatedLastname, user.LastName)
+	if user.LastName != update.Lastname {
+		t.Errorf("Expected to update lastname to \"%s\", but it is \"%s\"", update.Lastname, user.LastName)
 	}
 
 }
@@ -555,9 +631,13 @@ func TestUpdateLastname2(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"preserved\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\", \"old\",\"2@gmail.com\",\"pw\")")
 
-	updatedLastname := "new"
+	type NewLastname struct {
+		Lastname string
+	}
+	var update NewLastname
+	update.Lastname = "New"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedLastname)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/2/lastname", &buf)
 	if err != nil {
@@ -589,8 +669,8 @@ func TestUpdateLastname2(t *testing.T) {
 		t.Errorf("Expected to preserve lastname as \"%s\", but it is \"%s\"", "preserved", preservedUser.LastName)
 	}
 
-	if updatedUser.LastName != updatedLastname {
-		t.Errorf("Expected to update lastname to \"%s\", but it is \"%s\"", updatedLastname, updatedUser.LastName)
+	if updatedUser.LastName != update.Lastname {
+		t.Errorf("Expected to update lastname to \"%s\", but it is \"%s\"", update.Lastname, updatedUser.LastName)
 	}
 
 }
@@ -602,9 +682,13 @@ func TestUpdateLastname3(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"preserved\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\", \"preserved\",\"2@gmail.com\",\"pw\")")
 
-	updatedLastname := "new"
+	type NewLastname struct {
+		Lastname string
+	}
+	var update NewLastname
+	update.Lastname = "new"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedLastname)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/3/lastname", &buf)
 	if err != nil {
@@ -653,9 +737,13 @@ func TestUpdateEmail1(t *testing.T) {
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"Chen\",\"old@gmail.com\",\"pw\")")
 
-	updatedEmail := "new@gmail.com"
+	type NewEmail struct {
+		Email string
+	}
+	var update NewEmail
+	update.Email = "new@gmail.com"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedEmail)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/1/email", &buf)
 	if err != nil {
@@ -681,8 +769,8 @@ func TestUpdateEmail1(t *testing.T) {
 
 	globalDB.Model(&user).First(&user, 1)
 
-	if user.Email != updatedEmail {
-		t.Errorf("Expected to update email to \"%s\", but it is \"%s\"", updatedEmail, user.Email)
+	if user.Email != update.Email {
+		t.Errorf("Expected to update email to \"%s\", but it is \"%s\"", update.Email, user.Email)
 	}
 
 }
@@ -694,9 +782,13 @@ func TestUpdateEmail2(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"Chen\",\"preserved@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\", \"Chen\",\"old@gmail.com\",\"pw\")")
 
-	updatedEmail := "new@gmail.com"
+	type NewEmail struct {
+		Email string
+	}
+	var update NewEmail
+	update.Email = "new@gmail.com"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedEmail)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/2/email", &buf)
 	if err != nil {
@@ -728,8 +820,8 @@ func TestUpdateEmail2(t *testing.T) {
 		t.Errorf("Expected to preserve email as \"%s\", but it is \"%s\"", "preserved", preservedUser.Email)
 	}
 
-	if updatedUser.Email != updatedEmail {
-		t.Errorf("Expected to update eamil to \"%s\", but it is \"%s\"", updatedEmail, updatedUser.Email)
+	if updatedUser.Email != update.Email {
+		t.Errorf("Expected to update eamil to \"%s\", but it is \"%s\"", update.Email, updatedUser.Email)
 	}
 
 }
@@ -741,9 +833,13 @@ func TestUpdateEmail3(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"Chen\",\"preserved1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\", \"Chen\",\"preserved2@gmail.com\",\"pw\")")
 
-	updatedEmail := "new@gmail.com"
+	type NewEmail struct {
+		Email string
+	}
+	var update NewEmail
+	update.Email = "new@gmail.com"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedEmail)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/3/email", &buf)
 	if err != nil {
@@ -792,14 +888,20 @@ func TestUpdateEmail4(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC1\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC2\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\")")
 
-	updatedEmail1 := "1@gmail.com"
-	updatedEmail2 := "2@gmail.com"
+	type NewEmail struct {
+		Email string
+	}
+	var update1 NewEmail
+	var update2 NewEmail
+
+	update1.Email = "1@gmail.com"
+	update2.Email = "2@gmail.com"
 
 	var buf1 bytes.Buffer
 	var buf2 bytes.Buffer
 
-	err1 := json.NewEncoder(&buf1).Encode(updatedEmail1)
-	err2 := json.NewEncoder(&buf2).Encode(updatedEmail2)
+	err1 := json.NewEncoder(&buf1).Encode(update1)
+	err2 := json.NewEncoder(&buf2).Encode(update2)
 
 	req1, err1 := http.NewRequest("PUT", "/api/users/2/email", &buf1)
 	if err1 != nil {
@@ -863,9 +965,13 @@ func TestUpdatePassword1(t *testing.T) {
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"old\")")
 
-	updatedPassword := "new"
+	type NewPassword struct {
+		Password string
+	}
+	var update NewPassword
+	update.Password = "new"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedPassword)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/1/password", &buf)
 	if err != nil {
@@ -891,8 +997,8 @@ func TestUpdatePassword1(t *testing.T) {
 
 	globalDB.Model(&user).First(&user, 1)
 
-	if user.Password != updatedPassword {
-		t.Errorf("Expected to update password to \"%s\", but it is \"%s\"", updatedPassword, user.Password)
+	if user.Password != update.Password {
+		t.Errorf("Expected to update password to \"%s\", but it is \"%s\"", update.Password, user.Password)
 	}
 
 }
@@ -904,9 +1010,13 @@ func TestUpdatePassword2(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"preserved\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\", \"Chen\",\"2@gmail.com\",\"old\")")
 
-	updatedPassword := "new"
+	type NewPassword struct {
+		Password string
+	}
+	var update NewPassword
+	update.Password = "new"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedPassword)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/2/password", &buf)
 	if err != nil {
@@ -938,8 +1048,8 @@ func TestUpdatePassword2(t *testing.T) {
 		t.Errorf("Expected to preserve password as \"%s\", but it is \"%s\"", "preserved", preservedUser.Password)
 	}
 
-	if updatedUser.Password != updatedPassword {
-		t.Errorf("Expected to update password to \"%s\", but it is \"%s\"", updatedPassword, updatedUser.Password)
+	if updatedUser.Password != update.Password {
+		t.Errorf("Expected to update password to \"%s\", but it is \"%s\"", update.Password, updatedUser.Password)
 	}
 
 }
@@ -951,9 +1061,13 @@ func TestUpdatePassword3(t *testing.T) {
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"preserved\")")
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password) values(\"DC\",\"Don\", \"Chen\",\"2@gmail.com\",\"preserved\")")
 
-	updatedPassword := "new"
+	type NewPassword struct {
+		Password string
+	}
+	var update NewPassword
+	update.Password = "new"
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(updatedPassword)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/3/password", &buf)
 	if err != nil {
@@ -1001,9 +1115,13 @@ func TestAddXP(t *testing.T) {
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"old\", \"50\")")
 
-	additionalXP := 50
+	type AdditionalXP struct {
+		NewXP int
+	}
+	var update AdditionalXP
+	update.NewXP = 50
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(additionalXP)
+	err := json.NewEncoder(&buf).Encode(update)
 
 	req, err := http.NewRequest("PUT", "/api/users/1/xp", &buf)
 	if err != nil {
@@ -1031,6 +1149,157 @@ func TestAddXP(t *testing.T) {
 
 	if user.XP != 100 {
 		t.Errorf("Expected to update xp to \"%d\", but it is \"%d\"", 100, user.XP)
+	}
+}
+
+// Updating a table with a single user, correct id given
+func TestUpdateDescription1(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp,description) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\",\"0\",\"old\")")
+
+	type NewDescription struct {
+		Description string
+	}
+	var update NewDescription
+	update.Description = "new"
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(update)
+
+	req, err := http.NewRequest("PUT", "/api/users/1/description", &buf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/users/{id}/description", handler.UpdateDescription(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, req)
+
+	returnInfo := struct {
+		ErrorExist bool
+		Successful bool
+	}{}
+
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !returnInfo.Successful || returnInfo.ErrorExist {
+		t.Errorf("Expected {Successful:True, ErrorExist:false} , but got %v", returnInfo)
+	}
+
+	var user handler.User
+
+	globalDB.Model(&user).First(&user, 1)
+
+	if user.Description != update.Description {
+		t.Errorf("Expected to update password to \"%s\", but it is \"%s\"", update.Description, user.Description)
+	}
+
+}
+
+// Updating a table with two users, updating the second user, correct id given
+func TestUpdateDescription2(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp,description) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\",\"0\",\"preserved\")")
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp,description) values(\"DC\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\",\"0\",\"old\")")
+
+	type NewDescription struct {
+		Description string
+	}
+	var update NewDescription
+	update.Description = "new"
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(update)
+
+	req, err := http.NewRequest("PUT", "/api/users/2/description", &buf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/users/{id}/description", handler.UpdateDescription(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, req)
+
+	returnInfo := struct {
+		ErrorExist bool
+		Successful bool
+	}{}
+
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if !returnInfo.Successful || returnInfo.ErrorExist {
+		t.Errorf("Expected {Successful:True, ErrorExist:false} , but got %v", returnInfo)
+	}
+
+	var preservedUser handler.User
+	var updatedUser handler.User
+
+	globalDB.Model(&preservedUser).First(&preservedUser, 1)
+	globalDB.Model(&updatedUser).First(&updatedUser, 2)
+
+	if preservedUser.Description != "preserved" {
+		t.Errorf("Expected to preserve password as \"%s\", but it is \"%s\"", "preserved", preservedUser.Password)
+	}
+
+	if updatedUser.Description != update.Description {
+		t.Errorf("Expected to update password to \"%s\", but it is \"%s\"", update.Description, updatedUser.Password)
+	}
+
+}
+
+// Updating a table with two users, updating the third nonexsistent user
+func TestUpdateDescription3(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp,description) values(\"DC\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw\",\"0\",\"preserved\")")
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp,description) values(\"DC\",\"Don\", \"Chen\",\"2@gmail.com\",\"pw\",\"0\",\"preserved\")")
+
+	type NewDescription struct {
+		Description string
+	}
+	var update NewDescription
+	update.Description = "new"
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(update)
+
+	req, err := http.NewRequest("PUT", "/api/users/3/description", &buf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := httptest.NewRecorder()
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/users/{id}/description", handler.UpdateDescription(globalDB)).Methods("PUT")
+	router.ServeHTTP(w, req)
+
+	returnInfo := struct {
+		ErrorExist bool
+		Successful bool
+	}{}
+
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if returnInfo.Successful || !returnInfo.ErrorExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:True} , but got %v", returnInfo)
+	}
+
+	var preservedUser1 handler.User
+	var preservedUser2 handler.User
+	var updatedUser handler.User
+
+	globalDB.Model(&preservedUser1).First(&preservedUser1, 1)
+	globalDB.Model(&preservedUser2).First(&preservedUser2, 2)
+
+	if preservedUser1.Description != "preserved" {
+		t.Errorf("Expected to preserve description as \"%s\", but it is \"%s\"", "preserved", preservedUser1.Password)
+	}
+
+	if preservedUser2.Description != "preserved" {
+		t.Errorf("Expected to preserve description as \"%s\", but it is \"%s\"", "preserved", preservedUser2.Password)
+	}
+
+	err = globalDB.Model(&handler.User{}).First(&updatedUser, 3).Error
+	if err == nil { // There should not be a third user
+		t.Errorf("Expected error, but user exsists: %v", updatedUser)
 	}
 }
 

@@ -13,12 +13,13 @@ import (
 type User struct {
 	gorm.Model
 
-	Username  string // test this
-	FirstName string
-	LastName  string
-	Email     string
-	Password  string
-	XP        int
+	Username    string // test this
+	FirstName   string
+	LastName    string
+	Email       string
+	Password    string
+	XP          int
+	Description string
 }
 
 // checks if the username is good. add more rules later
@@ -61,15 +62,15 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 			UsernameExist bool
 		}{}
 
-		err := globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", ThisUser.Email).Find(&returnInfo.EmailExist).Error
-		if err != nil {
-			returnInfo.ErrorExist = true
-		}
-		exists, _ := IsValidUsername(globalDB, ThisUser.Username)
-		returnInfo.UsernameExist = exists
+		// New User has 0 XP and a blank description
+		ThisUser.XP = 0
+		ThisUser.Description = ""
 
-		if !returnInfo.EmailExist && !returnInfo.ErrorExist && !returnInfo.UsernameExist {
-			err = globalDB.Create(&ThisUser).Error
+		returnInfo.EmailExist, _ = IsValidEmail(globalDB, ThisUser.Email)
+		returnInfo.UsernameExist, _ = IsValidUsername(globalDB, ThisUser.Username)
+
+		if !returnInfo.EmailExist && !returnInfo.UsernameExist {
+			err := globalDB.Create(&ThisUser).Error
 			if err != nil {
 				returnInfo.ErrorExist = true
 				json.NewEncoder(w).Encode(returnInfo)
@@ -78,6 +79,8 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 				return
 			}
 			returnInfo.Successful = true
+		} else {
+			returnInfo.Successful = false
 		}
 		json.NewEncoder(w).Encode(returnInfo)
 	}
@@ -115,10 +118,13 @@ func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		var newUsername string
-		util.DecodeJSONRequest(&newUsername, r.Body, w)
+		type NewUsername struct {
+			Username string
+		}
+		var update NewUsername
+		util.DecodeJSONRequest(&update, r.Body, w)
 
-		returnInfo.UsernameExist, returnInfo.UsernameValid = IsValidUsername(globalDB, newUsername)
+		returnInfo.UsernameExist, returnInfo.UsernameValid = IsValidUsername(globalDB, update.Username)
 
 		if returnInfo.UsernameExist {
 			returnInfo.ErrorExist = true
@@ -144,7 +150,7 @@ func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("username", newUsername)
+		globalDB.Model(&user).Update("username", update.Username)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -157,8 +163,11 @@ func UpdateFirstname(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		var newFirstname string
-		util.DecodeJSONRequest(&newFirstname, r.Body, w)
+		type NewFirstname struct {
+			Firstname string
+		}
+		var update NewFirstname
+		util.DecodeJSONRequest(&update, r.Body, w)
 
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
@@ -174,7 +183,7 @@ func UpdateFirstname(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("first_name", newFirstname)
+		globalDB.Model(&user).Update("first_name", update.Firstname)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -187,8 +196,11 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		var newLastname string
-		util.DecodeJSONRequest(&newLastname, r.Body, w)
+		type NewLastname struct {
+			Lastname string
+		}
+		var update NewLastname
+		util.DecodeJSONRequest(&update, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -203,7 +215,7 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("last_name", newLastname)
+		globalDB.Model(&user).Update("last_name", update.Lastname)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -223,10 +235,13 @@ func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		var newEmail string
-		util.DecodeJSONRequest(&newEmail, r.Body, w)
+		type NewEmail struct {
+			Email string
+		}
+		var update NewEmail
+		util.DecodeJSONRequest(&update, r.Body, w)
 
-		returnInfo.EmailExist, returnInfo.EmailValid = IsValidEmail(globalDB, newEmail)
+		returnInfo.EmailExist, returnInfo.EmailValid = IsValidEmail(globalDB, update.Email)
 
 		if returnInfo.EmailExist {
 			returnInfo.ErrorExist = true
@@ -252,7 +267,7 @@ func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("email", newEmail)
+		globalDB.Model(&user).Update("email", update.Email)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -265,8 +280,11 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		var newPassword string
-		util.DecodeJSONRequest(&newPassword, r.Body, w)
+		type NewPassword struct {
+			Password string
+		}
+		var update NewPassword
+		util.DecodeJSONRequest(&update, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -281,7 +299,7 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("password", newPassword)
+		globalDB.Model(&user).Update("password", update.Password)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -294,8 +312,11 @@ func AddXP(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		var newXP int
-		util.DecodeJSONRequest(&newXP, r.Body, w)
+		type AdditionalXP struct {
+			NewXP int
+		}
+		var update AdditionalXP
+		util.DecodeJSONRequest(&update, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -310,9 +331,41 @@ func AddXP(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		newXP += user.XP
+		update.NewXP += user.XP
 
-		globalDB.Model(&user).Update("xp", newXP)
+		globalDB.Model(&user).Update("xp", update.NewXP)
+
+		returnInfo.Successful = true
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func UpdateDescription(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		type NewDescription struct {
+			Description string
+		}
+		var update NewDescription
+		util.DecodeJSONRequest(&update, r.Body, w)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
+
+		var user User
+		err := globalDB.Model(&User{}).First(&user, ID).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		globalDB.Model(&user).Update("description", update.Description)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
