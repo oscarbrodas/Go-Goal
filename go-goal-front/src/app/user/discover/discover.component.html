@@ -26,7 +26,7 @@
 
                     <div class="f-sect-b">
                         <button (click)="viewProfile()">View Profile</button>
-                        <button>{{message}}</button>
+                        <button (click)="addOrRemove()">{{message}}</button>
                     </div>
                 </div>
 
@@ -46,10 +46,7 @@
     <div class="friends-sect">
 
         <div @banner class="f-banner">
-            <p *ngIf="friends; else elseBlock2 ">Friends</p>
-            <ng-template #elseBlock2>
-                <p>Users</p>
-            </ng-template>
+            <p>Users</p>
         </div>
 
         <div @friends class="f-boxes">

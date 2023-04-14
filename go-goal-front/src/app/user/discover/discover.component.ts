@@ -80,8 +80,8 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query, 
 })
 export class DiscoverComponent implements OnInit, OnChanges {
 
-  friends: boolean = true;
-  users: boolean = false;
+  friendRequested: boolean = false;
+  removeRequested: boolean = false;
 
   user?: userInfo;
   userFriendsIDs: number[] = [3];
@@ -183,7 +183,20 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
   }
 
-  addFriend(): void {
+  addOrRemove(): void {
+    if (this.message == "Add Friend") {
+      console.log('Adding friend...');
+      this.friendRequested = true;
+      this.removeRequested = false;
+
+      // Backend call to add friend
+
+    } else {
+      console.log('Removing friend...');
+      this.friendRequested = false;
+      this.removeRequested = true;
+
+    }
 
   }
 
