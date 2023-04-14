@@ -191,7 +191,7 @@
     padding: 5px;
 }
 
-.f-sect-b>button {
+.f-sect-b>.b-nck {
     width: 100px;
     height: 50px;
     min-height: fit-content;
@@ -209,11 +209,29 @@
 
 }
 
-.f-sect-b>button:hover {
+.f-sect-b>.b-nck:hover {
     background: rgba(102, 255, 26, 1);
     color: black;
     border: 2px solid black;
     outline: 1px solid white;
+}
+
+.b-ck {
+    width: 100px;
+    height: 50px;
+    min-height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: 500;
+    border-radius: 20px;
+    border: 2px solid black;
+    outline: 0px;
+    background: rgb(38, 38, 38);
+    border: 2px solid rgb(38, 38, 38);
+    color: black;
+    transition: all 0.5s;
 }
 
 .prof-sect {

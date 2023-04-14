@@ -52,7 +52,7 @@ export class LoginService {
 
 
   getUser(): userInfo { return this.user }
-  loggedInStatus(): boolean { return this.user.loggedIn }
+  loggedInStatus(): boolean { return this.loggedIn }
 
   // Clears User
   clearUser(): void {

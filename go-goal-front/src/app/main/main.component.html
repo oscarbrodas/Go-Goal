@@ -41,7 +41,10 @@
             </svg>
         </div>
 
-        <button @joinButton class="join-b" (click)="join()">Join</button>
+        <button @joinButton class="join-b" *ngIf="!logginIn; else prof" (click)="join()">Join</button>
+        <ng-template #prof>
+            <button @joinButton class="join-b" (click)="join()">Home</button>
+        </ng-template>
 
     </div>
 

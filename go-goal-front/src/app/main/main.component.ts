@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, HostListener, Input, OnChanges, OnD
 import { fromEvent, Subscription } from 'rxjs';
 import { trigger, state, style, transition, animate, keyframes, group, query } from '@angular/animations';
 import { Router } from '@angular/router';
+import { UserService } from '../user/user.service';
+import { LoginService } from '../login-page/login.service';
 
 
 @Component({
@@ -60,6 +62,8 @@ export class MainComponent implements OnInit {
 
   section2active = false;
   section3active = false;
+  logginIn = false;
+  userID: number = -1;
 
   @HostListener('window:resize', ['$event']) onResize(event?: any) {
     this.screenHeight = window.innerHeight;
@@ -77,23 +81,30 @@ export class MainComponent implements OnInit {
 
   }
 
-  constructor(private renderer: Renderer2, private router: Router) {
+  constructor(private renderer: Renderer2, private router: Router, private userService: UserService) {
     this.onResize();
   }
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.orginalScreenHeight = window.innerHeight;
     window.scrollTo(0, 0);
-  }
+    if (this.userService != null) {
+      this.logginIn = true;
+      this.userID = this.userService.getUserData().ID;
+    }
 
+  }
 
 
 
 
 
   join() {
-    this.router.navigate(['/sign-up']);
+    if (this.logginIn) {
+      this.router.navigate([`/user/${this.userID}/profile`]);
+    } else
+      this.router.navigate(['/sign-up']);
   }
 
 

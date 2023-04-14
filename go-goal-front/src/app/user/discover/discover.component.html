@@ -21,12 +21,26 @@
             </p>
             <ng-template #elseBlock>
                 <div class="f-sect">
+
                     <p>{{friendForm.value.friendUsername}}</p>
                     <p>{{friendForm.value.friend}}</p>
 
                     <div class="f-sect-b">
-                        <button (click)="viewProfile()">View Profile</button>
-                        <button (click)="addOrRemove()">{{message}}</button>
+
+                        <button class="b-nck" (click)="viewProfile()">View Profile</button>
+
+
+                        <button class="b-nck" *ngIf="!friendRequested && !removeRequested; else staticButton"
+                            (click)="addOrRemove()">
+                            {{message}}
+                        </button>
+
+                        <ng-template #staticButton>
+                            <button class="b-ck" disabled>
+                                {{message}}
+                            </button>
+                        </ng-template>
+
                     </div>
                 </div>
 
@@ -46,7 +60,7 @@
     <div class="friends-sect">
 
         <div @banner class="f-banner">
-            <p>Users</p>
+            <p>Friends</p>
         </div>
 
         <div @friends class="f-boxes">
