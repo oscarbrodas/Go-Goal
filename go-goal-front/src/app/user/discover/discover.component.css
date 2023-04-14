@@ -284,6 +284,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 
 
     background: rgba(0, 0, 0, 1);
@@ -302,6 +303,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+
     color: aliceblue;
     padding-top: 10px;
 }

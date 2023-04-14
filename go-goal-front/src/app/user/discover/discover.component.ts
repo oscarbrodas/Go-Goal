@@ -25,10 +25,10 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query, 
 
     trigger('banner', [
       transition(':enter', [
-        style({ width: '0%', content: '', border: 'none' }),
+        style({ width: '0%', content: '', border: 'none', top: '-100%' }),
         group([
-          style({ width: '0%', content: '', border: 'none' }),
-          animate('0.6s 0.55s ease', keyframes([
+          style({ width: '0%', content: '', border: 'none', top: '-50%' }),
+          animate('0.4s 0.5s ease', keyframes([
             style({ width: '0%', border: '*' }),
             style({ width: '100%', }),
           ])),
@@ -49,7 +49,7 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query, 
       transition(':enter', [
         style({ height: '0', content: '', background: 'none', border: 'none' }),
         group([
-          animate('0.6s 1.1s ease', keyframes([
+          animate('0.5s 0.9s ease', keyframes([
             style({ height: '0', background: '*' }),
             style({ height: '*', border: '*' }),
 
