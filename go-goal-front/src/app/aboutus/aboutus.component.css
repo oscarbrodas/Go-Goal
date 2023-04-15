@@ -355,7 +355,7 @@
 }
 
 .blockquote {
-    border-left: 3px solid gold;
+    border-left: 3px solid rgb(132, 0, 255);
     color: aliceblue;
     font-family: Georgia, Times, "Times New Roman", serif;
     font-size: 1.25em;
@@ -371,7 +371,7 @@
 }
 
 .blockquote2 {
-    border-right: 3px solid gold;
+    border-right: 3px solid red;
     color: aliceblue;
     font-family: Georgia, Times, "Times New Roman", serif;
     font-size: 1.25em;

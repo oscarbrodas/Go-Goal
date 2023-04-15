@@ -17,7 +17,9 @@ export class LinkbarComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.loggedIn = this.userService.isLoggedIn();
-    this.userID = this.userService.getUserData().ID;
+    if (this.loggedIn) {
+      this.userID = this.userService.getUserData().ID;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
