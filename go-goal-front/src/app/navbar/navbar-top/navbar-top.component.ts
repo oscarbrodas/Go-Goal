@@ -93,7 +93,9 @@ export class NavbarTopComponent {
     this.subMenu = !this.subMenu;
   }
   profilePage(): void {
-    this.router.navigate([`user/${this.userService.getUserData().ID}/profile`]);
+    this.router.navigate([`user/${this.userService.getUserData().ID}/profile`]).then(() => {
+      window.location.reload();
+    });
   }
   goalsPage(): void {
     this.router.navigate([`user/${this.userService.getUserData().ID}/goals`]);

@@ -1,5 +1,9 @@
+.page {
+    display: flex;
+}
+
 .profile-body-l {
-    height: clamp(90vh, 90vh, 100vh);
+    height: clamp(95vh, 95vh, 100vh);
     width: 30%;
     min-width: 300px;
 
@@ -14,7 +18,7 @@
 .profile-body-r {
     height: clamp(90vh, 90vh, 100vh);
     width: 70%;
-    min-width: 500px;
+    min-width: 300px;
 
     display: flex;
     flex-direction: column;
@@ -35,7 +39,7 @@
     gap: 5px;
     position: relative;
 
-    height: 90%;
+    height: 100%;
     max-height: fit-content;
     width: clamp(300px, 500px, 600px);
 
@@ -273,18 +277,20 @@
     align-items: center;
     position: relative;
     font-weight: 500;
+    font-size: 18px;
     border-radius: 20px;
     border: 2px solid rgba(102, 255, 26, 1);
     background: rgb(38, 38, 38);
-    color: black;
+    color: white;
     transition: all 0.5s ease;
+    text-align: center;
 }
 
 
 /* Goal Info Section*/
 
 .goal-outline {
-    height: clamp(60%, 60%, fit-content);
+    height: clamp(70%, 70%, fit-content);
     width: 80%;
     border-radius: 0 0 20px 20px;
 
@@ -298,6 +304,25 @@
     position: relative;
     overflow: auto;
 
+}
+
+.goal-outline::-webkit-scrollbar {
+    width: 15px;
+    position: absolute;
+    top: 20px;
+}
+
+.goal-outline::-webkit-scrollbar-button,
+.goal-outline::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.goal-outline::-webkit-scrollbar-thumb {
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 20px;
+
+    max-height: 20px;
 }
 
 .goal-card {
@@ -347,49 +372,6 @@
     cursor: pointer;
 }
 
-
-
-/* Friend Info Section*/
-
-.friend-outline {
-    display: block;
-    justify-content: center;
-    height: 50%;
-    overflow-y: auto;
-    width: 25%;
-
-    border-radius: 20px;
-
-    outline: rgba(102, 255, 26, 1) 2px solid;
-    background: rgba(0, 0, 0, .6);
-    color: white;
-
-    overflow: hidden;
-}
-
-.discover-outline {
-    display: block;
-    justify-content: center;
-    height: 35%;
-    width: 100%;
-    position: relative;
-
-
-    border: solid red 4px;
-    background: rgba(186, 192, 34, 0.8);
-    overflow: hidden;
-}
-
-.more {
-    padding: 10px;
-    justify-content: center;
-    font-size: large;
-    font-weight: bolder;
-    width: 100%;
-}
-
-
-
 .goal {
     width: 90%;
     height: 100px;
@@ -409,22 +391,160 @@
 
 }
 
-
-
-
-
-
-
-
-
-.friends {
-    height: 50%;
+.more {
+    padding: 10px;
+    justify-content: center;
+    font-size: large;
+    font-weight: bolder;
+    width: 100%;
 }
+
+
+
+/* Friend Info Section*/
+
+.friend-outline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 40%;
+    overflow-y: auto;
+    width: clamp(300px, 80%, 80%);
+
+    border-radius: 20px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: rgba(0, 0, 0, .6);
+    color: white;
+
+    overflow: hidden;
+}
+
+.friend-outline>h1 {
+    background: black;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+
+}
+
+.requests {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 0px 10px 10px 10px;
+
+}
+
+.cards {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow-y: auto;
+    gap: 1%;
+}
+
+.card1 {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    gap: 5px;
+
+    background: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+
+}
+
+.card2 {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px 10px 15px;
+    gap: 5px;
+
+    background: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+}
+
+.card1>p,
+.card2>p {
+
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    font-weight: 400;
+    color: white;
+
+}
+
+.bts {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.bts>button {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    color: white;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+    transition: all 0.5s;
+
+}
+
+button>mat-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: white;
+}
+
 
 
 @media screen and (width < 770px) {
 
+    .page {
+        flex-direction: column;
+    }
+
+    .profile-body-r {
+        width: 100%;
+        height: fit-content;
+        margin-top: 10%;
+        margin-left: 1%;
+        margin-bottom: 10%;
+    }
+
+    .profile-body-l {
+        margin-left: 14%;
+    }
+
     .goal-outline {
         display: none;
+    }
+
+    .friend-outline {
+        min-height: 200px;
     }
 }

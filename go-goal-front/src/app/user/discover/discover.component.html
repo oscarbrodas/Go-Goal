@@ -65,7 +65,8 @@
 
         <div @friends class="f-boxes">
 
-            <button class="f-prof" *ngFor="let friend of userFriends | keyvalue" (click)="setFriendProfile(friend)">
+            <button @button class="f-prof" *ngFor="let friend of userFriends | keyvalue"
+                (click)="setFriendProfile(friend)">
                 <p>{{friend.value}}</p>
             </button>
 

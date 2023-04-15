@@ -48,32 +48,25 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query, 
     trigger('friends', [
       transition(':enter', [
         style({ height: '0', content: '', background: 'none', border: 'none' }),
-        group([
-          animate('0.5s 0.9s ease', keyframes([
-            style({ height: '0', background: '*' }),
-            style({ height: '*', border: '*' }),
+        animate('0.5s 0.9s ease', keyframes([
+          style({ height: '0', background: '*' }),
+          style({ height: '*', border: '*' }),
 
-          ])),
-
-          query('button', [
-            style({ opacity: 0 }),
-            animate('0.6s 1.3s ease', keyframes([
-              style({ opacity: 0 }),
-              style({ opacity: 1 }),
-
-
-            ])),
-
-          ], { optional: true }),
-
-
-        ])
-
+        ])),
       ]),
 
 
-
     ]),
+
+    trigger('button', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('0.5s 1.2s ease', style({ opacity: 1 }))
+
+
+      ]),
+
+    ])
 
 
   ]
@@ -119,28 +112,16 @@ export class DiscoverComponent implements OnInit, OnChanges {
         this.userFriendsIDs = [];
         console.log('No friends found.');
       } else {
-        this.userFriendsIDs = data.IDs;
         console.log('Friends IDs Loaded.');
+        this.userFriendsIDs = data.IDs;
+
+        // For each friend's ID, grab their username
+        this.getFriendsUsernames();
+
       }
 
     });
 
-    // For each friend's ID, grab their username
-    const fr = async (): Promise<boolean> => {
-      return this.getFriendsUsernames();
-    };
-
-    fr().then((res) => {
-
-      if (res) {
-        console.log('Friends Loaded.');
-
-
-      } else {
-        console.log('Error: Could not get friends usernames.');
-      }
-
-    });
 
     // Get outgoing and incoming friend requests
     this.getRequests();
@@ -245,7 +226,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
       this.userFriends.delete(this.IDSearch);
       this.http.delete<any>(`http://localhost:9000/api/friends/removeFriend/${this.user?.ID}/${this.IDSearch}`, {}).subscribe((data) => {
 
-        if (data.ErrorExist || data.Successful === false) {
+        if (data.ErrorExist) {
           console.log('Error: Could not remove friend.');
         } else {
           console.log('Friend removed.');
@@ -260,14 +241,19 @@ export class DiscoverComponent implements OnInit, OnChanges {
   // Get friend usernames from IDs
   getFriendsUsernames(): boolean {
 
-    let res = true;
+    let res: boolean = true;
     this.userFriendsIDs.map((friend) => {
 
       this.http.get<any>(`http://localhost:9000/api/users?id=${friend}`).subscribe((data) => {
-        if (data.ErrorExist) res = false;
-        console.log(data);
+        if (data.ErrorExist) {
+          res = false;
+          console.log('Error: Could not get friend data.');
 
-        this.userFriends.set(friend, data.ThisUser.Username);
+        }
+        else {
+          this.userFriends.set(friend, data.ThisUser.Username);
+        }
+
 
       });
 

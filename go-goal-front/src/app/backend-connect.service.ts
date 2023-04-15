@@ -73,6 +73,10 @@ export class BackendConnectService {
     return this.http.get<JSON>(`${this.backendURL}friends/getOutgoingFriendRequests/${ID}`, this.httpOptions);
   }
 
+  public getIngoingRequests(ID: Number): Observable<any> {
+    return this.http.get<JSON>(`${this.backendURL}friends/getIngoingFriendRequests/${ID}`, this.httpOptions);
+  }
+
   public sendFriendRequest(ID: Number, friendID: Number): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}friends/sendFriendRequest/${ID}/${friendID}`, this.httpOptions);
   }

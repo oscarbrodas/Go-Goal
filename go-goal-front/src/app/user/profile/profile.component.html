@@ -61,7 +61,7 @@
                 <button *ngIf="!this.theUser && !this.added && !this.requested" (click)="FriendRequest()"
                     [disabled]="this.added" id="friendButton">Add Friend</button>
 
-                <p *ngIf="this.requested" class="pending">Request Pending</p>
+                <p *ngIf=" this.requested" class="pending">Request Pending</p>
                 <p *ngIf="this.added" class="accepted">Friend</p>
 
                 <button *ngIf="this.theUser" routerLink="../settings" id="setButton">Go to Account
@@ -96,15 +96,49 @@
                     id="moreButton">More</i></div>
         </div>
 
-        <div class="friend-outline">
+        <div @friends class="friend-outline">
 
             <h1 *ngIf="!this.theUser">Mutual Friends</h1>
+            <h1 *ngIf="this.theUser">Pending Friend Requests</h1>
 
-            <h1 *ngIf="this.theUser">Friends</h1>
+            <div class="requests">
 
-            <div class="friends"></div>
+                <div class="cards" *ngIf="this.theUser; else not;">
 
-            <h1 *ngIf="this.theUser">Pending Requests</h1>
+                    <div class="card1" *ngFor="let p of pendingFriends | keyvalue">
+
+                        <p>{{p.value}}</p>
+
+                        <div class="bts">
+
+                            <button class="accept" (click)="acceptRequest(p.key)">
+                                <mat-icon style="color: rgba(102, 255, 26, 1)">check</mat-icon>
+                            </button>
+
+                            <button class="decline" (click)="declineRequest(p.key)">
+                                <mat-icon style="color: red">close</mat-icon>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <ng-template #not>
+
+                    <div class="cards">
+
+                        <div class="card2" *ngFor="let m of mutualFriends | keyvalue">
+
+                            <p>{{m.value}}</p>
+
+                        </div>
+
+                    </div>
+
+                </ng-template>
+
+            </div>
 
         </div>
 

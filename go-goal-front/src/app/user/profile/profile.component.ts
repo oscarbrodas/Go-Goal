@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { goal } from '../goals/goals.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
@@ -36,14 +37,16 @@ import { goal } from '../goals/goals.component';
     ]),
 
     trigger('friends', [
+
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateX(200px)' }),
-        animate(500)
+        style({ right: '-100%' }),
+        animate('0.8s 0.35s ease', keyframes([
+          style({ right: '-100%', offset: 0 }),
+          style({ right: '0%', offset: 1 })
+        ]))
       ]),
-      transition(':leave', [
-        style({ opacity: 1, transform: 'translateX(800px)' }),
-        animate(500)
-      ])
+
+
     ]),
   ]
 })
@@ -55,7 +58,12 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
   id: Number = 0;
   userGoals: goal[] = [];
   topUserGoals: goal[] = [];
-  pendingFriends: number[] = [];
+  pendingIDs: number[] = [];
+  outgoingIDs: number[] = [];
+  viewProfileIDs: number[] = [];
+  viewProfileUsernames: string[] = [];
+  mutualFriends: Map<number, string> = new Map();
+  pendingFriends: Map<number, string> = new Map();
   friends: number[] = [];
   theCount: number = 0;
   requested: boolean = false;
@@ -66,7 +74,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
     Description: new FormControl(''),
   });
 
-  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) { }
+  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute, private http: HttpClient) { }
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -127,7 +135,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       this.theCount = this.topUserGoals.length;
     })
 
-    // Get pending friend requests
+    // Get outgoing friend requests for logged in user
     this.backend.getOutgoingRequests(this.userService.getUserData().ID).subscribe((data) => {
       if (data.ErrorExist || data == null) {
         console.log("Error getting outgoing requests (getOutgoingRequests)");
@@ -135,43 +143,87 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       else if (data.IDs != null && data.IDs.length > 0) {
         console.log("Outgoing requests found.");
         data.IDs.forEach((item: any) => {
-          this.pendingFriends.push(item);
+          this.outgoingIDs.push(item);
         });
-
-        // Check if friend request has been sent already if not the user
-        if (!this.theUser && this.pendingFriends.includes(this.user.ID)) {
-          this.requested = true;
-        }
-
       }
       else {
         console.log("No outgoing requests.");
       }
 
+      // Check if friend request has been sent already if not the user
+      if (!this.theUser && this.outgoingIDs.includes(this.user.ID)) {
+        this.requested = true;
+      }
+
     });
 
-    // Get friends
+    // Get incoming friend requests for logged in user
+    this.backend.getIngoingRequests(this.userService.getUserData().ID).subscribe((data) => {
+      if (data.ErrorExist || data == null) {
+        console.log("Error getting ingoing requests (getIngoingRequests)");
+      }
+      else if (data.IDs != null && data.IDs.length > 0) {
+        console.log("Incoming requests found.");
+        data.IDs.forEach((item: any) => {
+          this.pendingIDs.push(item);
+        });
+        this.getFriendsUsernames();
+
+      }
+      else {
+        console.log("No incoming requests.");
+      }
+
+    });
+
+    // Get friends of logged in user
     this.backend.getFriends(this.userService.getUserData().ID).subscribe((data) => {
       if (data.ErrorExist || data == null) {
         console.log("Error getting friends (getFriends)");
       }
       else if (data.IDs != null && data.IDs.length > 0) {
+        console.log("Friends found.");
         data.IDs.forEach((item: any) => {
           this.friends.push(item);
         });
 
         // Check if user profile is a friend
         if (!this.theUser && this.friends.includes(this.user.ID)) {
+          this.requested = false;
           this.added = true;
         }
 
       }
       else {
-        console.log("No friends.");
+        console.log("Friends found. (Zero friends)");
       }
 
 
     });
+
+    // Get friends of user profile and check mutual friends
+    this.backend.getFriends(this.id).subscribe((data) => {
+      if (data.ErrorExist || data == null) {
+        console.log("Error getting friends (getFriends)");
+      }
+      else if (data.IDs != null && data.IDs.length > 0) {
+        console.log("Friends found.");
+        data.IDs.forEach((item: any) => {
+          this.viewProfileIDs.push(item);
+        });
+        this.getMutualFriends();
+
+      }
+      else {
+        console.log("Friends found. (Zero friends of user profile)");
+      }
+
+
+    });
+
+
+
+
 
 
 
@@ -208,6 +260,44 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+  acceptRequest(id: number): void {
+
+    this.http.put<any>(`http://localhost:9000/api/friends/acceptFriendRequest/${id}/${this.userService.getUserData().ID}`, {}).subscribe((data) => {
+
+      if (data.ErrorExist) console.log("Error accepting friend request (acceptRequest)");
+      else {
+        this.pendingIDs = this.pendingIDs.filter((item) => item !== id);
+        this.pendingFriends.delete(id);
+        this.friends.push(id);
+        console.log("Friend request accepted.");
+
+      }
+
+
+    });
+
+  }
+
+  declineRequest(id: number): void {
+
+    this.http.delete<any>(`http://localhost:9000/api/friends/declineFriendRequest/${id}/${this.userService.getUserData().ID}`).subscribe((data) => {
+
+      if (data.ErrorExist) console.log("Error declining friend request (declineRequest)");
+      else {
+        this.pendingIDs = this.pendingIDs.filter((item) => item !== id);
+        this.pendingFriends.delete(id);
+        console.log("Friend request declined.");
+
+      }
+
+
+    });
+
+
+
+  }
+
+
   more(): void {
     if (this.userGoals.length - this.theCount > 3) {
       this.topUserGoals = this.topUserGoals.concat(this.userGoals.slice(this.theCount, this.theCount + 3))
@@ -215,6 +305,39 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       this.topUserGoals = this.userGoals;
     }
     this.theCount = this.topUserGoals.length;
+  }
+
+  // Get friend usernames from IDs
+  getFriendsUsernames() {
+
+    this.pendingIDs.map((pending) => {
+
+      this.http.get<any>(`http://localhost:9000/api/users?id=${pending}`).subscribe((data) => {
+        if (data.ErrorExist) console.log("Error getting friend username (getFriendsUsernames)");
+
+        this.pendingFriends.set(pending, data.ThisUser.Username);
+
+      });
+
+    });
+
+  }
+
+  // Get usernames of mutual friends
+  getMutualFriends() {
+
+    this.viewProfileIDs.map((friend) => {
+
+      this.http.get<any>(`http://localhost:9000/api/users?id=${friend}`).subscribe((data) => {
+        if (data.ErrorExist) console.log("Error getting friend username (getMutualUsernames)");
+
+        if (this.friends.includes(friend)) this.mutualFriends.set(friend, data.ThisUser.Username);
+
+
+      });
+
+    });
+
   }
 
 

@@ -336,6 +336,7 @@
     flex-wrap: wrap;
     overflow: hidden;
     padding: 10px;
+    gap: 1%;
 
     background: rgba(0, 0, 0, 0.5);
     border: 3px solid black;
@@ -361,6 +362,7 @@
     background: black;
     color: white;
     transition: all 0.5s;
+
 }
 
 .bxs {
@@ -369,7 +371,6 @@
     flex-direction: row;
     align-items: flex-start;
     flex-wrap: wrap;
-    gap: 1%;
     transition: all 0.5s;
 }
 
