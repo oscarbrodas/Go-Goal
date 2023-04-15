@@ -73,6 +73,13 @@ export class LoginService {
     this.loginInfo.Email = li.value.Email;
     this.loginInfo.Password = li.value.Password;
 
+    if (!this.loginInfo.Email.includes('@')) {
+      this.loginFailed = true;
+      this.loginSuccess = false;
+      alert("Please enter a valid email address.");
+      return;
+    }
+
     // GET REQUEST FOR USER INFORMATION
     console.log("Attempting to log in...");
     this.backend.getLoginInfo(this.loginInfo).subscribe((data) => {

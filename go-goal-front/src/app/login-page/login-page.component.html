@@ -1,28 +1,37 @@
 <div class="page">
-    <div
-        style="height: 100vh; width: 100vw; display: flex; justify-content: center; align-content: center; align-items: center;">
+    <div class="main">
 
         <div class="signblock">
 
-            <b class="title">LOGIN</b>
+            <b class="title">Login</b>
             <div class="login">
 
-                <form [formGroup]="loginForm" (ngSubmit)="Submit(loginForm)">
+                <form class="form" [formGroup]="loginForm" (ngSubmit)="Submit(loginForm)">
 
-                    <label class="form">Email: </label>
-                    <input type="text" class="form" name="Email" formControlName="Email">
-                    <br>
-                    <label class="form">Password: </label>
-                    <input type="password" class="form" name="Password" formControlName="Password">
-                    <br>
+                    <div class="forms">
+                        <div class="f-2">
+                            <label class="form1">Email: </label>
+                            <input type="text" name="Email" formControlName="Email">
+                        </div>
+
+                        <div class="f-2">
+                            <label class="form2">Password: </label>
+                            <input type="password" name="Password" formControlName="Password">
+                        </div>
+                    </div>
+
                     <button type="submit" name="loginButton">Log In</button>
                     <br>
-                    <a routerLink="../sign-up">Don't have an account? Sign up here!</a>
+
+
                 </form>
 
-                <p *ngIf="checkFailedLogin()">Login Failed. Please try again</p>
-                <p *ngIf="checkSuccessLogin()">Login successful! Redirecting...</p>
+                <a routerLink="../sign-up">Don't have an account? Sign up here!</a>
+
             </div>
+
+            <p *ngIf="checkFailedLogin()">Login Failed. Please try again</p>
+            <p *ngIf="checkSuccessLogin()">Login successful! Redirecting...</p>
 
         </div>
 

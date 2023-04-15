@@ -88,7 +88,6 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
 
     this.activatedRoute.params.subscribe((url) => {
-      //console.log(url["id"]);
       this.id = url["id"];
     });
 
@@ -222,13 +221,10 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
     });
 
 
-
-
-
-
-
   }
 
+
+  // Update description
   updateDescription() {
 
     this.user.Description = this.descriptionForm.value.Description;
@@ -245,6 +241,8 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+
+  // Send friend request
   FriendRequest(): void {
 
     this.requested = true;
@@ -260,6 +258,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+  // Accept friend request
   acceptRequest(id: number): void {
 
     this.http.put<any>(`http://localhost:9000/api/friends/acceptFriendRequest/${id}/${this.userService.getUserData().ID}`, {}).subscribe((data) => {
@@ -278,6 +277,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+  // Decline friend request
   declineRequest(id: number): void {
 
     this.http.delete<any>(`http://localhost:9000/api/friends/declineFriendRequest/${id}/${this.userService.getUserData().ID}`).subscribe((data) => {
@@ -297,7 +297,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-
+  // Get more user goals
   more(): void {
     if (this.userGoals.length - this.theCount > 3) {
       this.topUserGoals = this.topUserGoals.concat(this.userGoals.slice(this.theCount, this.theCount + 3))
