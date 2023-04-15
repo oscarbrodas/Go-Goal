@@ -76,7 +76,7 @@ export class LoginService {
     if (!this.loginInfo.Email.includes('@')) {
       this.loginFailed = true;
       this.loginSuccess = false;
-      alert("Please enter a valid email address.");
+      console.log("Login failed: Invalid email");
       return;
     }
 

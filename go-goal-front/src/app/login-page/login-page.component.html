@@ -3,7 +3,7 @@
 
         <div class="signblock">
 
-            <b class="title">Login</b>
+            <p class="title">Login</p>
             <div class="login">
 
                 <form class="form" [formGroup]="loginForm" (ngSubmit)="Submit(loginForm)">
@@ -11,12 +11,12 @@
                     <div class="forms">
                         <div class="f-2">
                             <label class="form1">Email: </label>
-                            <input type="text" name="Email" formControlName="Email">
+                            <input type="text" name="Email" formControlName="Email" placeholder="Email">
                         </div>
 
                         <div class="f-2">
                             <label class="form2">Password: </label>
-                            <input type="password" name="Password" formControlName="Password">
+                            <input type="password" name="Password" formControlName="Password" placeholder="Password">
                         </div>
                     </div>
 
@@ -30,8 +30,8 @@
 
             </div>
 
-            <p *ngIf="checkFailedLogin()">Login Failed. Please try again</p>
-            <p *ngIf="checkSuccessLogin()">Login successful! Redirecting...</p>
+            <p *ngIf="checkFailedLogin()" class="mes">Login Failed. Please try again</p>
+            <p *ngIf="checkSuccessLogin()" class="mes">Login successful! Redirecting...</p>
 
         </div>
 

@@ -161,3 +161,12 @@ button:hover {
     border-radius: 10rem;
     z-index: -1;
 }
+
+p {
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: center;
+    color: white;
+
+    justify-self: flex-end;
+}
