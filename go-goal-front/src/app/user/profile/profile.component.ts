@@ -66,6 +66,11 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
   requested: boolean = false;
   added: boolean = false; //These booleans will be implemented when friends added into system
 
+  editDescription: boolean = false;
+  descriptionForm: FormGroup = this.formBuilder.group({
+    description: new FormControl(''),
+  });
+
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) { }
 
 
@@ -78,31 +83,47 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
+
+
     this.activatedRoute.params.subscribe((url) => {
       //console.log(url["id"]);
       this.id = url["id"];
     });
+
+
     this.backend.getInfo(this.id).subscribe((data) => {
       // console.log(data)
       this.user.FirstName = data.ThisUser.FirstName;
       this.user.LastName = data.ThisUser.LastName;
       this.user.Email = data.ThisUser.Email;
       this.user.Username = data.ThisUser.Username;
+      this.user.Description = data.ThisUser.Description;
+      this.user.XP = data.ThisUser.XP;
       this.theUser = data.ThisUser.ID == this.userService.getUserData().ID;
     });
+
+
     this.backend.getGoals(this.id).subscribe((data) => {
+
       if (!data.Successful || data.ErrorExist || data == null) {
         console.log("Error getting goals (getGoals)");
       }
       else if (data.Goals.length > 0) {
+
         this.userGoals = [];
         data.Goals.forEach((item: any) => {
-          this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: false });
+
+          // Push uncompleted goals to userGoals
+          if (item.Completed === false) {
+            this.userGoals.push({ Title: item.Title, Description: item.Description, goalID: item.ID, Completed: item.Completed });
+          }
+
         });
-      }
-      else {
+      } else {
         this.userGoals = [{ Title: "No goals yet", Description: "It looks like this journey is just beginning!", goalID: -1, Completed: false }];
       }
+
+
       if (this.userGoals.length >= 3) {
         this.topUserGoals = this.userGoals.slice(0, 3);
       } else {

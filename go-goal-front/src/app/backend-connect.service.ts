@@ -80,6 +80,7 @@ export interface userInfo { // ADD: User data as necessary
   Email: string;
   Password: string;
   XP?: number;
+  Description?: string;
 }
 
 export interface loginInfo {

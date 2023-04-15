@@ -1,39 +1,130 @@
+.profile-body-l {
+    height: clamp(90vh, 90vh, 100vh);
+    width: 30%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    padding: 0 0 0 4%;
+}
+
+.profile-body-r {
+    height: 80%;
+    width: 70%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-top: 90px;
+}
+
+/* User Info Section*/
+
 .details {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 90%;
-    overflow: hidden;
-    width: 25%;
-    min-width: 300px;
-    position: absolute;
-    left: 0;
-    top: 25px;
-    margin: 1%;
-    margin-top: 4.25%;
-    /*border: solid red 4px;
-    background:rgba(155, 32, 234, 0.8)*/
-    border-radius: 20px;
 
+
+    height: 90%;
+    width: clamp(300px, 500px, 600px);
+    overflow: hidden;
+
+
+
+    border-radius: 20px;
     outline: rgba(102, 255, 26, 1) 2px solid;
     background: rgba(0, 0, 0, .6);
     color: white;
 
     overflow: hidden;
 }
+
+.img-sect {
+    height: 400px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 30%;
+    padding-bottom: 10%;
+    gap: 30px;
+
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 1px;
+
+    background: black;
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 0 0 15% 15%;
+}
+
+.pic {
+    aspect-ratio: 1/1;
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    border-radius: 50%;
+}
+
+.info-sect {
+
+    height: fit-content;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 1px;
+
+}
+
+.info-sect>h1 {
+    width: 100%;
+    text-align: left;
+    font-size: 28px;
+    margin-top: 15px;
+    padding: 10px 0 10px 15px;
+
+
+    background: black;
+    border-top: 2px solid rgba(102, 255, 26, 1);
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+
+}
+
+.info-sect>p {
+    width: 100%;
+    text-align: left;
+    font-size: 22px;
+    padding: 10px 0 10px 15px;
+
+    background: black;
+    border-top: 2px solid rgba(102, 255, 26, 1);
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+
+}
+
+
+/* Goal Info Section*/
 
 .goal-outline {
     display: inline-block;
     height: 90%;
     overflow-y: auto;
     width: 46%;
-    position: absolute;
-    margin: 1%;
-    margin-top: 4.25%;
-    left: 26%;
-    top: 25px;
-    margin-bottom: 2%;
     border-radius: 20px;
 
     outline: rgba(102, 255, 26, 1) 2px solid;
@@ -46,6 +137,10 @@
     overflow: hidden;
 
 }
+
+
+
+/* Friend Info Section*/
 
 .friend-outline {
     display: block;
@@ -53,12 +148,7 @@
     height: 90%;
     overflow-y: auto;
     width: 25%;
-    position: absolute;
-    margin: 1%;
-    margin-top: 4.25%;
-    right: 0;
-    top: 25px;
-    margin-bottom: 2%;
+
     border-radius: 20px;
 
     outline: rgba(102, 255, 26, 1) 2px solid;
@@ -74,9 +164,8 @@
     height: 35%;
     width: 100%;
     position: relative;
-    left: 0;
-    top: 92.5%;
-    margin-bottom: 200px;
+
+
     border: solid red 4px;
     background: rgba(186, 192, 34, 0.8);
     overflow: hidden;
@@ -91,15 +180,7 @@
     width: 100%;
 }
 
-.pic {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-    margin-top: 10px;
-    outline: rgba(102, 255, 26, 1) 2px solid;
-    background: black;
-    border-radius: 50%;
-}
+
 
 .goal {
     width: 90%;
@@ -130,11 +211,6 @@
     background: black;
     color: white;
     cursor: pointer;
-}
-
-h1 {
-    text-align: center;
-    padding: 15px;
 }
 
 button {
