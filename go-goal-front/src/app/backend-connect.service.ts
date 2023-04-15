@@ -46,6 +46,9 @@ export class BackendConnectService {
   public updatePassword(userID: number, newName: string): Observable<any> {
     return this.http.put<JSON>(`${this.backendURL}users/${userID}/password`, { newName }, this.httpOptions)
   }
+  public updateDescription(userID: number, desc: string): Observable<any> {
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/description`, { Description: desc }, this.httpOptions)
+  }
   public createGoal(goalData: any, ID: Number): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}goals/${ID}`, goalData, this.httpOptions);
   }
@@ -55,8 +58,6 @@ export class BackendConnectService {
   }
 
   public deleteGoals(gID: Number): Observable<any> {
-    console.log(gID);
-
     return this.http.delete<JSON>(`${this.backendURL}goals/${gID}`, this.httpOptions);
   }
 
@@ -67,6 +68,15 @@ export class BackendConnectService {
   public getFriends(ID: Number): Observable<any> {
     return this.http.get<JSON>(`${this.backendURL}friends/${ID}`, this.httpOptions);
   }
+
+  public getOutgoingRequests(ID: Number): Observable<any> {
+    return this.http.get<JSON>(`${this.backendURL}friends/getOutgoingFriendRequests/${ID}`, this.httpOptions);
+  }
+
+  public sendFriendRequest(ID: Number, friendID: Number): Observable<any> {
+    return this.http.post<JSON>(`${this.backendURL}friends/sendFriendRequest/${ID}/${friendID}`, this.httpOptions);
+  }
+
 
 
 }

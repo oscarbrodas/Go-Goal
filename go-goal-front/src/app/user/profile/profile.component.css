@@ -12,14 +12,17 @@
 }
 
 .profile-body-r {
-    height: 80%;
+    height: clamp(90vh, 90vh, 100vh);
     width: 70%;
+    min-width: 500px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-top: 90px;
+    gap: 5%;
+    margin-top: 60px;
+
 }
 
 /* User Info Section*/
@@ -29,20 +32,38 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-
+    gap: 5px;
+    position: relative;
 
     height: 90%;
     max-height: fit-content;
     width: clamp(300px, 500px, 600px);
-
-
 
     border-radius: 20px;
     outline: rgba(102, 255, 26, 1) 2px solid;
     background: rgba(0, 0, 0, .6);
     color: white;
 
-    overflow: hidden;
+    overflow: auto;
+}
+
+.details::-webkit-scrollbar {
+    width: 15px;
+    position: absolute;
+    top: 20px;
+}
+
+.details::-webkit-scrollbar-button,
+.details::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.details::-webkit-scrollbar-thumb {
+    background-color: black;
+    border: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 20px;
+
+    max-height: 20px;
 }
 
 .img-sect {
@@ -76,7 +97,8 @@
     border-radius: 50%;
 }
 
-.info-sect {
+.info-sect,
+.d-box {
 
     height: fit-content;
     width: 100%;
@@ -96,8 +118,8 @@
     width: 100%;
     text-align: left;
     font-size: 24px;
-    margin-top: 15px;
-    padding: 10px 0 10px 15px;
+    margin-top: 20px;
+    padding: 15px 0 10px 15px;
 
 
     background: black;
@@ -153,11 +175,23 @@
     border-radius: 10px;
 }
 
+
+.d-box>p {
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    padding: 10px 0 10px 15px;
+
+    background: black;
+    border-top: 2px solid rgba(102, 255, 26, 1);
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+}
+
 .desc-b {
     width: 100%;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     gap: 10px;
     padding: 0 0 0 15px;
@@ -166,7 +200,7 @@
 .desc-b>button {
     width: 100px;
     height: 40px;
-    margin: 10px 0 0 0;
+    margin: 0;
     padding: 0 0 0 0;
 
     background: black;
@@ -187,15 +221,72 @@
     cursor: pointer;
 }
 
+.account-b {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15%;
+
+    background: black;
+    border-top: 2px solid rgba(102, 255, 26, 1);
+    border-radius: 10px;
+}
+
+.account-b>button {
+
+    height: 60%;
+    width: 50%;
+    min-height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+    font-size: 18px;
+    transition: all 0.5s;
+}
+
+.account-b>button:hover {
+    background: rgba(102, 255, 26, 1);
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+}
+
+.pending,
+.accepted {
+    width: 50%;
+    height: 80px;
+    min-height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: 500;
+    border-radius: 20px;
+    border: 2px solid rgba(102, 255, 26, 1);
+    background: rgb(38, 38, 38);
+    color: black;
+    transition: all 0.5s ease;
+}
+
 
 /* Goal Info Section*/
 
 .goal-outline {
-    display: inline-block;
-    height: 90%;
-    overflow-y: auto;
-    width: 46%;
-    border-radius: 20px;
+    height: clamp(60%, 60%, fit-content);
+    width: 80%;
+    border-radius: 0 0 20px 20px;
 
     outline: rgba(102, 255, 26, 1) 2px solid;
     background: rgba(0, 0, 0, .6);
@@ -204,8 +295,56 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
+    position: relative;
+    overflow: auto;
 
+}
+
+.goal-card {
+    width: 100%;
+    height: fit-content;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;
+    margin-bottom: 10px;
+
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+    background: black;
+    border-radius: 0 0 20px 20px;
+}
+
+.g-redirect {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.allGoals,
+.more {
+    text-align: center;
+    width: 30%;
+    border-radius: 10px;
+
+    outline: rgba(102, 255, 26, 1) 2px solid;
+    background: black;
+    color: white;
+    transition: .5s ease-in-out;
+}
+
+.allGoals:hover,
+.more:hover {
+    background: rgba(102, 255, 26, 1);
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
 }
 
 
@@ -215,7 +354,7 @@
 .friend-outline {
     display: block;
     justify-content: center;
-    height: 90%;
+    height: 50%;
     overflow-y: auto;
     width: 25%;
 
@@ -241,7 +380,6 @@
     overflow: hidden;
 }
 
-.row,
 .more {
     padding: 10px;
     justify-content: center;
@@ -271,56 +409,22 @@
 
 }
 
-.allGoals,
-.more {
-    text-align: center;
-    width: 30%;
-    border-radius: 10px;
-    width: 30%;
-    outline: rgba(102, 255, 26, 1) 2px solid;
-    background: black;
-    color: white;
-    cursor: pointer;
-}
 
-button {
-    width: 50%;
-    height: 30%;
-    min-height: fit-content;
-    display: block;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
 
-    outline: rgba(102, 255, 26, 1) 2px solid;
-    background: black;
-    color: white;
-}
 
-.setButton {
-    align-self: flex-end;
-    height: 80px;
-}
 
-.pending,
-.accepted {
-    width: 50%;
-    height: 30%;
-    min-height: fit-content;
-    display: block;
-    flex-direction: row;
-    justify-content: center;
-    text-align: center;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    outline: black 2px solid;
-    background: rgba(128, 128, 128, 0.6);
-    color: black;
-}
+
+
+
 
 .friends {
     height: 50%;
+}
+
+
+@media screen and (width < 770px) {
+
+    .goal-outline {
+        display: none;
+    }
 }

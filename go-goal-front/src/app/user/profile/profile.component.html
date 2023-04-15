@@ -1,7 +1,7 @@
 <div class="page">
     <div class="profile-body-l">
 
-        <div class="details">
+        <div @details class="details">
 
 
             <div class="img-sect">
@@ -16,41 +16,55 @@
                 <h1>{{this.user.FirstName}} {{this.user.LastName}}</h1>
 
                 <p>
-                    <b>Email: </b>{{this.user.Email}}
+                    Email: {{this.user.Email}}
                     <br>
                     <br>
-                    <b>Experience Points: </b>{{this.user.XP}}
+                    Experience Points: {{this.user.XP}}
                 </p>
 
             </div>
 
             <div class="desc">
 
-                <form [formGroup]="descriptionForm" class="form" (ngSubmit)="false">
-
-                    <textarea class="desc-box" formControlName="Description" placeholder="Add a Description"></textarea>
-
-
+                <form *ngIf="editDescription; else Desc;" [formGroup]="descriptionForm" class="form">
+                    <textarea class="desc-box" formControlName="Description" placeholder="Add a Description"
+                        [ariaDisabled]="true"></textarea>
                 </form>
 
-                <div class="desc-b">
-                    <button *ngIf="!editDescription; else editD;" class="edit-b submit">Edit</button>
+                <ng-template #Desc>
+                    <div class="d-box">
+                        <p *ngIf="this.user.Description?.length===0; else d;">No Description Set</p>
+                    </div>
+
+                    <ng-template #d>
+                        <div class="d-box">
+                            <p>{{this.user.Description}}</p>
+                        </div>
+                    </ng-template>
+
+                </ng-template>
+
+                <div *ngIf="this.theUser" class="desc-b">
+                    <button *ngIf="!editDescription; else editD;" class="edit-b"
+                        (click)="editDescription = !editDescription">Edit</button>
                     <ng-template #editD>
-                        <button class="edit-b submit">Save</button>
-                        <button>Cancel</button>
+                        <button style="margin-top: 15px" (click)="updateDescription()">Save</button>
+                        <button style="margin-top: 15px" (click)="editDescription = !editDescription">Cancel</button>
                     </ng-template>
                 </div>
 
 
             </div>
 
-            <div class="row" style="align-self: flex-end;">
+            <div class="account-b">
 
                 <button *ngIf="!this.theUser && !this.added && !this.requested" (click)="FriendRequest()"
-                    id="friendButton">Add Friend</button>
+                    [disabled]="this.added" id="friendButton">Add Friend</button>
+
                 <p *ngIf="this.requested" class="pending">Request Pending</p>
                 <p *ngIf="this.added" class="accepted">Friend</p>
-                <button *ngIf="this.theUser" routerLink="../settings" id="setButton" class="setButton">Go To Account
+
+                <button *ngIf="this.theUser" routerLink="../settings" id="setButton">Go to Account
                     Settings</button>
             </div>
 
@@ -61,33 +75,38 @@
 
     <div class="profile-body-r">
 
-        <div class="goal-outline">
-            <h1>Top Goals</h1>
+        <div @goals class="goal-outline">
+
+            <div class="goal-card">
+                <h1>Top Goals</h1>
+            </div>
+
             <div class="goal" *ngFor="let u of topUserGoals">
                 <div class="desc">
                     <p>{{u.Title}}</p>
                     <p>{{u.Description}}</p>
                 </div>
             </div>
-            <div routerLink="../goals" *ngIf="this.theUser" class="allGoals"><i id="allGoals">Go to all your goals</i>
+
+            <div *ngIf="this.theUser" class="g-redirect">
+                <button class="allGoals" routerLink="../goals">Go to all your goals</button>
             </div>
+
             <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i
                     id="moreButton">More</i></div>
         </div>
 
-
         <div class="friend-outline">
+
             <h1 *ngIf="!this.theUser">Mutual Friends</h1>
+
             <h1 *ngIf="this.theUser">Friends</h1>
+
             <div class="friends"></div>
+
             <h1 *ngIf="this.theUser">Pending Requests</h1>
+
         </div>
-        <!--
-            This is eventually to make into a panel that shows suggested friends or goals, not implemented yet
-                <div *ngIf="this.theUser" class ="discover-outline">
-                C
-            </div>
-            -->
 
     </div>
 

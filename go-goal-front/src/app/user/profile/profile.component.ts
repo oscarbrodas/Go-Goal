@@ -14,33 +14,25 @@ import { goal } from '../goals/goals.component';
     trigger('details', [
 
       transition(':enter', [
-        animate(600, keyframes([
-          style({ opacity: 0, transform: 'translateX(-200px)', offset: 0 }),
-          style({ opacity: 0.5, transform: 'translateX(-100px)', offset: 0.5 }),
-          style({ opacity: 1, transform: 'translateX(0)', offset: 1 }),
+        style({ top: '100%' }),
+        animate('0.8s ease', keyframes([
+          style({ top: '-100%', offset: 0 }),
+          style({ top: '0%', offset: 1 })
         ]))
       ]),
-      transition(':leave', [
-        animate(600, keyframes([
-          style({ opacity: 1, transform: 'translateX(0px)', offset: 0 }),
-          style({ transform: 'translateX(500px)', offset: 0.5 }),
-          style({ opacity: 0, transform: 'translateX(1000px)', offset: 1 }),
 
-        ]))
-      ])
     ]),
 
     trigger('goals', [
-      transition('void => *', [
-        style({ opacity: 0, transform: 'translateY(300px)' }),
-        animate(500)
-      ]),
-      transition('* => void', [
-        animate(500, keyframes([
-          style({ opacity: 1, transform: 'translateY(1000px)', offset: 0 }),
 
+      transition(':enter', [
+        style({ top: '-100%' }),
+        animate('0.8s 0.2s ease', keyframes([
+          style({ top: '-100%', offset: 0 }),
+          style({ top: '0%', offset: 1 })
         ]))
-      ])
+      ]),
+
     ]),
 
     trigger('friends', [
@@ -58,16 +50,18 @@ import { goal } from '../goals/goals.component';
 export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   user: userInfo = { ID: 0, FirstName: "error", LastName: "error", Username: "error", Password: "Not to View", Email: "error", loggedIn: false };
+
   theUser: boolean = false;
   id: Number = 0;
   userGoals: goal[] = [];
   topUserGoals: goal[] = [];
+  pendingFriends: number[] = [];
+  friends: number[] = [];
   theCount: number = 0;
   requested: boolean = false;
-  added: boolean = false; //These booleans will be implemented when friends added into system
+  added: boolean = false;
 
   editDescription: boolean = false;
-  descriptionButton: string = "Edit";
   descriptionForm: FormGroup = this.formBuilder.group({
     Description: new FormControl(''),
   });
@@ -85,15 +79,15 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
 
-
     this.activatedRoute.params.subscribe((url) => {
       //console.log(url["id"]);
       this.id = url["id"];
     });
 
-
+    // Get user info for this profile
     this.backend.getInfo(this.id).subscribe((data) => {
       // console.log(data)
+      this.user.ID = data.ThisUser.ID;
       this.user.FirstName = data.ThisUser.FirstName;
       this.user.LastName = data.ThisUser.LastName;
       this.user.Email = data.ThisUser.Email;
@@ -103,7 +97,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       this.theUser = data.ThisUser.ID == this.userService.getUserData().ID;
     });
 
-
+    // Get user goals for this profile
     this.backend.getGoals(this.id).subscribe((data) => {
 
       if (!data.Successful || data.ErrorExist || data == null) {
@@ -124,7 +118,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
         this.userGoals = [{ Title: "No goals yet", Description: "It looks like this journey is just beginning!", goalID: -1, Completed: false }];
       }
 
-
+      // Slice top 3 goals
       if (this.userGoals.length >= 3) {
         this.topUserGoals = this.userGoals.slice(0, 3);
       } else {
@@ -133,18 +127,87 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       this.theCount = this.topUserGoals.length;
     })
 
+    // Get pending friend requests
+    this.backend.getOutgoingRequests(this.userService.getUserData().ID).subscribe((data) => {
+      if (data.ErrorExist || data == null) {
+        console.log("Error getting outgoing requests (getOutgoingRequests)");
+      }
+      else if (data.IDs != null && data.IDs.length > 0) {
+        console.log("Outgoing requests found.");
+        data.IDs.forEach((item: any) => {
+          this.pendingFriends.push(item);
+        });
+
+        // Check if friend request has been sent already if not the user
+        if (!this.theUser && this.pendingFriends.includes(this.user.ID)) {
+          this.requested = true;
+        }
+
+      }
+      else {
+        console.log("No outgoing requests.");
+      }
+
+    });
+
+    // Get friends
+    this.backend.getFriends(this.userService.getUserData().ID).subscribe((data) => {
+      if (data.ErrorExist || data == null) {
+        console.log("Error getting friends (getFriends)");
+      }
+      else if (data.IDs != null && data.IDs.length > 0) {
+        data.IDs.forEach((item: any) => {
+          this.friends.push(item);
+        });
+
+        // Check if user profile is a friend
+        if (!this.theUser && this.friends.includes(this.user.ID)) {
+          this.added = true;
+        }
+
+      }
+      else {
+        console.log("No friends.");
+      }
+
+
+    });
+
+
+
   }
 
   updateDescription() {
 
+    this.user.Description = this.descriptionForm.value.Description;
+    // Backend call to update description
+    this.backend.updateDescription(this.user.ID, this.descriptionForm.value.Description).subscribe((data) => {
+      if (!data.Successful || data.ErrorExist || data == null) {
+        console.log("Error updating description (updateDescription)");
+      }
+      else {
+        console.log("Description updated.");
+        this.editDescription = false;
+      }
+    });
+
   }
-
-
 
   FriendRequest(): void {
-    //to add, command to send friend request when button clicked
+
     this.requested = true;
+    this.backend.sendFriendRequest(this.userService.getUserData().ID, this.user.ID).subscribe((data) => {
+      if (!data.Successful || data.ErrorExist || data == null) {
+        console.log("Error sending friend request (sendFriendRequest)");
+      }
+      else {
+        console.log("Friend request sent.");
+      }
+    });
+
+
   }
+
   more(): void {
     if (this.userGoals.length - this.theCount > 3) {
       this.topUserGoals = this.topUserGoals.concat(this.userGoals.slice(this.theCount, this.theCount + 3))
@@ -153,4 +216,6 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.theCount = this.topUserGoals.length;
   }
+
+
 }
