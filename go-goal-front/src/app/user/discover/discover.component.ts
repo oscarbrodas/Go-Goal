@@ -25,9 +25,9 @@ import { trigger, state, style, transition, animate, keyframes, stagger, query, 
 
     trigger('banner', [
       transition(':enter', [
-        style({ width: '0%', content: '', border: 'none', top: '-100%' }),
+        style({ width: '0%', content: '', border: 'none' }),
         group([
-          style({ width: '0%', content: '', border: 'none', top: '-50%' }),
+          style({ width: '0%', content: '', border: 'none' }),
           animate('0.4s 0.5s ease', keyframes([
             style({ width: '0%', border: '*' }),
             style({ width: '100%', }),

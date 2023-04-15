@@ -1,5 +1,7 @@
 <div class="page">
     <div class="details">
+
+
         <div class="row">
             <img class="pic" src="../assets/dashboard_images/p.png">
         </div>
@@ -18,6 +20,8 @@
                 Settings</button>
         </div>
     </div>
+
+
     <div class="goal-outline">
         <h1>Top Goals</h1>
         <div class="goal" *ngFor="let u of topUserGoals">
@@ -31,6 +35,8 @@
         <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i
                 id="moreButton">More</i></div>
     </div>
+
+
     <div class="friend-outline">
         <h1 *ngIf="!this.theUser">Mutual Friends</h1>
         <h1 *ngIf="this.theUser">Friends</h1>
