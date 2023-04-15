@@ -29,7 +29,18 @@
                 <form [formGroup]="descriptionForm" class="form" (ngSubmit)="false">
 
                     <textarea class="desc-box" formControlName="Description" placeholder="Add a Description"></textarea>
+
+
                 </form>
+
+                <div class="desc-b">
+                    <button *ngIf="!editDescription; else editD;" class="edit-b submit">Edit</button>
+                    <ng-template #editD>
+                        <button class="edit-b submit">Save</button>
+                        <button>Cancel</button>
+                    </ng-template>
+                </div>
+
 
             </div>
 

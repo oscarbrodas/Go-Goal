@@ -67,8 +67,9 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
   added: boolean = false; //These booleans will be implemented when friends added into system
 
   editDescription: boolean = false;
+  descriptionButton: string = "Edit";
   descriptionForm: FormGroup = this.formBuilder.group({
-    description: new FormControl(''),
+    Description: new FormControl(''),
   });
 
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute) { }
@@ -131,6 +132,10 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       }
       this.theCount = this.topUserGoals.length;
     })
+
+  }
+
+  updateDescription() {
 
   }
 

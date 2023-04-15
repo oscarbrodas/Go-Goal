@@ -64,8 +64,8 @@
     border-left: 2px solid #17191c;
 }
 
-.item:hover,
-.item:focus p {
+.item:hover>p,
+.item:focus>p {
     color: rgba(0, 0, 0, 1);
 }
 
