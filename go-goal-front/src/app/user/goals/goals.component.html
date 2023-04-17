@@ -1,4 +1,5 @@
 <div class="page">
+
     <div class="left-side">
         <div @sidebar class="sidebar">
             <h1>Your Goals</h1>
@@ -22,10 +23,30 @@
                 </form>
             </div>
 
-            <div class="experience">XP POINTS IN-PROGRESS</div>
+            <div class="experience">
+
+                <h1>XP</h1>
+
+                <p>Level: {{uLevel}}</p>
+
+                <div>
+
+                    <div class="progress-bar">
+
+                        <div class="progress"></div>
+                        <!-- [style.width.%]="(XP / 100) * 100" -->
+                    </div>
+
+                    <p>{{XP}}</p>
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
+
     <div *ngIf="listLoaded" class="content">
         <div [@goals]="goalsUncompleted.length" class="list">
 
@@ -59,4 +80,5 @@
 
         </div>
     </div>
+
 </div>

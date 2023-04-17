@@ -4,6 +4,7 @@ import { BackendConnectService, userInfo } from 'src/app/backend-connect.service
 import { trigger, state, style, transition, animate, keyframes, stagger, query } from '@angular/animations';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -68,14 +69,26 @@ export class GoalsComponent implements OnInit, OnChanges {
     goalID: new FormControl(-1)
   });
 
+  XP: number = 0;
+  uLevel: number = 0;
 
-  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService) {
+
+  constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private http: HttpClient) {
   }
 
   ngOnInit(): void {
     // Backend call to get goals
     this.getGoals();
     console.log('Goals loaded');
+
+    // Get XP
+    this.backend.getInfo(this.userService.getUserData().ID).subscribe((data) => {
+      this.XP = data.ThisUser.XP;
+      this.uLevel = this.XP / 100;
+    });
+    console.log('XP loaded');
+
+
 
 
   }
@@ -128,10 +141,7 @@ export class GoalsComponent implements OnInit, OnChanges {
     }
     else {
       // Send goals to backend
-      this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description, Completed: false }, this.userService.getUserData().ID).subscribe((data) => {
-        console.log(data);
-
-      });
+      this.backend.createGoal({ Title: this.newGoal.value.Title, Description: this.newGoal.value.Description, Completed: false }, this.userService.getUserData().ID).subscribe((data) => { });
 
       // Push to list, delay to allow backend to update
       this.goalsUncompleted.push({ Title: this.newGoal.value.Title!, Description: this.newGoal.value.Description!, goalID: 0, Completed: false });
@@ -235,6 +245,10 @@ export class GoalsComponent implements OnInit, OnChanges {
           // Add to completed list
           this.goalsCompleted.push(item);
 
+          // Update XP
+          this.XP += 100;
+          this.updateXP();
+
         }
       });
 
@@ -279,6 +293,12 @@ export class GoalsComponent implements OnInit, OnChanges {
 
     }
 
+  }
+
+  updateXP() {
+    this.http.put<JSON>(`http://localhost:9000/api/users/${this.userService.getUserData().ID}/xp`, { NewXP: 100 }).subscribe((data) => {
+      console.log(data);
+    });
   }
 
 }

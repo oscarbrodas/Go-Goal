@@ -94,6 +94,8 @@ export class LoginService {
         this.user.LastName = data.ThisUser.LastName;
         this.user.Email = data.ThisUser.Email;
         this.user.Password = data.ThisUser.Password;
+        this.user.Description = data.ThisUser.Description;
+        this.user.XP = data.ThisUser.XP;
         this.loginFailed = false;
         this.loginSuccess = true;
         this.loggedIn = true;
