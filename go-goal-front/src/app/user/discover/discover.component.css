@@ -391,13 +391,13 @@
     transition: all 0.5s;
 }
 
-.bxs>button:hover {
+.f-boxes>button:hover {
     background: rgba(102, 255, 26, 1);
     color: black;
     border: 2px solid black;
     transition: all 0.5s;
 }
 
-.bxs>button:hover>p {
+.f-boxes>button:hover>p {
     color: black;
 }
