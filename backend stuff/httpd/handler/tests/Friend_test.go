@@ -31,6 +31,7 @@ func initializeTestDatabase() {
 	globalDB = db
 
 	// must drop goals and friends first before users because they have foreign keys in them
+	globalDB.Exec("DROP TABLE benchmarks")
 	globalDB.Exec("DROP TABLE goals")
 	globalDB.Exec("DROP TABLE friends")
 	globalDB.Exec("DROP TABLE users")
@@ -38,6 +39,7 @@ func initializeTestDatabase() {
 	globalDB.AutoMigrate(&handler.User{})
 	globalDB.AutoMigrate(&handler.Goal{})
 	globalDB.AutoMigrate(&handler.Friend{})
+	globalDB.AutoMigrate(&handler.Benchmark{})
 }
 
 func initializeTestFileSystem() {
