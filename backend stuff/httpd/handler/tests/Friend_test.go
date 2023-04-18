@@ -1,7 +1,6 @@
 package handler_test
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"go-goal/httpd/handler"
@@ -73,28 +72,12 @@ func TestGetAllFriends(t *testing.T) {
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,1,0)")
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(4,1,1)")
 
-	// all of this just sets the input json to a user with id:1
-	var user handler.User
-	user.ID = 1
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
-
-	// w will be a replacement for w http.ResponseWriter
 	w := httptest.NewRecorder()
+	r, _ := http.NewRequest(http.MethodGet, "/api/friends/1", nil)
 
-	// r will be a a replacement for r *http.Request
-	// second parameter is for inputing stuff with the links such as /{id}
-	// third parameter is the input json
-	r, err := http.NewRequest(http.MethodGet, "", &buf)
-	if err != nil {
-		panic(err)
-	}
-
-	// this looks weird because GetAllFriends returns a handler function
-	handler.GetAllFriends(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/{id}", handler.GetAllFriends(globalDB)).Methods("GET")
+	router.ServeHTTP(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
@@ -121,21 +104,11 @@ func TestSendFriendRequest1(t *testing.T) {
 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"2\",\"Chen\",\"2@gmail.com\",\"pw\")")
 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"3\",\"Chen\",\"3@gmail.com\",\"pw\")")
 
-	var user handler.User
-	user.ID = 1
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("POST", "/api/friends/sendFriendRequest/3", &buf)
-	if err != nil {
-		panic(err)
-	}
+	r, _ := http.NewRequest("POST", "/api/friends/sendFriendRequest/1/3", nil)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/friends/sendFriendRequest/{id}", handler.SendFriendRequest(globalDB)).Methods("POST")
+	router.HandleFunc("/api/friends/sendFriendRequest/{sender}/{reciever}", handler.SendFriendRequest(globalDB)).Methods("POST")
 	router.ServeHTTP(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
@@ -186,19 +159,11 @@ func TestSendFriendRequest2(t *testing.T) {
 		ErrorExist bool
 	}{}
 
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("POST", "/api/friends/sendFriendRequest/2", &buf)
-	if err != nil {
-		panic(err)
-	}
+	r, _ := http.NewRequest("POST", "/api/friends/sendFriendRequest/1/2", nil)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/friends/sendFriendRequest/{id}", handler.SendFriendRequest(globalDB)).Methods("POST")
+	router.HandleFunc("/api/friends/sendFriendRequest/{sender}/{reciever}", handler.SendFriendRequest(globalDB)).Methods("POST")
 	router.ServeHTTP(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
@@ -220,8 +185,6 @@ func TestGetOutgoingFriendRequests(t *testing.T) {
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,1,2)")
 
-	var user handler.User
-	user.ID = 1
 	expected := struct {
 		IDs        []uint
 		ErrorExist bool
@@ -233,19 +196,16 @@ func TestGetOutgoingFriendRequests(t *testing.T) {
 		IDs        []uint
 		ErrorExist bool
 	}{}
-
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("GET", "", &buf)
+	r, err := http.NewRequest("GET", "/api/friends/getOutgoingFriendRequests/1", nil)
 	if err != nil {
 		panic(err)
 	}
 
-	handler.GetOutgoingFriendRequests(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/getOutgoingFriendRequests/{id}", handler.GetOutgoingFriendRequests(globalDB)).Methods("GET")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -265,8 +225,6 @@ func TestGetIngoingFriendRequests(t *testing.T) {
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(3,2,1)")
 
-	var user handler.User
-	user.ID = 2
 	expected := struct {
 		IDs        []uint
 		ErrorExist bool
@@ -279,18 +237,13 @@ func TestGetIngoingFriendRequests(t *testing.T) {
 		ErrorExist bool
 	}{}
 
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("GET", "", &buf)
-	if err != nil {
-		panic(err)
-	}
+	r, _ := http.NewRequest("GET", "/api/friends/getIngoingFriendRequests/2", nil)
 
-	handler.GetIngoingFriendRequests(globalDB)(w, r)
+	router := mux.NewRouter()
+	router.HandleFunc("/api/friends/getIngoingFriendRequests/{id}", handler.GetIngoingFriendRequests(globalDB)).Methods("GET")
+	router.ServeHTTP(w, r)
+
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("Did not get StatusOK, instead got %d", w.Result().StatusCode)
 	}
@@ -308,8 +261,6 @@ func TestAcceptFriendRequest(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 
-	var user handler.User
-	user.ID = 2
 	expected := struct {
 		Successful bool
 		ErrorExist bool
@@ -322,19 +273,11 @@ func TestAcceptFriendRequest(t *testing.T) {
 		ErrorExist bool
 	}{}
 
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("PUT", "/api/friends/acceptFriendRequest/1", &buf)
-	if err != nil {
-		panic(err)
-	}
+	r, _ := http.NewRequest("PUT", "/api/friends/acceptFriendRequest/1/2", nil)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/friends/acceptFriendRequest/{id}", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
+	router.HandleFunc("/api/friends/acceptFriendRequest/{sender}/{accepter}", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
 	router.ServeHTTP(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
@@ -359,8 +302,6 @@ func TestDeclineFriendRequest(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,1)")
 
-	var user handler.User
-	user.ID = 2
 	expected := struct {
 		Successful bool
 		ErrorExist bool
@@ -373,19 +314,11 @@ func TestDeclineFriendRequest(t *testing.T) {
 		ErrorExist bool
 	}{}
 
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("PUT", "/api/friends/declineFriendRequest/1", &buf)
-	if err != nil {
-		panic(err)
-	}
+	r, _ := http.NewRequest("DELETE", "/api/friends/declineFriendRequest/1/2", nil)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/friends/declineFriendRequest/{id}", handler.DeclineFriendRequest(globalDB)).Methods("PUT")
+	router.HandleFunc("/api/friends/declineFriendRequest/{sender}/{decliner}", handler.DeclineFriendRequest(globalDB)).Methods("DELETE")
 	router.ServeHTTP(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
@@ -410,8 +343,6 @@ func TestRemoveFriend(t *testing.T) {
 
 	globalDB.Exec("insert into friends(user1,user2,who_sent) values(1,2,0)")
 
-	var user handler.User
-	user.ID = 2
 	expected := struct {
 		Successful bool
 		ErrorExist bool
@@ -424,19 +355,11 @@ func TestRemoveFriend(t *testing.T) {
 		ErrorExist bool
 	}{}
 
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(user)
-	if err != nil {
-		panic(err)
-	}
 	w := httptest.NewRecorder()
-	r, err := http.NewRequest("PUT", "/api/friends/removeFriend/1", &buf)
-	if err != nil {
-		panic(err)
-	}
+	r, _ := http.NewRequest("DELETE", "/api/friends/removeFriend/1/2", nil)
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/friends/removeFriend/{id}", handler.RemoveFriend(globalDB)).Methods("PUT")
+	router.HandleFunc("/api/friends/removeFriend/{remover}/{friend}", handler.RemoveFriend(globalDB)).Methods("DELETE")
 	router.ServeHTTP(w, r)
 
 	if w.Result().StatusCode != http.StatusOK {
