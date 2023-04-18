@@ -32,19 +32,19 @@ export class BackendConnectService {
     return this.http.get<JSON>(`${this.backendURL}users?id=${userID}`);
   }
   public updateFirstName(userID: number, newName: string): Observable<any> {
-    return this.http.put(`${this.backendURL}users/${userID}/firstname`, { "new": newName }, this.httpOptions)
+    return this.http.put(`${this.backendURL}users/${userID}/firstname`, { "firstname": newName }, this.httpOptions)
   }
   public updateLastName(userID: number, newName: string): Observable<any> {
-    return this.http.put(`${this.backendURL}users/${userID}/lastname`, newName, this.httpOptions)
+    return this.http.put(`${this.backendURL}users/${userID}/lastname`,{"lastname": newName}, this.httpOptions)
   }
   public updateEmail(userID: number, newName: string): Observable<any> {
-    return this.http.put<JSON>(`${this.backendURL}users/${userID}/email`, { newName }, this.httpOptions)
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/email`, {"email": newName }, this.httpOptions)
   }
   public updateUsername(userID: number, newName: string): Observable<any> {
-    return this.http.put<JSON>(`${this.backendURL}users/${userID}/username`, { newName }, this.httpOptions)
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/username`, { "username": newName }, this.httpOptions)
   }
   public updatePassword(userID: number, newName: string): Observable<any> {
-    return this.http.put<JSON>(`${this.backendURL}users/${userID}/password`, { newName }, this.httpOptions)
+    return this.http.put<JSON>(`${this.backendURL}users/${userID}/password`, { "password": newName }, this.httpOptions)
   }
   public updateDescription(userID: number, desc: string): Observable<any> {
     return this.http.put<JSON>(`${this.backendURL}users/${userID}/description`, { Description: desc }, this.httpOptions)

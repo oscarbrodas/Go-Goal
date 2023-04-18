@@ -124,10 +124,10 @@ export class SettingsComponent {
     if (value == "Name:") {
       this.profileData.FirstName = changeForm.value.data;
       this.profileData.LastName = changeForm.value.data2;
-      //this.backend.updateFirstName(this.profileData.ID, this.profileData.FirstName).subscribe((data) =>
-      //console.log("Updated First Name"))
-      //this.backend.updateLastName(this.profileData.ID, this.profileData.LastName).subscribe((data)=>
-      //console.log("Updated Last Name"))
+      this.backend.updateFirstName(this.profileData.ID, this.profileData.FirstName).subscribe((data) =>
+      console.log("Updated First Name"))
+      this.backend.updateLastName(this.profileData.ID, this.profileData.LastName).subscribe((data)=>
+      console.log("Updated Last Name"))
     } else if (value == "Email:") {
       if (!changeForm.value.data.includes('@') && !changeForm.value.data.includes('.')) {
         this.invalidMessage = "Not a valid email address";
@@ -135,12 +135,12 @@ export class SettingsComponent {
         return;
       }
       this.profileData.Email = changeForm.value.data;
-      //this.backend.updateEmail(this.profileData.ID, this.profileData.Email).subscribe(()=>
-      //console.log("Updated Email"))
+      this.backend.updateEmail(this.profileData.ID, this.profileData.Email).subscribe(()=>
+      console.log("Updated Email"))
     } else if (value == 'Username:') {
       this.profileData.Username = changeForm.value.data;
-      //this.backend.updateUsername(this.profileData.ID, this.profileData.Username).subscribe(()=>
-      //console.log("Updated Username"))
+      this.backend.updateUsername(this.profileData.ID, this.profileData.Username).subscribe(()=>
+      console.log("Updated Username"))
     } else if (value == 'New Password:') {
       if (changeForm.value.data.length <= 8 || changeForm.value.data == this.profileData.Password) {
         this.invalidMessage = "Your password is few too digits or the same password as before";
@@ -148,8 +148,8 @@ export class SettingsComponent {
         return;
       }
       this.profileData.Password = changeForm.value.data;
-      //this.backend.updatePassword(this.profileData.ID, this.profileData.Password).subscribe(()=>
-      //console.log("Updated Password"))
+      this.backend.updatePassword(this.profileData.ID, this.profileData.Password).subscribe(()=>
+      console.log("Updated Password"))
     }
     this.userService.setUserData(this.profileData);
     this.close();
