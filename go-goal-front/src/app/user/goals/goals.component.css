@@ -351,6 +351,38 @@ textarea::placeholder {
 
 }
 
+.experience>h1 {
+    border-bottom: 2px solid rgba(102, 255, 26, 1);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.lvl1-3 {
+    color: aliceblue;
+}
+
+.lvl4-6 {
+    color: yellowgreen;
+}
+
+.lvl7-9 {
+    color: darkviolet
+}
+
+.lvl10 {
+    color: goldenrod;
+}
+
+
+.p-cont {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: 3px;
+}
+
+
 .progress-bar {
     height: 20px;
     width: 200px;
@@ -369,22 +401,12 @@ textarea::placeholder {
 }
 
 .progress {
-    animation: load 3s normal forwards;
     box-shadow: 0 10px 40px -10px rgba(102, 255, 26, 1);
     border-radius: 100px;
     background: rgba(102, 255, 26, 1);
     height: 30px;
     width: 0;
-}
-
-@keyframes load {
-    0% {
-        width: 0;
-    }
-
-    100% {
-        width: 68%;
-    }
+    transition: all 0.5s ease forwards;
 }
 
 

@@ -68,6 +68,8 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
   theCount: number = 0;
   requested: boolean = false;
   added: boolean = false;
+  levelName: string = "Newbie";
+  levelNames: string[] = ['Newbie', 'Goal Keeper', 'Goal Getter', 'Goal Master', 'Overachiever', 'Dream Chaser', 'Visionary', 'Legend in the Making', 'Idol', 'Ascendant', 'God of Goals'];
 
   editDescription: boolean = false;
   descriptionForm: FormGroup = this.formBuilder.group({
@@ -102,6 +104,15 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       this.user.Description = data.ThisUser.Description;
       this.user.XP = data.ThisUser.XP;
       this.theUser = data.ThisUser.ID == this.userService.getUserData().ID;
+
+      // Get level name
+      let level = Math.floor(this.user.XP! / 500);
+      if (level >= this.levelNames.length) {
+        this.levelName = this.levelNames[this.levelNames.length - 1];
+      }
+      else {
+        this.levelName = this.levelNames[level];
+      }
     });
 
     // Get user goals for this profile

@@ -25,20 +25,24 @@
 
             <div class="experience">
 
-                <h1>XP</h1>
+                <h1 class="lvl1-3" *ngIf="uLevel <= 3">{{uLevelName}}</h1>
+                <h1 class="lvl4-6" *ngIf="uLevel > 3 && uLevel <= 6">{{uLevelName}}</h1>
+                <h1 class="lvl7-9" *ngIf="uLevel > 6 && uLevel <= 9">{{uLevelName}}</h1>
+                <h1 class="lvl10" *ngIf="uLevel > 9">{{uLevelName}}</h1>
 
-                <p>Level: {{uLevel}}</p>
+                <p>Current Level</p>
 
                 <div>
-
                     <div class="progress-bar">
 
-                        <div class="progress"></div>
-                        <!-- [style.width.%]="(XP / 100) * 100" -->
+                        <div class="progress" [style.width.%]="(this.XP % 500) / 5"></div>
+
                     </div>
 
-                    <p>{{XP}}</p>
-
+                    <div class="p-cont">
+                        <p>{{uLevel}}</p>
+                        <p>{{uLevel + 1}}</p>
+                    </div>
                 </div>
 
             </div>

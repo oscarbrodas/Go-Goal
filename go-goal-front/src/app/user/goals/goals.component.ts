@@ -43,15 +43,23 @@ import { HttpClient } from '@angular/common/http';
           style({ left: '*', offset: 1 }),
         ]))
       ]),
-      // transition(':leave', [
-      //   animate('1200ms ease-out', keyframes([
-      //     style({ offset: 0, left: '*' }),
-      //     style({ left: '-400px', offset: 0.45 }),
-      //     style({ left: '-500px', offset: 1 }),
-      //   ]))
-      // ])
+
+
+    ]),
+
+    trigger('xp', [
+      transition(':enter', [
+        style({ width: '0' }),
+        animate('1200ms 10s ease-out', keyframes([
+          style({ offset: 0, width: '0' }),
+          style({ width: '*', offset: 1 }),
+        ]))
+
+
+      ]),
 
     ])
+
   ]
 })
 export class GoalsComponent implements OnInit, OnChanges {
@@ -71,6 +79,9 @@ export class GoalsComponent implements OnInit, OnChanges {
 
   XP: number = 0;
   uLevel: number = 0;
+  progWidth: number = 0;
+  uLevelName: string = "Newbie";
+  levelNames: string[] = ['Newbie', 'Goal Keeper', 'Goal Getter', 'Goal Master', 'Overachiever', 'Dream Chaser', 'Visionary', 'Legend in the Making', 'Idol', 'Ascendant', 'God of Goals'];
 
 
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private http: HttpClient) {
@@ -84,7 +95,17 @@ export class GoalsComponent implements OnInit, OnChanges {
     // Get XP
     this.backend.getInfo(this.userService.getUserData().ID).subscribe((data) => {
       this.XP = data.ThisUser.XP;
-      this.uLevel = this.XP / 100;
+      this.uLevel = Math.floor(this.XP / 500);
+      if (this.uLevel >= 10) {
+        this.uLevelName = this.levelNames[10];
+      }
+      else if (this.uLevel < 0) {
+        this.uLevelName = this.levelNames[0];
+      }
+      else {
+        this.uLevelName = this.levelNames[this.uLevel];
+      }
+
     });
     console.log('XP loaded');
 
@@ -297,7 +318,6 @@ export class GoalsComponent implements OnInit, OnChanges {
 
   updateXP() {
     this.http.put<JSON>(`http://localhost:9000/api/users/${this.userService.getUserData().ID}/xp`, { NewXP: 100 }).subscribe((data) => {
-      console.log(data);
     });
   }
 
