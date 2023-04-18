@@ -78,7 +78,7 @@ export class GoalsComponent implements OnInit, OnChanges {
   });
 
   XP: number = 0;
-  uLevel: number = 0;
+  @Input() uLevel: number = 0;
   progWidth: number = 0;
   uLevelName: string = "Newbie";
   levelNames: string[] = ['Newbie', 'Goal Keeper', 'Goal Getter', 'Goal Master', 'Overachiever', 'Dream Chaser', 'Visionary', 'Legend in the Making', 'Idol', 'Ascendant', 'God of Goals'];
@@ -319,6 +319,10 @@ export class GoalsComponent implements OnInit, OnChanges {
   updateXP() {
     this.http.put<JSON>(`http://localhost:9000/api/users/${this.userService.getUserData().ID}/xp`, { NewXP: 100 }).subscribe((data) => {
     });
+
+    if (this.XP % 500 === 0) {
+      this.uLevel++;
+    }
   }
 
 }
