@@ -46,7 +46,7 @@
 
                 <div *ngIf="this.theUser" class="desc-b">
                     <button *ngIf="!editDescription; else editD;" class="edit-b"
-                        (click)="editDescription = !editDescription">Edit</button>
+                        (click)="editDescription = !editDescription; this.descriptionForm.setValue({Description: this.user.Description});">Edit</button>
                     <ng-template #editD>
                         <button style="margin-top: 15px" (click)="updateDescription()">Save</button>
                         <button style="margin-top: 15px" (click)="editDescription = !editDescription">Cancel</button>

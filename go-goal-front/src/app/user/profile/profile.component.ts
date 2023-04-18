@@ -105,6 +105,7 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
       this.user.XP = data.ThisUser.XP;
       this.theUser = data.ThisUser.ID == this.userService.getUserData().ID;
 
+
       // Get level name
       let level = Math.floor(this.user.XP! / 500);
       if (level >= this.levelNames.length) {
@@ -230,6 +231,8 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
 
     });
+
+
 
 
   }
