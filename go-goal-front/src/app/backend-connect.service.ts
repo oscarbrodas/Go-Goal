@@ -80,8 +80,12 @@ export class BackendConnectService {
   public sendFriendRequest(ID: Number, friendID: Number): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}friends/sendFriendRequest/${ID}/${friendID}`, this.httpOptions);
   }
-
-
+  public getImage(ID: Number): Observable<any>{
+    return this.http.get<JSON>(`${this.backendURL}/users/${ID}/avatar`, this.httpOptions); //Base64Image is key
+  }
+  public setImage(ID: Number, image: string): Observable<any>{
+    return this.http.put<JSON>(`${this.backendURL}/users/${ID}/avatar`, {"Base64Image": image}, this.httpOptions);//Base64Image is key
+  }
 
 }
 

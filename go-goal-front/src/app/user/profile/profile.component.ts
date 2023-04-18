@@ -78,7 +78,6 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService, private activatedRoute: ActivatedRoute, private http: HttpClient) { }
 
-
   ngOnChanges(changes: SimpleChanges): void {
 
   }
@@ -86,9 +85,8 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
 
 
   }
-
+  imgSource: string = "../assets/dashboard_images/p.png";
   ngOnInit() {
-
     this.activatedRoute.params.subscribe((url) => {
       this.id = url["id"];
     });
@@ -115,7 +113,11 @@ export class ProfileComponent implements OnInit, OnChanges, OnDestroy {
         this.levelName = this.levelNames[level];
       }
     });
-
+    //Get Profile Image
+    this.backend.getImage(this.id).subscribe((data)=>{
+      console.log(data.Successful);
+      this.imgSource = `data:image/png;base64,${data.Base64Image}`;
+    })
     // Get user goals for this profile
     this.backend.getGoals(this.id).subscribe((data) => {
 
