@@ -55,7 +55,7 @@ func IsValidEmail(globalDB *gorm.DB, email string) (exists bool, validEmail bool
 }
 
 // input json must contain all information of the user
-func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
+func CreateUser(globalDB *gorm.DB, globalUploader *manager.Uploader, globalDownloader *manager.Downloader) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var ThisUser User
@@ -87,7 +87,42 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 			returnInfo.Successful = true
 		} else {
 			returnInfo.Successful = false
+			json.NewEncoder(w).Encode(returnInfo)
+			return
 		}
+
+		buf := manager.NewWriteAtBuffer([]byte{})
+
+		// Grab basic profile file from file system
+		_, err := globalDownloader.Download(context.TODO(), buf, &s3.GetObjectInput{
+			Bucket: aws.String("go-goal-filesystem"),
+			Key:    aws.String("basic.png"),
+		})
+
+		if err != nil {
+			fmt.Println("Error: ", err)
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		// Set User's avatar to basic.png
+		_, err = globalUploader.Upload(context.TODO(), &s3.PutObjectInput{
+			Bucket: aws.String("go-goal-filesystem"),
+			Key:    aws.String(fmt.Sprint(ThisUser.ID) + ".png"), // File name is userID.png
+			Body:   bytes.NewReader(buf.Bytes()),
+			ACL:    "public-read",
+		})
+
+		if err != nil {
+			fmt.Println("Error: ", err)
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }

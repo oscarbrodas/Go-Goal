@@ -2,19 +2,27 @@ package handler_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"go-goal/httpd/handler"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"testing"
 
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 var globalDB *gorm.DB
+var globalUploader *manager.Uploader
+var globalDownloader *manager.Downloader
 
 func initializeTestDatabase() {
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
@@ -31,6 +39,26 @@ func initializeTestDatabase() {
 	globalDB.AutoMigrate(&handler.User{})
 	globalDB.AutoMigrate(&handler.Goal{})
 	globalDB.AutoMigrate(&handler.Friend{})
+}
+
+func initializeTestFileSystem() {
+
+	// Load Environment Variables
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// Setup s3 uploader
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		log.Printf("error: %v", err)
+		return
+	}
+
+	client := s3.NewFromConfig(cfg)
+	globalUploader = manager.NewUploader(client)
+	globalDownloader = manager.NewDownloader(client)
 }
 
 func TestGetAllFriends(t *testing.T) {

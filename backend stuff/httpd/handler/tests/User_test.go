@@ -86,6 +86,7 @@ func TestGetUser(t *testing.T) {
 // creating a new user without the email already existing
 func TestCreateUser1(t *testing.T) {
 	initializeTestDatabase()
+	initializeTestFileSystem()
 
 	var user handler.User
 	user.Username = "dwan12345"
@@ -103,7 +104,7 @@ func TestCreateUser1(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handler.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB, globalUploader, globalDownloader)(w, r)
 
 	returnInfo := struct {
 		Successful    bool
@@ -126,6 +127,7 @@ func TestCreateUser1(t *testing.T) {
 // creating a new user with the email existing
 func TestCreateUser2(t *testing.T) {
 	initializeTestDatabase()
+	initializeTestFileSystem()
 
 	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp, description) values(\"dc\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw1\",\"0\",\"Hi!\")")
 
@@ -145,7 +147,7 @@ func TestCreateUser2(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handler.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB, globalUploader, globalDownloader)(w, r)
 
 	returnInfo := struct {
 		Successful    bool
@@ -181,7 +183,7 @@ func TestCreateUser3(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handler.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB, globalUploader, globalDownloader)(w, r)
 
 	returnInfo := struct {
 		Successful    bool
