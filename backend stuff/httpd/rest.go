@@ -52,6 +52,7 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/friends/acceptFriendRequest/{sender}/{accepter}", handler.AcceptFriendRequest(globalDB)).Methods("PUT")
 	s.HandleFunc("/friends/declineFriendRequest/{sender}/{decliner}", handler.DeclineFriendRequest(globalDB)).Methods("DELETE")
 	s.HandleFunc("/friends/removeFriend/{remover}/{friend}", handler.RemoveFriend(globalDB)).Methods("DELETE")
+	s.HandleFunc("/friends/search/{name}", handler.SearchFriend(globalDB)).Methods("GET")
 
 	// Route to serve site - MUST BE FINAL ROUTE
 	r.PathPrefix("/").Handler(AngularHandler).Methods("GET")
