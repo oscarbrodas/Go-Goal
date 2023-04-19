@@ -304,14 +304,14 @@ func SearchFriend(globalDB *gorm.DB) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		params := mux.Vars(r)
 		name, _ := params["name"]
-
+		name = "%" + name + "%"
 		returnInfo := struct {
 			Successful bool
 			ErrorExist bool
 			Users      []User
 		}{}
 
-		globalDB.Model(User{}).Where("username LIKE ? AND ROWNUM < 11", "%"+name+"%").Find(&returnInfo.Users)
+		globalDB.Model(&User{}).Raw("SELECT * FROM users WHERE username LIKE ? LIMIT 10", name).Scan(&returnInfo.Users)
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
