@@ -311,7 +311,7 @@ func SearchFriend(globalDB *gorm.DB) http.HandlerFunc {
 			users      []User
 		}{}
 
-		globalDB.Model(User{}).Where("name LIKE ? AND ROWNUM < 11", "%"+name+"%").Find(&returnInfo.users)
+		globalDB.Model(User{}).Where("username LIKE ? AND ROWNUM < 11", "%"+name+"%").Find(&returnInfo.users)
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
