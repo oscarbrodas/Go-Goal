@@ -23,6 +23,7 @@ import { LoginService } from './login-page/login.service';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
 
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { AboutusComponent } from './aboutus/aboutus.component';
     HttpClientModule,
     FormsModule,
     CarouselModule,
-    CardModule
+    CardModule,
+    ImageCropperModule,
   ],
   exports: [],
   providers: [],

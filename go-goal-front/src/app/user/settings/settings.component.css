@@ -194,6 +194,7 @@ button:hover {
   width: 30%;
   position: relative;
   transition: all 5s ease-in-out;
+  overflow: scroll;
 }
 
 form>div>button {
@@ -316,4 +317,13 @@ form>div>button {
     left: 65%;
   }
 
+}
+
+.ImageToEdit{
+  width: 30vw;
+  height:30vw;
+  overflow:scroll;
+}
+.newImage{
+  margin-top:20%;
 }

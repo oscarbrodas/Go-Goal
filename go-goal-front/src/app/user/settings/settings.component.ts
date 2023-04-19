@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { BackendConnectService, userInfo } from 'src/app/backend-connect.service';
 import { trigger, state, style, transition, animate, keyframes, stagger, query, group } from '@angular/animations';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { UserService } from '../user.service';
-
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -69,16 +70,22 @@ import { UserService } from '../user.service';
   ]
 })
 export class SettingsComponent {
+  imgSource: string = "../assets/dashboard_images/p.png";
   constructor(private backend: BackendConnectService, private formBuilder: FormBuilder, private userService: UserService) {
   }
   profileData: userInfo = { FirstName: "error", LastName: "error", ID: 0, Email: "error", Username: "error", Password: "error", loggedIn: false };
   ngOnInit(): void {
     this.profileData = this.getProfile();
+    this.backend.getImage(this.profileData.ID).subscribe((data)=>{
+      console.log(data.Successful);
+      this.imgSource = `data:image/png;base64,${data.Base64Image}`;
+    })
   }
   getProfile(): userInfo {
     return this.userService.getUserData();
   }
   editing: boolean = false;
+  editingImage: boolean = false;
   invalid: boolean = false;
   invalidMessage: string = "";
   title: string = "";
@@ -100,22 +107,25 @@ export class SettingsComponent {
         data2: this.profileData.LastName
       })
       this.double = true;
+      this.editing = true;
     } else if (value == 'Email:') {
       this.changeForm.patchValue({ data: this.profileData.Email })
+      this.editing = true;
     } else if (value == 'Username:') {
       this.changeForm.patchValue({ data: this.profileData.Username })
+      this.editing = true;
     } else if (value == 'New Password:') {
       this.changeForm.patchValue({ data: "" })
-    } else {
+      this.editing = true;
+    } else if(value == 'New Image:'){
       // ADD IMAGE UPDATE SECTION
-
+      this.editingImage = true;
     }
     //Pull up pop-in window
-    this.editing = true;
-    //Close window with submission there and reload
   }
   close(): void {
     this.editing = false;
+    this.editingImage = false;
     this.double = false;
     this.invalid = false;
   }
@@ -154,4 +164,34 @@ export class SettingsComponent {
     this.userService.setUserData(this.profileData);
     this.close();
   }
+
+  imageChangedEvent: any = '';
+    croppedImage: any = '';
+
+    fileChangeEvent(event: any): void {
+        this.imageChangedEvent = event;
+    }
+    imageCropped(event: ImageCroppedEvent) {
+        this.croppedImage = event.base64;
+    }
+    imageLoaded(/*image: LoadedImage*/) {
+      // show cropper
+  }
+  cropperReady() {
+      // cropper ready
+  }
+  loadImageFailed() {
+      // show message
+  }
+
+    saveImage(){
+      this.backend.setImage(this.profileData.ID, `${this.croppedImage}`).subscribe((data)=>{
+        console.log(data.Successful);
+      })
+      this.backend.getImage(this.profileData.ID).subscribe((data)=>{
+        console.log(data.Successful);
+        this.imgSource = `data:image/png;base64,${data.Base64Image}`;
+      })
+      this.close();
+    }
 }

@@ -28,17 +28,43 @@
     </div>
 
     <div class="pic-cont">
-        <img class="pic" @picSlide src="../assets/dashboard_images/p.png">
-        <div (click)="edit('New Image')" class="pic-update">
+        <img class="pic" @picSlide src={{this.imgSource}}>
+        <div (click)="edit('New Image:')" class="pic-update">
             <p>Update?</p>
         </div>
-
     </div>
 
 
-    <div class="overlay" *ngIf="this.editing">
+    <div class="overlay" *ngIf="this.editing || this.editingImage">
         <div class="pop-up">
-            <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)">
+            <div *ngIf="this.editingImage" class="newImage">
+                
+
+            <input type="file" (change)="fileChangeEvent($event)" />
+
+            <image-cropper class="ImageToEdit"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded()"
+            (cropperReady)="cropperReady()"
+            (loadImageFailed)="loadImageFailed()"
+            [resizeToWidth]="110"
+            [cropperMinWidth]="55"
+            [onlyScaleDown]="true"
+            [roundCropper]="true"
+
+            ></image-cropper>
+            <div style="display: flex; justify-content: space-around;">
+                <button (click)="saveImage()">Save</button>
+                <button (click)="close()">Cancel</button>
+            </div>
+            </div>
+
+
+            <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)" *ngIf="this.editing">
                 <label>{{this.title}} </label>
                 <input type="text" class="form" name="data" formControlName="data">
                 <input *ngIf="this.double" type="text" class="form" name="data2" formControlName="data2">

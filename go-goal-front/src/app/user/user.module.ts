@@ -10,6 +10,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from './profile/profile.component';
 import { DiscoverComponent } from './discover/discover.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { DiscoverComponent } from './discover/discover.component';
     UserRoutingModule,
     MatIconModule,
     ReactiveFormsModule,
-
+    ImageCropperModule,
   ]
 })
 export class UserModule { }
