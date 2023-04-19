@@ -27,7 +27,8 @@ export class SignUpComponentComponent {
     LastName: new FormControl(''),
     Email: new FormControl(''),
     Username: new FormControl(''),
-    Password: new FormControl('')
+    Password: new FormControl(''),
+    ConfirmPassword: new FormControl('')
   });
   loginForm = this.formBuilder.group({
     Email: new FormControl(""),
@@ -68,6 +69,10 @@ export class SignUpComponentComponent {
     }
     else if (this.userData.Password.length < 8) {
       this.signUpMessage = 'This account needs a more secure password'
+      return;
+    }
+    else if(this.userData.Password != uf.value.ConfirmPassword){
+      this.signUpMessage = 'Passwords do not match'
       return;
     }
     else {
