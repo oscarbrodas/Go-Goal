@@ -75,12 +75,14 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
   friendRequested: boolean = false;
   removeRequested: boolean = false;
-
+  index: number = 0;
   user?: userInfo;
   userFriendsIDs: number[] = [];
+  userSearched: userInfo[] = [];
   userFriends: Map<number, string> = new Map([]);
   outgoingFriendRequests: number[] = [];
   incomingFriendRequests: number[] = [];
+  standard: string = "Click on a Profile or search for an ID to display their information."
 
   searchForm = new FormGroup({
     search: new FormControl(''),
@@ -135,50 +137,96 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
   // Search for a user among database
   search(): void {
-    // Validate input
-    let s: string = this.searchForm.value.search?.toString()!;
-    if (Number.isNaN(Number(s)) || Number(s) <= 0 || Number(s) == this.user?.ID) {
-      alert('Please enter a valid ID to search for.')
-      return;
-    }
-    else if (this.userFriendsIDs.includes(Number(s))) {
-      alert('This user is already your friend.')
-      return;
-    }
-
     // Backend call
-    this.http.get<any>(`http://localhost:9000/api/users?id=${this.searchForm.value.search}`).subscribe((data) => {
-      if (data.ErrorExist) {
+    this.http.get<any>(`http://localhost:9000/api/friends/search/${this.searchForm.value.search}`, this.backend.httpOptions).subscribe((data) => {
+    console.log(data)
+    this.userSearched= []
+    if (data.ErrorExist || data.Users === null) {
         this.friendForm.setValue({
-          friendUsername: 'User Not Found',
-          friend: `User Not Found`
+          friendUsername: 'No Users Found',
+          friend: `-1`
         });
+        this.standard = "No users with that username were found, please try again"
         console.log('Error: Could not get friend data.');
       } else { // User found, set form values
+        for(let entry=0;entry<data.Users.length;entry++){
+          this.userSearched.push({"ID": data.Users[entry].ID,
+            "loggedIn": false,
+            "Username": data.Users[entry].Username,
+            "FirstName": data.Users[entry].FirstName,
+            "LastName": data.Users[entry].LastName,
+            "Email": data.Users[entry].Email,
+            "Password": data.Users[entry].Password})
+        }
+        console.log(this.userSearched)
         this.friendForm.setValue({
-          friendUsername: `Username: ${data.ThisUser.Username}`,
-          friend: `Name: ${data.ThisUser.FirstName + ' ' + data.ThisUser.LastName}`
+          friendUsername: `Username: ${data.Users[0].Username}`,
+          friend: `Name: ${data.Users[0].FirstName + ' ' + data.Users[0].LastName}`
         });
         this.message = "Add Friend";
-        this.IDSearch = data.ThisUser.ID;
-
+        this.IDSearch = data.Users[0].ID;
+        this.index = 0;
         // Check if friend request has already been sent
+        if(this.userFriendsIDs.includes(this.userSearched[this.index].ID)){
+          this.message = "Remove Friend"
+        }
         if (this.outgoingFriendRequests.includes(this.IDSearch)) {
           this.message = "Friend Request Sent";
           this.friendRequested = true;
         } else {
           this.friendRequested = false;
         }
-
+        console.log(this.userSearched)
       }
 
     });
-
+    this.friendRequested = false;
     this.removeRequested = false;
 
 
   }
-
+  prev(){
+    this.index = (this.index+this.userSearched.length-1)%this.userSearched.length
+    this.friendForm.setValue({
+      friendUsername: `Username: ${this.userSearched[this.index].Username}`,
+      friend: `Name: ${this.userSearched[this.index].FirstName + ' ' + this.userSearched[this.index].LastName}`
+    });
+    this.friendRequested = false;
+    this.removeRequested = false;
+    this.message = "Add Friend";
+    this.IDSearch = this.userSearched[this.index].ID;
+    // Check if friend request has already been sent
+    if(this.userFriendsIDs.includes(this.userSearched[this.index].ID)){
+      this.message = "Remove Friend"
+    }
+    if (this.outgoingFriendRequests.includes(this.IDSearch)) {
+      this.message = "Friend Request Sent";
+      this.friendRequested = true;
+    } else {
+      this.friendRequested = false;
+    }
+  }
+  next(){
+    this.index = (this.index+1)%this.userSearched.length
+    this.friendForm.setValue({
+      friendUsername: `Username: ${this.userSearched[this.index].Username}`,
+      friend: `Name: ${this.userSearched[this.index].FirstName + ' ' + this.userSearched[this.index].LastName}`
+    });
+    this.friendRequested = false;
+    this.removeRequested = false;
+    this.message = "Add Friend";
+    this.IDSearch = this.userSearched[this.index].ID;
+    // Check if friend request has already been sent
+    if(this.userFriendsIDs.includes(this.userSearched[this.index].ID)){
+      this.message = "Remove Friend"
+    }
+    if (this.outgoingFriendRequests.includes(this.IDSearch)) {
+      this.message = "Friend Request Sent";
+      this.friendRequested = true;
+    } else {
+      this.friendRequested = false;
+    }
+  }
   // Navigate to profile of user selected
   viewProfile(): void {
     this.router.navigate([`/user/${this.IDSearch}/profile`]);
@@ -216,7 +264,7 @@ export class DiscoverComponent implements OnInit, OnChanges {
       });
 
 
-    } else { // Remove friend section from profile section
+    } else if (this.message == "Remove Friend"){ // Remove friend section from profile section
       console.log('Removing friend...');
       this.message = "Removed Friend";
       this.friendRequested = false;
@@ -224,6 +272,8 @@ export class DiscoverComponent implements OnInit, OnChanges {
 
       // Remove friend from map and backend
       this.userFriends.delete(this.IDSearch);
+      this.userFriendsIDs = this.userFriendsIDs.filter((ele)=> ele !== this.IDSearch);
+      console.log(this.IDSearch)
       this.http.delete<any>(`http://localhost:9000/api/friends/removeFriend/${this.user?.ID}/${this.IDSearch}`, {}).subscribe((data) => {
 
         if (data.ErrorExist) {

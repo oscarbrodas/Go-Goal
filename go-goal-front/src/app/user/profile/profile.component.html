@@ -89,7 +89,7 @@
             </div>
 
             <div *ngIf="this.theUser" class="g-redirect">
-                <button class="allGoals" routerLink="../goals">Go to all your goals</button>
+                <button class="allGoals" id="allGoals" routerLink="../goals">Go to all your goals</button>
             </div>
 
             <div class="more" *ngIf="!this.theUser && this.theCount < this.userGoals.length" (click)="more()"><i

@@ -8,8 +8,8 @@
 
         <form [formGroup]="searchForm" (ngSubmit)="search()" class="form">
             <label for="s">Search: </label>
-            <input type="text" id="s" placeholder="Search by ID" formControlName="search">
-            <button type="submit">
+            <input type="text" id="s" placeholder="Search by Username" formControlName="search">
+            <button type="submit" id="searchButton">
                 <mat-icon>search</mat-icon>
             </button>
         </form>
@@ -17,12 +17,11 @@
         <div class="info-sect" style="border-top: 2px solid rgba(102, 255, 26, 1);">
 
             <p *ngIf="friendForm.value.friend === '-1'; else elseBlock">
-                Click on a Profile or search for an ID to display their information.
+                {{this.standard}}
             </p>
             <ng-template #elseBlock>
                 <div class="f-sect">
 
-                    <p>{{friendForm.value.friendUsername}}</p>
                     <p>{{friendForm.value.friend}}</p>
 
                     <div class="f-sect-b">
@@ -34,7 +33,6 @@
                             (click)="addOrRemove()">
                             {{message}}
                         </button>
-
                         <ng-template #staticButton>
                             <button class="b-ck" disabled>
                                 {{message}}
@@ -42,6 +40,16 @@
                         </ng-template>
 
                     </div>
+                    <div class="f-sect-b" *ngIf="userSearched.length > 1">
+
+                        <button class="b-nck" (click)="prev()" id="prevButton">&lt; Prev</button>
+
+
+                        <button class="b-nck" (click)="next()" id="nextButton">
+                            Next &gt;
+                        </button>
+                    </div>
+
                 </div>
 
             </ng-template>
@@ -69,8 +77,6 @@
                 (click)="setFriendProfile(friend)">
                 <p>{{friend.value}}</p>
             </button>
-
-
 
         </div>
 
