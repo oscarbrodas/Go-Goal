@@ -287,7 +287,7 @@
 
 ## Backend Sprint 4 Work
 
-Added search friends function in order to search for new friends with a username similar to the one the user will be searching. Updated the unit tests for friends to reflect the proper functionality of friends. Created unit tests for the benchmark functionality.
+Added search friends function in order to search for new friends with a username similar to the one the user will be searching. Updated the unit tests for friends to reflect the proper functionality of friends. Created unit tests for the benchmark functionality. Added profile descriptions to the user table. Updated the routes and functions of the update user functions to accect json objects within the body of the requests. Added AWS s3 functionality, routes, and functions to support profile pictures.
 
 ## Frontend Sprint 4 Work
 
