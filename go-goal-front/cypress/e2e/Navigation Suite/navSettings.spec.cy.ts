@@ -1,13 +1,13 @@
 describe('Navigation from User Home Page Tests', () => {
-    beforeEach(() => {
+     beforeEach(() => {
       cy.visit('/login')
-      cy.get('[name="Email"]').type("sglickman611@gmail.com")
-      cy.get('[name="Password"]').type("ThisIsAPassword")
+      cy.get('[id="Email"]').type("User1@gmail.com", {force: true})
+      cy.get('[id="Password"]').type("UserOneOne")
       cy.get('[type="submit"]').click()
-      cy.visit('/user/1/settings')
+      cy.visit("/user/1/settings")
     })
     it('Visits the initial home page', () => {
-      cy.url().should('include','home')
+      cy.url().should('include','settings')
     })
   
     it('Visit profile page from top bar', ()=>{
@@ -20,13 +20,18 @@ describe('Navigation from User Home Page Tests', () => {
       cy.get('[name="myGoals"]').click()
       cy.url().should('include','goals')
     })
+    it('Visit discover page from top bar', ()=>{
+      cy.get('[id="menuButton"]').click()
+      cy.get('[name="discover"]').click()
+      cy.url().should('include','discover')
+    })
     it('Visit settings page from top bar', ()=>{
       cy.get('[id="menuButton"]').click()
       cy.get('[name="settings"]').click()
       cy.url().should('include','settings')
     })
     it('Visit Home from bottom bar', () => {
-      cy.get('[name = "linkBarMain"]').click()
+      cy.get('[name = "linkBarHome"]').click()
       cy.url().should('include','main')
     })
   
@@ -40,13 +45,13 @@ describe('Navigation from User Home Page Tests', () => {
       cy.url().should('include','aboutus')
     })
   
-    it('Visit login page from bottom bar', ()=>{
-      cy.get('[name = "linkBarLogin"]').click()
-      cy.url().should('include','login')
+    it('Visit profile page from bottom bar', ()=>{
+      cy.get('[name="linkBarProfile"]').click()
+      cy.url().should('include','1/profile')
     })
   
-    it('Visit sign-up page from bottom bar', ()=>{
-      cy.get('[name = "linkBarSignUp"]').click()
-      cy.url().should('include','sign-up')
+    it('Logout from bottom bar', ()=>{
+      cy.get('[name = "linkBarLogout"]').click()
+      cy.url().should('include','main')
     })
 })
