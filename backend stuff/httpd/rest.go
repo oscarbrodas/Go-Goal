@@ -20,7 +20,7 @@ func httpHandler() http.Handler {
 
 	// Create, Update, Retrieve, Handle Users
 	s.HandleFunc("/users", handler.GetUser(globalDB)).Methods("GET")
-	s.HandleFunc("/users", handler.CreateUser(globalDB)).Methods("POST")
+	s.HandleFunc("/users", handler.CreateUser(globalDB, globalUploader, globalDownloader)).Methods("POST")
 	s.HandleFunc("/users/{id}/username", handler.UpdateUsername(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/firstname", handler.UpdateFirstname(globalDB)).Methods("PUT")
 	s.HandleFunc("/users/{id}/lastname", handler.UpdateLastname(globalDB)).Methods("PUT")
@@ -30,6 +30,8 @@ func httpHandler() http.Handler {
 	s.HandleFunc("/users/{id}/description", handler.UpdateDescription(globalDB)).Methods("PUT")
 	s.HandleFunc("/login/{email}/{password}", handler.CheckLogin(globalDB)).Methods("GET")
 	s.HandleFunc("/users/checkUsername/{username}", handler.CheckUsername(globalDB)).Methods("GET")
+	s.HandleFunc("/users/{id}/avatar", handler.SetAvatar(globalDB, globalUploader)).Methods("PUT")
+	s.HandleFunc("/users/{id}/avatar", handler.GetAvatar(globalDB, globalDownloader)).Methods("GET")
 
 	// Create and Retrieve Goals
 	s.HandleFunc("/goals/{id}", handler.CreateGoal(globalDB)).Methods("POST")
