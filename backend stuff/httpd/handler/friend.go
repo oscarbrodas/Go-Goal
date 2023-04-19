@@ -305,13 +305,13 @@ func SearchFriend(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		name, _ := params["name"]
 
-		returnInfo := struct { // need to be standardized
+		returnInfo := struct {
 			Successful bool
 			ErrorExist bool
-			users      []User
+			Users      []User
 		}{}
 
-		globalDB.Model(User{}).Where("username LIKE ? AND ROWNUM < 11", "%"+name+"%").Find(&returnInfo.users)
+		globalDB.Model(User{}).Where("username LIKE ? AND ROWNUM < 11", "%"+name+"%").Find(&returnInfo.Users)
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
