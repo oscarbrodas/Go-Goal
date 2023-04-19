@@ -1,17 +1,11 @@
 package handler
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"go-goal/util"
 	"net/http"
 
-	"context"
-
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
@@ -19,43 +13,27 @@ import (
 type User struct {
 	gorm.Model
 
-	Username    string
-	FirstName   string
-	LastName    string
-	Email       string
-	Password    string
-	XP          int
-	Description string
+	Username  string // test this
+	FirstName string
+	LastName  string
+	Email     string
+	Password  string
 }
 
 // checks if the username is good. add more rules later
-func IsValidUsername(globalDB *gorm.DB, username string) (exists bool, validName bool) {
-	// Empty Username is not valid and does not exist
-	if username == "" {
-		return false, false
-	}
-	//Checks if the username is registered with another user
+func isValidUsername(globalDB *gorm.DB, username string) (exists bool, validName bool) {
 	globalDB.Model(&User{}).Select("count(*) > 0").Where("username = ?", username).Find(&exists)
 	validName = !exists
+
+	if username == "" {
+		validName = false
+	}
 
 	return exists, validName
 }
 
-// checks if the username is good. add more rules later
-func IsValidEmail(globalDB *gorm.DB, email string) (exists bool, validEmail bool) {
-	// Empty Email is not valid and does not exist
-	if email == "" {
-		return false, false
-	}
-	//Checks if the email is registered with another user
-	globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", email).Find(&exists)
-	validEmail = !exists
-
-	return exists, validEmail
-}
-
 // input json must contain all information of the user
-func CreateUser(globalDB *gorm.DB, globalUploader *manager.Uploader, globalDownloader *manager.Downloader) http.HandlerFunc {
+func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var ThisUser User
@@ -68,15 +46,15 @@ func CreateUser(globalDB *gorm.DB, globalUploader *manager.Uploader, globalDownl
 			UsernameExist bool
 		}{}
 
-		// New User has 0 XP and a blank description
-		ThisUser.XP = 0
-		ThisUser.Description = ""
+		err := globalDB.Model(&User{}).Select("count(*) > 0").Where("email = ?", ThisUser.Email).Find(&returnInfo.EmailExist).Error
+		if err != nil {
+			returnInfo.ErrorExist = true
+		}
+		exists, _ := isValidUsername(globalDB, ThisUser.Username)
+		returnInfo.UsernameExist = exists
 
-		returnInfo.EmailExist, _ = IsValidEmail(globalDB, ThisUser.Email)
-		returnInfo.UsernameExist, _ = IsValidUsername(globalDB, ThisUser.Username)
-
-		if !returnInfo.EmailExist && !returnInfo.UsernameExist {
-			err := globalDB.Create(&ThisUser).Error
+		if !returnInfo.EmailExist && !returnInfo.ErrorExist && !returnInfo.UsernameExist {
+			err = globalDB.Create(&ThisUser).Error
 			if err != nil {
 				returnInfo.ErrorExist = true
 				json.NewEncoder(w).Encode(returnInfo)
@@ -85,44 +63,7 @@ func CreateUser(globalDB *gorm.DB, globalUploader *manager.Uploader, globalDownl
 				return
 			}
 			returnInfo.Successful = true
-		} else {
-			returnInfo.Successful = false
-			json.NewEncoder(w).Encode(returnInfo)
-			return
 		}
-
-		buf := manager.NewWriteAtBuffer([]byte{})
-
-		// Grab basic profile file from file system
-		_, err := globalDownloader.Download(context.TODO(), buf, &s3.GetObjectInput{
-			Bucket: aws.String("go-goal-filesystem"),
-			Key:    aws.String("basic.png"),
-		})
-
-		if err != nil {
-			fmt.Println("Error: ", err)
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		// Set User's avatar to basic.png
-		_, err = globalUploader.Upload(context.TODO(), &s3.PutObjectInput{
-			Bucket: aws.String("go-goal-filesystem"),
-			Key:    aws.String(fmt.Sprint(ThisUser.ID) + ".png"), // File name is userID.png
-			Body:   bytes.NewReader(buf.Bytes()),
-			ACL:    "public-read",
-		})
-
-		if err != nil {
-			fmt.Println("Error: ", err)
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
@@ -148,39 +89,15 @@ func GetUser(globalDB *gorm.DB) http.HandlerFunc {
 func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-
-		returnInfo := struct { // Don't need to pass new or old information, should already have it
-			ErrorExist    bool
-			Successful    bool
-			UsernameExist bool
-			UsernameValid bool
-		}{}
-
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		type NewUsername struct {
-			Username string
-		}
-		var update NewUsername
-		util.DecodeJSONRequest(&update, r.Body, w)
-
-		returnInfo.UsernameExist, returnInfo.UsernameValid = IsValidUsername(globalDB, update.Username)
-
-		if returnInfo.UsernameExist {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Printf("Error: Username already exists.")
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-		if !returnInfo.UsernameValid {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Printf("Error: Username not valid.")
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
+		var newUsername string
+		util.DecodeJSONRequest(&newUsername, r.Body, w)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
 
 		var user User
 		err := globalDB.Model(&User{}).First(&user, ID).Error
@@ -191,7 +108,7 @@ func UpdateUsername(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("username", update.Username)
+		globalDB.Model(&user).Update("username", newUsername)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -204,11 +121,8 @@ func UpdateFirstname(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		type NewFirstname struct {
-			Firstname string
-		}
-		var update NewFirstname
-		util.DecodeJSONRequest(&update, r.Body, w)
+		var newFirstname string
+		util.DecodeJSONRequest(&newFirstname, r.Body, w)
 
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
@@ -224,7 +138,7 @@ func UpdateFirstname(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("first_name", update.Firstname)
+		globalDB.Model(&user).Update("first_name", newFirstname)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -237,11 +151,8 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		type NewLastname struct {
-			Lastname string
-		}
-		var update NewLastname
-		util.DecodeJSONRequest(&update, r.Body, w)
+		var newLastname string
+		util.DecodeJSONRequest(&newLastname, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -256,7 +167,7 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("last_name", update.Lastname)
+		globalDB.Model(&user).Update("last_name", newLastname)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -266,38 +177,15 @@ func UpdateLastname(globalDB *gorm.DB) http.HandlerFunc {
 func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		returnInfo := struct { // Don't need to pass new or old information, should already have it
-			ErrorExist bool
-			Successful bool
-			EmailExist bool
-			EmailValid bool
-		}{}
-
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		type NewEmail struct {
-			Email string
-		}
-		var update NewEmail
-		util.DecodeJSONRequest(&update, r.Body, w)
-
-		returnInfo.EmailExist, returnInfo.EmailValid = IsValidEmail(globalDB, update.Email)
-
-		if returnInfo.EmailExist {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Printf("Error: Email already exists.")
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-		if !returnInfo.EmailValid {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Printf("Error: Email not valid.")
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
+		var newEmail string
+		util.DecodeJSONRequest(&newEmail, r.Body, w)
+		returnInfo := struct { // Don't need to pass new or old information, should already have it
+			ErrorExist bool
+			Successful bool
+		}{}
 
 		var user User
 		err := globalDB.Model(&User{}).First(&user, ID).Error
@@ -308,7 +196,7 @@ func UpdateEmail(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("email", update.Email)
+		globalDB.Model(&user).Update("email", newEmail)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -321,11 +209,8 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		ID := params["id"]
 
-		type NewPassword struct {
-			Password string
-		}
-		var update NewPassword
-		util.DecodeJSONRequest(&update, r.Body, w)
+		var newPassword string
+		util.DecodeJSONRequest(&newPassword, r.Body, w)
 		returnInfo := struct { // Don't need to pass new or old information, should already have it
 			ErrorExist bool
 			Successful bool
@@ -340,73 +225,7 @@ func UpdatePassword(globalDB *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		globalDB.Model(&user).Update("password", update.Password)
-
-		returnInfo.Successful = true
-		json.NewEncoder(w).Encode(returnInfo)
-	}
-}
-
-func AddXP(globalDB *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		params := mux.Vars(r)
-		ID := params["id"]
-
-		type AdditionalXP struct {
-			NewXP int
-		}
-		var update AdditionalXP
-		util.DecodeJSONRequest(&update, r.Body, w)
-		returnInfo := struct { // Don't need to pass new or old information, should already have it
-			ErrorExist bool
-			Successful bool
-		}{}
-
-		var user User
-		err := globalDB.Model(&User{}).First(&user, ID).Error
-		if err != nil {
-			returnInfo.ErrorExist = true
-			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		update.NewXP += user.XP
-
-		globalDB.Model(&user).Update("xp", update.NewXP)
-
-		returnInfo.Successful = true
-		json.NewEncoder(w).Encode(returnInfo)
-	}
-}
-
-func UpdateDescription(globalDB *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		params := mux.Vars(r)
-		ID := params["id"]
-
-		type NewDescription struct {
-			Description string
-		}
-		var update NewDescription
-		util.DecodeJSONRequest(&update, r.Body, w)
-		returnInfo := struct { // Don't need to pass new or old information, should already have it
-			ErrorExist bool
-			Successful bool
-		}{}
-
-		var user User
-		err := globalDB.Model(&User{}).First(&user, ID).Error
-		if err != nil {
-			returnInfo.ErrorExist = true
-			fmt.Printf("Error in update user\nCould not find user with id:%s", ID)
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		globalDB.Model(&user).Update("description", update.Description)
+		globalDB.Model(&user).Update("password", newPassword)
 
 		returnInfo.Successful = true
 		json.NewEncoder(w).Encode(returnInfo)
@@ -452,91 +271,7 @@ func CheckUsername(globalDB *gorm.DB) http.HandlerFunc {
 		params := mux.Vars(r)
 		username := params["username"]
 
-		returnInfo.Exists, returnInfo.ValidName = IsValidUsername(globalDB, username)
-
-		json.NewEncoder(w).Encode(returnInfo)
-	}
-}
-
-func SetAvatar(globalDB *gorm.DB, globalUploader *manager.Uploader) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		returnInfo := struct {
-			ErrorExist bool
-			Successful bool
-		}{}
-		params := mux.Vars(r)
-		ID := params["id"]
-
-		type ImageInput struct {
-			Base64 string
-		}
-		var im ImageInput
-		util.DecodeJSONRequest(&im, r.Body, w)
-
-		file, err := util.Base64toFile(im.Base64)
-
-		if err != nil {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Println("Error with base64 conversion: ", err)
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		result, err := globalUploader.Upload(context.TODO(), &s3.PutObjectInput{
-			Bucket: aws.String("go-goal-filesystem"),
-			Key:    aws.String(ID + ".png"), // File name is userID.png
-			Body:   bytes.NewReader(file),
-			ACL:    "public-read",
-		})
-
-		if err != nil {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Printf("Error with file upload")
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		fmt.Printf("Successfully Uploaded Avatar to %s", result.Location)
-		returnInfo.ErrorExist = false
-		returnInfo.Successful = true
-
-		json.NewEncoder(w).Encode(returnInfo)
-	}
-}
-
-func GetAvatar(globalDB *gorm.DB, globalDownloader *manager.Downloader) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		returnInfo := struct {
-			ErrorExist  bool
-			Successful  bool
-			Base64Image string
-		}{}
-		params := mux.Vars(r)
-		ID := params["id"]
-
-		buf := manager.NewWriteAtBuffer([]byte{})
-
-		_, err := globalDownloader.Download(context.TODO(), buf, &s3.GetObjectInput{
-			Bucket: aws.String("go-goal-filesystem"),
-			Key:    aws.String(ID + ".png"),
-		})
-
-		if err != nil {
-			returnInfo.ErrorExist = true
-			returnInfo.Successful = false
-			fmt.Println("Error with file download: ", err)
-			json.NewEncoder(w).Encode(returnInfo)
-			return
-		}
-
-		fmt.Println("Successfully downloaded Avatar")
-		returnInfo.ErrorExist = false
-		returnInfo.Successful = true
-		returnInfo.Base64Image = util.FiletoBase64(buf.Bytes())
+		returnInfo.Exists, returnInfo.ValidName = isValidUsername(globalDB, username)
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
