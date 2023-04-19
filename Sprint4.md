@@ -291,6 +291,19 @@
 
 ## Frontend Sprint 4 Work
 
+- Added and styled the main page a user sees when first visiting the website.
+
+- Implemented the Discover page and added the ability to search, add, and remove friends from other users.
+
+- Overhauled the profile page and added the ability to see pending friend requests and other profiles.
+
+- Overhauled the settings page to take user profile photos to be displayed.
+
+- Implemented the full functionality of the goals page and XP, where users can now have 'Goal Titles' based on XP values of completed goals.
+
+- Added the About Us and FAQ Page.
+
+- Implemented reactive CSS for all pages.
 
 ## Frontend Unit Tests
 
