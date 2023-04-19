@@ -287,23 +287,10 @@
 
 ## Backend Sprint 4 Work
 
-
+Added search friends function in order to search for new friends with a username similar to the one the user will be searching. Updated the unit tests for friends to reflect the proper functionality of friends. Created unit tests for the benchmark functionality.
 
 ## Frontend Sprint 4 Work
 
-- Added and styled the main page a user sees when first visiting the website.
-
-- Implemented the Discover page and added the ability to search, add, and remove friends from other users.
-
-- Overhauled the profile page and added the ability to see pending friend requests and other profiles.
-
-- Overhauled the settings page to take user profile photos to be displayed.
-
-- Implemented the full functionality of the goals page and XP, where users can now have 'Goal Titles' based on XP values of completed goals.
-
-- Added the About Us and FAQ Page.
-
-- Implemented reactive CSS for all pages.
 
 ## Frontend Unit Tests
 
@@ -357,3 +344,5 @@
  - No Goal - check if an exception is raised when a goal is entered with no data
  - Complete Goal - Click complete and see if that info is saved when reloaded
  - Delete Goal - Click delete options and see if goal is gone when reloaded
+ - Add Benchmark - Tests to see if a benchmark was properly added to the database with the proper foreign key to the appropriate goals object
+ - Get Benchmarks - tests proper getting of benchmarks, checks if no benchmark is returned when no benchmark exists, and tests for when input goal ID does not exist
