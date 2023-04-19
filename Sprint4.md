@@ -291,6 +291,13 @@ Added search friends function in order to search for new friends with a username
 
 ## Frontend Sprint 4 Work
 
+- Created main page for new users to the website to view and explain the service.
+
+- Implemented the Discover page to search, add, and remove friends and users.
+
+- Added the 
+
+- Implemented reactive CSS for all pages.
 
 ## Frontend Unit Tests
 
