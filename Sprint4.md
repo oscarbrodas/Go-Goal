@@ -295,7 +295,11 @@ Added search friends function in order to search for new friends with a username
 
 - Implemented the Discover page to search, add, and remove friends and users.
 
-- Added the 
+- Overhauled the profile page to display pending friend requests and other user's profiles.
+
+- Overhauled settings page to take user profile pictures that update in backend.
+
+- Implemented goals page fully and added XP for goals with 'Goal Titles' based on XP values.
 
 - Implemented reactive CSS for all pages.
 
