@@ -92,6 +92,7 @@ export class SettingsComponent {
   toChange: string = "";
   toChange2: string = "";
   double: boolean = false;
+  ValidName: boolean = false;
   changeForm = this.formBuilder.group(
     {
       data: new FormControl(''),
@@ -128,9 +129,10 @@ export class SettingsComponent {
     this.editingImage = false;
     this.double = false;
     this.invalid = false;
+    this.ValidName = false;
   }
   saveEdits(value: string, changeForm: FormGroup): void {
-    //COmmented lines throughout are http request functions that are not yet fully operational
+    //Commented lines throughout are http request functions that are not yet fully operational
     if (value == "Name:") {
       this.profileData.FirstName = changeForm.value.data;
       this.profileData.LastName = changeForm.value.data2;
@@ -138,6 +140,9 @@ export class SettingsComponent {
       console.log("Updated First Name"))
       this.backend.updateLastName(this.profileData.ID, this.profileData.LastName).subscribe((data)=>
       console.log("Updated Last Name"))
+      this.userService.setUserData(this.profileData);
+      this.close();
+
     } else if (value == "Email:") {
       if (!changeForm.value.data.includes('@') && !changeForm.value.data.includes('.')) {
         this.invalidMessage = "Not a valid email address";
@@ -147,10 +152,25 @@ export class SettingsComponent {
       this.profileData.Email = changeForm.value.data;
       this.backend.updateEmail(this.profileData.ID, this.profileData.Email).subscribe(()=>
       console.log("Updated Email"))
+      this.userService.setUserData(this.profileData);
+      this.close();
+
     } else if (value == 'Username:') {
-      this.profileData.Username = changeForm.value.data;
-      this.backend.updateUsername(this.profileData.ID, this.profileData.Username).subscribe(()=>
-      console.log("Updated Username"))
+      this.backend.checkUsernameAvailability(changeForm.value.data).subscribe((data)=>{
+        console.log(data);
+        this.ValidName = data.ValidName;
+        if (!this.ValidName) {
+          this.invalidMessage = "Username already taken";
+          this.invalid = true;
+          return;
+        }
+        this.profileData.Username = changeForm.value.data;
+        this.backend.updateUsername(this.profileData.ID, this.profileData.Username).subscribe(()=>
+        console.log("Updated Username"))
+        this.userService.setUserData(this.profileData);
+        this.close();
+      })
+
     } else if (value == 'New Password:') {
       if (changeForm.value.data.length <= 8 || changeForm.value.data == this.profileData.Password) {
         this.invalidMessage = "Your password is few too digits or the same password as before";
@@ -160,9 +180,10 @@ export class SettingsComponent {
       this.profileData.Password = changeForm.value.data;
       this.backend.updatePassword(this.profileData.ID, this.profileData.Password).subscribe(()=>
       console.log("Updated Password"))
+      this.userService.setUserData(this.profileData);
+      this.close();
     }
-    this.userService.setUserData(this.profileData);
-    this.close();
+    
   }
 
   imageChangedEvent: any = '';

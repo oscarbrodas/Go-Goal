@@ -80,13 +80,18 @@ export class BackendConnectService {
   public sendFriendRequest(ID: Number, friendID: Number): Observable<any> {
     return this.http.post<JSON>(`${this.backendURL}friends/sendFriendRequest/${ID}/${friendID}`, this.httpOptions);
   }
+  public searchFriends(searchKey: string): Observable<any>{
+    return this.http.get<JSON>(`${this.backendURL}/friends/search/${searchKey}`, this.httpOptions);
+  }
   public getImage(ID: Number): Observable<any>{
     return this.http.get<JSON>(`${this.backendURL}/users/${ID}/avatar`, this.httpOptions); //Base64Image is key
   }
   public setImage(ID: Number, image: string): Observable<any>{
     return this.http.put<JSON>(`${this.backendURL}/users/${ID}/avatar`, {"Base64": image}, this.httpOptions);//Base64 is key
   }
-
+  public checkUsernameAvailability(username: string): Observable<any>{
+    return this.http.get<JSON>(`${this.backendURL}/users/checkUsername/${username}`, this.httpOptions)
+  }
 }
 
 export interface userInfo { // ADD: User data as necessary 

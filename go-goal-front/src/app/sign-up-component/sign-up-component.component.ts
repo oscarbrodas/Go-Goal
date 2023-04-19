@@ -46,6 +46,7 @@ export class SignUpComponentComponent {
 
   signUpMessage?: string;
   submitted: boolean = false;
+  validName?: boolean;
   users: userInfo[] = [];
 
   Submit(uf: FormGroup): void {
@@ -59,11 +60,17 @@ export class SignUpComponentComponent {
     this.userData.Email = uf.value.Email;
     this.userData.Username = uf.value.Username;
     this.userData.Password = uf.value.Password;
-
+    //Valid Username check now
+    this.backend.checkUsernameAvailability(this.userData.Username).subscribe((data)=>{
+      console.log(data)
+      if(!data.ValidName){
+        this.signUpMessage = 'Username Already Taken'
+        return;
+      }}
+    )
     // Attempt to Sign Up
     if (!this.userData.Email.includes('@') && !this.userData.Email.includes('.')) {
       console.log(this.userData);
-
       this.signUpMessage = 'Not a valid email address'
       return;
     }

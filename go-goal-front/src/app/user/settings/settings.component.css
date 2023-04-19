@@ -235,7 +235,6 @@ form>div>button {
   max-height: 30%;
   overflow: auto;
 }
-
 @media screen and (width <=640px) {
 
   .popup {
