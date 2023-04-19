@@ -11,3 +11,6 @@ Front-End Installations:
 
 Back-End Installations:
 - GO (Framework)
+
+Optional: 
+- NPM
