@@ -45,6 +45,7 @@ func TestGetUser(t *testing.T) {
 // creating a new user without the email already existing
 func TestCreateUser1(t *testing.T) {
 	initializeTestDatabase()
+	initializeTestFileSystem()
 
 	var user handler.User
 	user.Username = "dwan12345"
@@ -62,7 +63,7 @@ func TestCreateUser1(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handler.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB, globalUploader, globalDownloader)(w, r)
 
 	returnInfo := struct {
 		Successful bool
@@ -84,6 +85,7 @@ func TestCreateUser1(t *testing.T) {
 // creating a new user with the email existing
 func TestCreateUser2(t *testing.T) {
 	initializeTestDatabase()
+	initializeTestFileSystem()
 
 	globalDB.Exec("insert into users(first_name,last_name,email,password) values(\"1\",\"Chen\",\"1@gmail.com\",\"pw\")")
 
@@ -92,7 +94,8 @@ func TestCreateUser2(t *testing.T) {
 	user.FirstName = "don"
 	user.LastName = "chen"
 	user.Email = "1@gmail.com"
-	user.Password = "pw"
+
+	user.Password = "pw2"
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(user)
 	if err != nil {
@@ -103,7 +106,44 @@ func TestCreateUser2(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	handler.CreateUser(globalDB)(w, r)
+	handler.CreateUser(globalDB, globalUploader, globalDownloader)(w, r)
+
+	returnInfo := struct {
+		Successful    bool
+		ErrorExist    bool
+		EmailExist    bool
+		UsernameExist bool
+	}{}
+	json.NewDecoder(w.Result().Body).Decode(&returnInfo)
+	if returnInfo.Successful || returnInfo.ErrorExist || !returnInfo.EmailExist || returnInfo.UsernameExist {
+		t.Errorf("Expected {Successful:false, ErrorExist:false, EmailExist:true, UsernameExist: false}, but got %v", returnInfo)
+	}
+}
+
+// creating a new user with the username existing
+func TestCreateUser3(t *testing.T) {
+	initializeTestDatabase()
+
+	globalDB.Exec("insert into users(username,first_name,last_name,email,password,xp, description) values(\"dc\",\"Don\",\"Chen\",\"1@gmail.com\",\"pw1\",\"0\",\"Hi!\")")
+
+	var user handler.User
+	user.Username = "dc"
+	user.FirstName = "Oscar"
+	user.LastName = "Rodas"
+	user.Email = "2@gmail.com"
+	user.Password = "pw2"
+
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(user)
+	if err != nil {
+		panic(err)
+	}
+	w := httptest.NewRecorder()
+	r, err := http.NewRequest("POST", "", &buf)
+	if err != nil {
+		panic(err)
+	}
+	handler.CreateUser(globalDB, globalUploader, globalDownloader)(w, r)
 
 	returnInfo := struct {
 		Successful bool

@@ -298,3 +298,21 @@ func RemoveFriend(globalDB *gorm.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
+
+func SearchFriend(globalDB *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		params := mux.Vars(r)
+		name, _ := params["name"]
+		name = "%" + name + "%"
+		returnInfo := struct {
+			Successful bool
+			ErrorExist bool
+			Users      []User
+		}{}
+
+		globalDB.Model(&User{}).Raw("SELECT * FROM users WHERE username LIKE ? LIMIT 10", name).Scan(&returnInfo.Users)
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}

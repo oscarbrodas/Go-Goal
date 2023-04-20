@@ -1,23 +1,31 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"go-goal/util"
 	"net/http"
 
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
+	Username    string
+	FirstName   string
+	LastName    string
+	Email       string
+	Password    string
+	XP          int
+	Description string
 
-	Username  string // test this
-	FirstName string
-	LastName  string
-	Email     string
-	Password  string
 }
 
 // checks if the username is good. add more rules later
@@ -33,7 +41,7 @@ func isValidUsername(globalDB *gorm.DB, username string) (exists bool, validName
 }
 
 // input json must contain all information of the user
-func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
+func CreateUser(globalDB *gorm.DB, globalUploader *manager.Uploader, globalDownloader *manager.Downloader) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var ThisUser User
@@ -63,7 +71,46 @@ func CreateUser(globalDB *gorm.DB) http.HandlerFunc {
 				return
 			}
 			returnInfo.Successful = true
+
+		} else {
+			returnInfo.Successful = false
+			json.NewEncoder(w).Encode(returnInfo)
+			return
 		}
+
+		buf := manager.NewWriteAtBuffer([]byte{})
+
+		// Grab basic profile file from file system
+		_, err := globalDownloader.Download(context.TODO(), buf, &s3.GetObjectInput{
+			Bucket: aws.String("go-goal-filesystem"),
+			Key:    aws.String("basic.png"),
+		})
+
+		if err != nil {
+			fmt.Println("Error: ", err)
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		// Set User's avatar to basic.png
+		_, err = globalUploader.Upload(context.TODO(), &s3.PutObjectInput{
+			Bucket: aws.String("go-goal-filesystem"),
+			Key:    aws.String(fmt.Sprint(ThisUser.ID) + ".png"), // File name is userID.png
+			Body:   bytes.NewReader(buf.Bytes()),
+			ACL:    "public-read",
+		})
+
+		if err != nil {
+			fmt.Println("Error: ", err)
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+
+		}
+
 		json.NewEncoder(w).Encode(returnInfo)
 	}
 }
@@ -272,6 +319,90 @@ func CheckUsername(globalDB *gorm.DB) http.HandlerFunc {
 		username := params["username"]
 
 		returnInfo.Exists, returnInfo.ValidName = isValidUsername(globalDB, username)
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func SetAvatar(globalDB *gorm.DB, globalUploader *manager.Uploader) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		returnInfo := struct {
+			ErrorExist bool
+			Successful bool
+		}{}
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		type ImageInput struct {
+			Base64 string
+		}
+		var im ImageInput
+		util.DecodeJSONRequest(&im, r.Body, w)
+
+		file, err := util.Base64toFile(im.Base64)
+
+		if err != nil {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			fmt.Println("Error with base64 conversion: ", err)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		result, err := globalUploader.Upload(context.TODO(), &s3.PutObjectInput{
+			Bucket: aws.String("go-goal-filesystem"),
+			Key:    aws.String(ID + ".png"), // File name is userID.png
+			Body:   bytes.NewReader(file),
+			ACL:    "public-read",
+		})
+
+		if err != nil {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			fmt.Printf("Error with file upload")
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		fmt.Printf("Successfully Uploaded Avatar to %s", result.Location)
+		returnInfo.ErrorExist = false
+		returnInfo.Successful = true
+
+		json.NewEncoder(w).Encode(returnInfo)
+	}
+}
+
+func GetAvatar(globalDB *gorm.DB, globalDownloader *manager.Downloader) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		returnInfo := struct {
+			ErrorExist  bool
+			Successful  bool
+			Base64Image string
+		}{}
+		params := mux.Vars(r)
+		ID := params["id"]
+
+		buf := manager.NewWriteAtBuffer([]byte{})
+
+		_, err := globalDownloader.Download(context.TODO(), buf, &s3.GetObjectInput{
+			Bucket: aws.String("go-goal-filesystem"),
+			Key:    aws.String(ID + ".png"),
+		})
+
+		if err != nil {
+			returnInfo.ErrorExist = true
+			returnInfo.Successful = false
+			fmt.Println("Error with file download: ", err)
+			json.NewEncoder(w).Encode(returnInfo)
+			return
+		}
+
+		fmt.Println("Successfully downloaded Avatar")
+		returnInfo.ErrorExist = false
+		returnInfo.Successful = true
+		returnInfo.Base64Image = util.FiletoBase64(buf.Bytes())
 
 		json.NewEncoder(w).Encode(returnInfo)
 	}
