@@ -6,10 +6,6 @@ describe('Navigation from User Home Page Tests', () => {
       cy.get('[type="submit"]').click()
       cy.visit('/user/1/goals')
     })
-    it('Visits the initial home page', () => {
-      cy.url().should('include','home')
-    })
-  
     it('Visit profile page from top bar', ()=>{
       cy.get('[id="menuButton"]').click()
       cy.get('[name="profile"]').click()

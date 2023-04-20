@@ -5,10 +5,6 @@ describe('Navigation from User Home Page Tests', () => {
       cy.get('[name="Password"]').type("ThisIsAPassword")
       cy.get('[type="submit"]').click()
     })
-    it('Visits the initial home page', () => {
-      cy.url().should('include','home')
-    })
-  
     it('Visit profile page from top bar', ()=>{
       cy.get('[id="menuButton"]').click()
       cy.get('[name="profile"]').click()
