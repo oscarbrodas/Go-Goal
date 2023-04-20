@@ -30,10 +30,6 @@ export class LoginService {
 
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
-
   user: userInfo = {
     loggedIn: false,
     ID: 0,
@@ -45,7 +41,7 @@ export class LoginService {
 
   }
 
-  friends: userInfo[] = [];
+  public friends: number[] = [];
 
   loginInfo: loginInfo = {
     Email: '',
@@ -56,7 +52,7 @@ export class LoginService {
 
 
   getUser(): userInfo { return this.user }
-  loggedInStatus(): boolean { return this.user.loggedIn }
+  loggedInStatus(): boolean { return this.loggedIn }
 
   // Clears User
   clearUser(): void {
@@ -77,6 +73,13 @@ export class LoginService {
     this.loginInfo.Email = li.value.Email;
     this.loginInfo.Password = li.value.Password;
 
+    if (!this.loginInfo.Email.includes('@')) {
+      this.loginFailed = true;
+      this.loginSuccess = false;
+      console.log("Login failed: Invalid email");
+      return;
+    }
+
     // GET REQUEST FOR USER INFORMATION
     console.log("Attempting to log in...");
     this.backend.getLoginInfo(this.loginInfo).subscribe((data) => {
@@ -91,11 +94,19 @@ export class LoginService {
         this.user.LastName = data.ThisUser.LastName;
         this.user.Email = data.ThisUser.Email;
         this.user.Password = data.ThisUser.Password;
+        this.user.Description = data.ThisUser.Description;
+        this.user.XP = data.ThisUser.XP;
         this.loginFailed = false;
         this.loginSuccess = true;
         this.loggedIn = true;
 
-        this.friends = [] // ADD: Get friends list from backend
+        this.backend.getFriends(this.user.ID).subscribe((data) => {
+          if (!data.ErrorExist) {
+            this.friends = data.Friends;
+            console.log(this.friends);
+          }
+
+        });
 
         this.userService.setUserData(this.user);
 

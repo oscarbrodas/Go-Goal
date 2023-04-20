@@ -1,34 +1,54 @@
 <div class="bar">
 
     <div class="content">
-        <c-card class="item" routerLink="main" name="linkBarMain">
-            Home
-        </c-card>
 
-        <c-card class="item" routerLink="help" name="linkBarHelp">
-            Help/FAQ
-        </c-card>
+        <div class="item" routerLink="main" (click)="top()" name="linkBarHome">
+            <p>Home</p>
+        </div>
 
-        <c-card class="item" routerLink="aboutus" name="linkBarAboutUs">
-            About Us
-        </c-card>
+        <div class="item" routerLink="help" (click)="top()" name="linkBarHelp">
+            <p>Help/FAQ</p>
+        </div>
+
+        <div class="item" routerLink="aboutus" (click)="top()" name="linkBarAboutUs">
+            <p>About Us</p>
+        </div>
     </div>
 
-    <div class="login">
+    <div *ngIf="!loggedIn; else elseBlock" class="login">
         <h1>Account</h1>
 
-        <c-card class="item" routerLink="login" name="linkBarLogin">
-            Login
-        </c-card>
+        <div class="sect">
+            <div class="button" routerLink="login" name="linkBarLogin">
+                Login
+            </div>
 
-        <c-card class="item" routerLink="sign-up" name="linkBarSignUp">
-            Register
-        </c-card>
+            <div class="button" routerLink="sign-up" name="linkBarSignUp">
+                Register
+            </div>
+        </div>
     </div>
 
+    <ng-template #elseBlock>
+        <div class="login">
+            <h1>Account</h1>
 
+            <div class="sect">
+                <div class="button" (click)="profile()" name="linkBarProfile">
+                    Profile
+                </div>
+
+                <div class="button" (click)="logout()" name="linkBarLogout">
+                    Logout
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <p style="color: black; position: absolute; bottom: -35px; left: 5px; white-space: nowrap;"><b>Go Goal® is a
+            Registered
+            Trademark. All
+            rights reserved.</b>
+    </p>
 
 </div>
-<p style="color: black; position: absolute; bottom: -210px; left: 5px;"><b>Go Goal® is a Registered Trademark. All
-        rights reserved.</b>
-</p>

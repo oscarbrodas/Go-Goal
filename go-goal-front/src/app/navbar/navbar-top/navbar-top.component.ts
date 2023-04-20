@@ -14,19 +14,19 @@ import { BackendConnectService } from 'src/app/backend-connect.service';
   animations: [
     trigger('menuTrigger', [
 
-      state('true', style({ position: '*', right: '-5px' })),
+      state('true', style({ position: '*', right: '*' })),
       state('false', style({ position: '*', right: '-400px' })),
 
       transition('false => true', [
         animate(450, keyframes([
           style({ offset: 0 }),
-          style({ transform: 'translateX(-395px)', offset: 0.45 }),
-          style({ transform: 'translateX(-380px)', offset: 0.5 }),
-          style({ transform: 'translateX(-395px)', offset: 0.6 }),
-          style({ transform: 'translateX(-392px)', offset: 0.65 }),
-          style({ transform: 'translateX(-395px)', offset: 0.75 }),
-          style({ transform: 'translateX(-394px)', offset: 0.85 }),
-          style({ transform: 'translateX(-395px)', offset: 1 }),
+          style({ right: '', offset: 0.45 }),
+          style({ right: '-15px', offset: 0.5 }),
+          style({ right: '*', offset: 0.6 }),
+          style({ right: '-8px', offset: 0.65 }),
+          style({ right: '*', offset: 0.75 }),
+          style({ right: '-6px', offset: 0.85 }),
+          style({ right: '*', offset: 1 }),
         ]))
       ]),
 
@@ -93,7 +93,9 @@ export class NavbarTopComponent {
     this.subMenu = !this.subMenu;
   }
   profilePage(): void {
-    this.router.navigate([`user/${this.userService.getUserData().ID}/profile`]);
+    this.router.navigate([`user/${this.userService.getUserData().ID}/profile`]).then(() => {
+      window.location.reload();
+    });
   }
   goalsPage(): void {
     this.router.navigate([`user/${this.userService.getUserData().ID}/goals`]);

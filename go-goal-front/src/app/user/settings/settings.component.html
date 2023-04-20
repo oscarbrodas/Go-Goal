@@ -1,42 +1,70 @@
 <div class="page">
 
-    <img @picSlide class="pic" src="../assets/dashboard_images/p.png">
+    <div @p1Slide class="panel p1-pos">
+        <p>Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}</p>
+        <button (click)="edit('Name:')">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
 
-    <div>
-        <div class="panel" style="position: absolute; top: 55%; left: 5%;">
-            <p>Name: {{this.profileData.FirstName}} {{this.profileData.LastName}}</p>
-            <button (click)="edit('Name:')">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </div>
 
-        <div class="panel" style="position: absolute; top: 70%; left: 27%;">
-            <p>Username: {{this.profileData.Username}}</p>
-            <button (click)="edit('Username:')">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </div>
+    <div @p2Slide class="panel p2-pos">
+        <p>Username: {{this.profileData.Username}}</p>
+        <button (click)="edit('Username:')">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
 
-        <div class="panel" style="position: absolute; top: 70%; left: 50%;">
-            <p>Email: {{this.profileData.Email}}</p>
-            <button (click)="edit('Email:')">
-                <mat-icon>edit</mat-icon>
-            </button>
-        </div>
+    <div @p3Slide class="panel p3-pos">
+        <p>Email: {{this.profileData.Email}}</p>
+        <button (click)="edit('Email:')">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
 
-        <div class="panel" style="position: absolute; top: 55%; left: 77%;">
-            <p>Password</p>
-            <button style="width: fit-content;" (click)="edit('New Password:')">Change Password</button>
+    <div @p4Slide class="panel p4-pos">
+        <p>Password</p>
+        <button class="pb" (click)="edit('New Password:')">Change Password</button>
+    </div>
+
+    <div class="pic-cont">
+        <img class="pic" @picSlide src={{this.imgSource}}>
+        <div (click)="edit('New Image:')" class="pic-update">
+            <p>Update?</p>
         </div>
     </div>
 
 
-
-
-
-    <div class="overlay" *ngIf="this.editing">
+    <div class="overlay" *ngIf="this.editing || this.editingImage">
         <div class="pop-up">
-            <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)">
+            <div *ngIf="this.editingImage" class="newImage">
+                
+
+            <input type="file" (change)="fileChangeEvent($event)" />
+
+            <image-cropper class="ImageToEdit"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded()"
+            (cropperReady)="cropperReady()"
+            (loadImageFailed)="loadImageFailed()"
+            [resizeToWidth]="110"
+            [cropperMinWidth]="55"
+            [onlyScaleDown]="true"
+            [roundCropper]="true"
+
+            ></image-cropper>
+            <div style="display: flex; justify-content: space-around;">
+                <button (click)="saveImage()">Save</button>
+                <button (click)="close()">Cancel</button>
+            </div>
+            </div>
+
+
+            <form [formGroup]="changeForm" (ngSubmit)="saveEdits(this.title,changeForm)" *ngIf="this.editing">
                 <label>{{this.title}} </label>
                 <input type="text" class="form" name="data" formControlName="data">
                 <input *ngIf="this.double" type="text" class="form" name="data2" formControlName="data2">
@@ -48,4 +76,5 @@
             </form>
         </div>
     </div>
+
 </div>

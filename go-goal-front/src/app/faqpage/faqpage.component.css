@@ -1,0 +1,387 @@
+p {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+
+.p {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.info-cont {
+
+    height: fit-content;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
+    margin-top: 50px;
+
+    transition: all 0.5s ease-in-out;
+}
+
+.questionSet {
+    width: 100%;
+    padding-top: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.questionSet>h1 {
+    color: white;
+    font-size: 4em;
+    font-weight: 500;
+
+    padding: 20px;
+    border: 5px solid greenyellow;
+    border-radius: 15px;
+    background: black;
+}
+
+.tag {
+    background: black;
+
+    border-bottom: 2px solid greenyellow;
+    color: white;
+    height: clamp(300px, 300px, 300px);
+    width: 100%;
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    position: relative;
+    top: 0px;
+    gap: 10px;
+    align-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    transition: 0.5s ease-in-out;
+}
+
+.tag:hover {
+    position: relative;
+    top: 10px;
+    transition: 0.5s ease-in-out;
+    border-radius: 15px;
+}
+
+.tag h1 {
+    font-size: 2.5em;
+    font-weight: 500;
+
+    position: relative;
+    top: 0px;
+}
+
+.tag p {
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: center;
+}
+
+.questions {
+    height: fit-content;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
+
+    transition: all 0.5s ease-in-out;
+}
+
+.card-cont {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+
+    position: relative;
+    top: 0px;
+    padding: 50px;
+    gap: 80px;
+
+    color: white;
+
+    transition: all 0.5s ease-in-out;
+}
+
+.infocard {
+    height: clamp(200px, 20%, fit-content);
+    width: clamp(400px, 80vw, 1000px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    overflow: hidden;
+    content: "";
+
+    outline: 3px solid greenyellow;
+    border-radius: 25px;
+    background: black;
+    transition: all 0.5s ease-in-out;
+    object-fit: contain;
+
+    box-shadow: 0 0 15px 7.5px #fff,
+        0 0 20px 10px yellow,
+        0 0 35px 22.5px rgba(0, 255, 0, 1);
+}
+
+.card-top {
+    height: 25%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    padding-top: 15px;
+    transition: all 0.5s ease-in-out;
+}
+
+.card-bot {
+    height: 140%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease-in-out;
+}
+
+.names {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    overflow-wrap: break-word;
+
+    padding-top: 5%;
+
+    transition: all 0.5s ease-in-out;
+
+}
+
+.border-a {
+    --border-size: 3px;
+    --border-angle: 0turn;
+    height: 350px;
+    width: 350px;
+    background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, rgb(255, 145, 0), rgb(132, 0, 255));
+    background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-animation: bg-spin 3s linear infinite;
+    animation: bg-spin 3s linear infinite;
+    transition: all 0.5s ease-in-out;
+}
+
+.border-b {
+    --border-size: 3px;
+    --border-angle: 0turn;
+    height: 350px;
+    width: 350px;
+    background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, white, red);
+    background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-animation: bg-spin 3s linear infinite;
+    animation: bg-spin 3s linear infinite;
+    transition: all 0.5s ease-in-out;
+}
+
+.border-c {
+    --border-size: 3px;
+    --border-angle: 0turn;
+    height: 350px;
+    width: 350px;
+    background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, white, red);
+    background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-animation: bg-spin 3s linear infinite;
+    animation: bg-spin 3s linear infinite;
+    transition: all 0.5s ease-in-out;
+}
+
+.border-d {
+    --border-size: 3px;
+    --border-angle: 0turn;
+    height: 350px;
+    width: 350px;
+    background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, white, red);
+    background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-animation: bg-spin 3s linear infinite;
+    animation: bg-spin 3s linear infinite;
+    transition: all 0.5s ease-in-out;
+}
+
+.l-pos {
+    position: relative;
+    top: 15%;
+    left: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.r-pos {
+
+    position: relative;
+    top: 15%;
+    right: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.border-a>img,
+.border-b>img,
+.border-c>img,
+.border-d>img {
+    height: 98%;
+    width: 97%;
+    object-fit: cover;
+    transition: all 0.5s ease-in-out;
+}
+
+.border-a:hover,
+.border-b:hover,
+.border-c:hover,
+.border-d:hover {
+    height: 360px;
+    width: 375px;
+}
+
+.names>p {
+
+    width: 60%;
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: center;
+    transition: all 0.5s ease-in-out;
+}
+
+.card-bot>p {
+    font-size: 1.2em;
+    font-weight: 300;
+    text-align: center;
+    transition: all 0.5s ease-in-out;
+
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.blockquote {
+    border-left: 3px solid rgb(132, 0, 255);
+    color: aliceblue;
+    font-family: Georgia, Times, "Times New Roman", serif;
+    font-size: 1.25em;
+    font-style: italic;
+    line-height: 1.8em;
+    margin-left: 25px;
+    padding: 0.5em 1.5em 0.5em 1em;
+    position: relative;
+    transition: 0.2s border ease-in-out;
+    z-index: 0;
+
+    align-self: flex-start;
+}
+
+.blockquote2 {
+    border-right: 3px solid red;
+    color: aliceblue;
+    font-family: Georgia, Times, "Times New Roman", serif;
+    font-size: 1.25em;
+    font-style: italic;
+    line-height: 1.8em;
+    margin-right: 25px;
+    padding: 0.5em 1.5em 0.5em 1em;
+    position: relative;
+    transition: 0.2s border ease-in-out;
+    z-index: 0;
+
+    align-self: flex-end;
+}
+
+@media screen and (width < 1080px) {
+    .tag {
+        display: none;
+    }
+}
+
+
+@keyframes textclip {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@-webkit-keyframes bg-spin {
+    to {
+        --border-angle: 1turn;
+    }
+}
+
+@keyframes bg-spin {
+    to {
+        --border-angle: 1turn;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0turn;
+}
+
+@media (width < 1000px) {
+    .border-a {
+        display: none;
+    }
+
+    .border-b {
+        display: none;
+    }
+
+    .border-c {
+        display: none;
+    }
+
+    .border-d {
+        display: none;
+    }
+
+    .card-bot {
+        padding-top: 10%;
+    }
+}

@@ -1,4 +1,5 @@
 <div class="page">
+
     <div class="left-side">
         <div @sidebar class="sidebar">
             <h1>Your Goals</h1>
@@ -22,27 +23,66 @@
                 </form>
             </div>
 
-            <div class="experience">XP POINTS IN-PROGRESS</div>
-        </div>
+            <div class="experience">
 
-    </div>
-    <div *ngIf="listLoaded" class="content">
-        <div [@goals]="userGoals.length" class="list">
-            <div class="goal" *ngFor="let u of userGoals">
-                <div class="desc">
-                    <p>{{u.Title}}</p>
-                    <p>{{u.Description}}</p>
+                <h1 class="lvl1-3" *ngIf="uLevel <= 3">{{uLevelName}}</h1>
+                <h1 class="lvl4-6" *ngIf="uLevel > 3 && uLevel <= 6">{{uLevelName}}</h1>
+                <h1 class="lvl7-9" *ngIf="uLevel > 6 && uLevel <= 9">{{uLevelName}}</h1>
+                <h1 class="lvl10" *ngIf="uLevel > 9">{{uLevelName}}</h1>
+
+                <p>Current Level</p>
+
+                <div>
+                    <div class="progress-bar">
+
+                        <div class="progress" [style.width.%]="(this.XP % 500) / 5"></div>
+
+                    </div>
+
+                    <div class="p-cont">
+                        <p>{{uLevel}}</p>
+                        <p>{{uLevel + 1}}</p>
+                    </div>
                 </div>
-                <button class="complete-b" (click)="goalButton(u)">
-                    <mat-icon *ngIf="norm">done</mat-icon>
-                    <mat-icon *ngIf="deleteTime">delete</mat-icon>
-                    <mat-icon *ngIf="editTime">edit</mat-icon>
-                </button>
-                <!-- <div class="complete-banner">
-                    <p>Complete?</p>
-                </div> -->
 
             </div>
+
+        </div>
+
+    </div>
+
+    <div *ngIf="listLoaded" class="content">
+        <div [@goals]="goalsUncompleted.length" class="list">
+
+            <div *ngIf="!completeGoalTime; else elseBlock;" class="goal-spacing">
+                <div class="goal" *ngFor="let u of goalsUncompleted;">
+                    <div class="desc">
+                        <p>{{u.Title}}</p>
+                        <p>{{u.Description}}</p>
+                    </div>
+                    <button class="complete-b" (click)="goalButton(u)">
+                        <mat-icon *ngIf="norm">done</mat-icon>
+                        <mat-icon *ngIf="deleteTime">delete</mat-icon>
+                        <mat-icon *ngIf="editTime">edit</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <ng-template #elseBlock>
+                <div class="goal-spacing">
+                    <div class="goal" *ngFor="let u of goalsCompleted;">
+                        <div class="desc">
+                            <p>{{u.Title}}</p>
+                            <p>{{u.Description}}</p>
+                        </div>
+                        <button class="complete-b" (click)="goalButton(u)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
+
         </div>
     </div>
+
 </div>

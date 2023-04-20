@@ -1,12 +1,13 @@
-describe('Navigation from User Profile Page Tests', () => {
-    beforeEach(() => {
-      cy.visit('/login')
-      cy.get('[id="Email"]').type("User1@gmail.com", {force: true})
-      cy.get('[id="Password"]').type("UserOneOne")
-      cy.get('[type="submit"]').click()
-    })
+describe('Navigation from User Discover Page Tests', () => {
+  beforeEach(() => {
+    cy.visit('/login')
+    cy.get('[id="Email"]').type("User1@gmail.com", {force: true})
+    cy.get('[id="Password"]').type("UserOneOne")
+    cy.get('[type="submit"]').click()
+    cy.visit('/user/1/discover')
+  })
     it('Visits the initial home page', () => {
-      cy.url().should('include','profile')
+      cy.url().should('include','discover')
     })
   
     it('Visit profile page from top bar', ()=>{

@@ -21,7 +21,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BackendConnectService } from './backend-connect.service'
 import { LoginService } from './login-page/login.service';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AboutusComponent } from './aboutus/aboutus.component';
 
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     SignUpComponentComponent,
     MainComponent,
     LinkbarComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AboutusComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     HttpClientModule,
     FormsModule,
     CarouselModule,
-    CardModule
+    CardModule,
+    ImageCropperModule,
   ],
   exports: [],
   providers: [],

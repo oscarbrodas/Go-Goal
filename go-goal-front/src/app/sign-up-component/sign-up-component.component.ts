@@ -27,7 +27,8 @@ export class SignUpComponentComponent {
     LastName: new FormControl(''),
     Email: new FormControl(''),
     Username: new FormControl(''),
-    Password: new FormControl('')
+    Password: new FormControl(''),
+    ConfirmPassword: new FormControl('')
   });
   loginForm = this.formBuilder.group({
     Email: new FormControl(""),
@@ -45,6 +46,7 @@ export class SignUpComponentComponent {
 
   signUpMessage?: string;
   submitted: boolean = false;
+  validName?: boolean;
   users: userInfo[] = [];
 
   Submit(uf: FormGroup): void {
@@ -58,16 +60,26 @@ export class SignUpComponentComponent {
     this.userData.Email = uf.value.Email;
     this.userData.Username = uf.value.Username;
     this.userData.Password = uf.value.Password;
-
+    //Valid Username check now
+    this.backend.checkUsernameAvailability(this.userData.Username).subscribe((data)=>{
+      console.log(data)
+      if(!data.ValidName){
+        this.signUpMessage = 'Username Already Taken'
+        return;
+      }}
+    )
     // Attempt to Sign Up
     if (!this.userData.Email.includes('@') && !this.userData.Email.includes('.')) {
       console.log(this.userData);
-
       this.signUpMessage = 'Not a valid email address'
       return;
     }
     else if (this.userData.Password.length < 8) {
       this.signUpMessage = 'This account needs a more secure password'
+      return;
+    }
+    else if(this.userData.Password != uf.value.ConfirmPassword){
+      this.signUpMessage = 'Passwords do not match'
       return;
     }
     else {

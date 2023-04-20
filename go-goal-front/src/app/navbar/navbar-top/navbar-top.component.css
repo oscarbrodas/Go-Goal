@@ -12,6 +12,7 @@
 
     position: fixed;
     top: 0px;
+    z-index: 999;
 }
 
 button {
@@ -24,7 +25,6 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    font-family: Verdana, Geneva, sans-serif;
     margin: 4px 2px;
     cursor: pointer;
 
@@ -90,6 +90,7 @@ h1 {
 .sub-menu-wrap {
     position: absolute;
     top: 110%;
+    right: -5px;
     min-width: 200px;
     max-width: fit-content;
     height: fit-content;
@@ -144,13 +145,12 @@ h1 {
     position: relative;
     bottom: 5px;
     right: 25px;
+    padding-top: 7px;
+    padding-right: 5px;
     transition: transform 0.5s ease-in-out;
 }
 
-.logout-logo {
-    position: relative;
-    right: -5px;
-}
+
 
 .sub-menu-link:hover span {
     transform: translate(5px);

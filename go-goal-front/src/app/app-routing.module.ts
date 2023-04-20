@@ -4,15 +4,17 @@ import { MainComponent } from './main/main.component';
 import { LoginPageComponent } from './login-page/login-page.component'
 import { SignUpComponentComponent } from './sign-up-component/sign-up-component.component'
 import { NotFoundComponent } from './not-found/not-found.component';
+import { FAQpageComponent } from './faqpage/faqpage.component';
 import { UserModule } from './user/user.module';
+import { AboutusComponent } from './aboutus/aboutus.component';
 
 const routes: Routes = [
   { path: 'main', component: MainComponent },
   { path: '', redirectTo: '/main', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
   { path: 'sign-up', component: SignUpComponentComponent },
-  { path: 'aboutus', component: NotFoundComponent },
-  { path: 'help', component: NotFoundComponent },
+  { path: 'aboutus', component: AboutusComponent },
+  { path: 'help', component: FAQpageComponent },
   { path: 'user/:id', loadChildren: () => import('./user/user.module').then(m => m.UserModule) },
   //Must leave 404 redirect as last route on page
   { path: '**', component: NotFoundComponent },
