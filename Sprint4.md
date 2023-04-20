@@ -293,11 +293,15 @@ Added search friends function in order to search for new friends with a username
 
 - Created main page for new users to the website to view and explain the service.
 
+- Created About Us page and FAQ page for users to learn more info before joining
+
 - Implemented the Discover page to search, add, and remove friends and users.
 
 - Overhauled the profile page to display pending friend requests and other user's profiles.
 
-- Overhauled settings page to take user profile pictures that update in backend.
+- Added profile pictures via AWS where one is given as a default and users can save their own for their account at any time
+
+- Overhauled settings page to make changes persistent and take in user profile pictures that update in backend.
 
 - Implemented goals page fully and added XP for goals with 'Goal Titles' based on XP values.
 
@@ -312,12 +316,16 @@ Added search friends function in order to search for new friends with a username
  - Visit About Us from Bottom Bar - Tests if about button properly routes to its page
  - Visit Login from Bottom Bar - Tests if bottom login button properly routes to login page
  - Visit Sign-Up from Bottom Bar - Tests if bottom sign-up button properly routes to sign-up page
+ - Visit FAQ Page from Bottom Bar- Tests if bottom help button properly routes to FAQ page
+ - Visit About Us Page from Bottom Bar- Test if bottom about us button properly routes ot About Us page
 
  - Tests of the top bar depended on if a page was part of the user component. Pages that were had these tests:
  - Visit Profile Page from Top Bar - Tests if menu icon properly routes to profile page
  - Visit Goal Page from Top Bar - Tests if menu icon properly routes to goal page
  - Visit Settings Page from Top Bar - Tests if menu icon properly routes to settings page
- - Visit Discover Page from Top Bar - Tests if menu icon properly routes to discover page (currently 404)
+ - Visit Discover Page from Top Bar - Tests if menu icon properly routes to discover page
+ - Visit Profile Page from Bottom Bar - Tests if bottom profile button properly routes to user's profile page
+ - Logout from Bottom Bar - Tests if log out feature on bottom bar properly takes a user out of their account
 
  - Other pages had these tests:
  - Visit Login Page from Top Bar - Tests if login button properly routes to login page
@@ -329,7 +337,7 @@ Added search friends function in order to search for new friends with a username
  - Username already taken - Check if inputting a username that has already been assigned to another account will allow a sign-up to go through
  - Insecure Password - Check if trying to create a password less than 8 characters will cause an error
  - Insecure Password and not a valid email - Try inputting a submission with both conditions that should pose an error
- - Email Already taken - Try signing up with an email already in the system, which should not work it
+ - Passwords don't match- Tries creating an account where the confirm password field does not have the same input as password
 ### Login Tests
  - Successful Login - Input a correct email and password and see if page redirects
  - Unrecognized Username - Input a username that is not in the system and check if log in fails
@@ -338,9 +346,16 @@ Added search friends function in order to search for new friends with a username
 ### Profile Tests
  - Check Right Page - Ensure navigation leads to correct page
  - Check All Goals - Use "go to all goals" link to go to goals page
- - Go to settings - Use "go to account settings" link to go to settings page
+ - Go to Settings - Use "go to account settings" link to go to settings page
  - Other's Goals - Go to another's profile and test if more button brings up more goals
  - Friend Request - Go to another's profile and test if friend request button will give request pending message
+### Discover Tests
+ - Check Right Page - Ensure navigation leads to correct page
+ - Check Friend - Check if clicking on of your friends brings up their info
+ - Search For User - Check if searching one user's username will bring up their info
+ - Click through Users - Check if searching a name within multiple user's usernames will allow you to scan through those users
+ - Click Backwards - Check if searching a name in multiple user's usernames allow you to hit the back arrow to go to the end
+ - Visit profile - CHeck if searching a user and clicking view profile will bring you to their page
 ### Settings Tests
  - Change First Name - Test if input field will allow you to edit first name
  - Change Last Name - Test if input field will allow you to edit last name
@@ -349,6 +364,7 @@ Added search friends function in order to search for new friends with a username
  - No Changes - Test if cancel button will not allow changes to go through
  - Invalid Email - Test if editing email to invalid format will not allow the edit to go through
  - Bad Password - Test if editing password to insecure password will not allow the edit to go through
+ - Username Taken - Test if it will aloow a username already in the database
 ### Goals Tests
  - Add Goal - Type in values and add goal to a system
  - Persistent Goal - check if a new goal stays on the page after refreshing and moving to and from that tab
